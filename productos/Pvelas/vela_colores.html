@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Vela de Colores — Cana´an Xu´x</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ── RESET & VARIABLES ── */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --naranja:#eb904d;
+  --naranja-oscuro:#c96a2a;
+  --cafe:#3d3b1f;
+  --cafe-claro:#6b3e2e;
+  --gris:#666;
+  --gris-claro:#f5f5f5;
+  --borde:#e0e0e0;
+  --blanco:#fff;
+}
+body{font-family:'Montserrat',sans-serif;color:var(--cafe);background:#fff}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;height:auto}
+
+/* ── ANNOUNCE ── */
+.announce{background:var(--cafe);color:#fff;text-align:center;font-size:13px;padding:8px 16px;letter-spacing:.03em}
+
+/* ── HEADER ── */
+header{background:#fff;border-bottom:1px solid var(--borde);position:sticky;top:0;z-index:200}
+.header-top{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:0 24px;height:68px}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-img{width:56px;height:56px;object-fit:contain}
+.logo-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--cafe);line-height:1}
+.logo-name span{display:block;font-size:11px;font-weight:500;font-family:'Montserrat',sans-serif;letter-spacing:.12em;color:var(--naranja);margin-top:2px;text-transform:uppercase}
+.header-icons{display:flex;align-items:center;gap:18px}
+.header-icons a{font-size:13px;font-weight:600;color:var(--cafe);display:flex;align-items:center;gap:5px;transition:color .2s}
+.header-icons a:hover{color:var(--naranja)}
+.icon-svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+.cart-count-badge{background:var(--naranja);color:#fff;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-left:2px;vertical-align:middle}
+
+/* ── NAV ── */
+nav{background:linear-gradient(135deg,#2a2510 0%,#3d3520 40%,#2e2a10 100%);border-bottom:3px solid var(--naranja);position:sticky;top:68px;z-index:190;box-shadow:0 4px 24px rgba(0,0,0,.35)}
+nav::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(235,144,77,.08) 1px,transparent 0);background-size:28px 28px;pointer-events:none}
+.nav-inner{max-width:1300px;margin:0 auto;padding:0 32px;display:flex;align-items:stretch;justify-content:space-between;position:relative}
+.nav-item{position:relative;flex:1;display:flex;justify-content:center}
+.nav-item>a,.nav-item>span{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:15px 6px;font-size:10px;font-weight:800;color:rgba(255,255,255,.88);letter-spacing:.10em;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:color .25s,background .25s;position:relative}
+.nav-item+.nav-item>a::before,.nav-item+.nav-item>span::before{content:'';position:absolute;left:0;top:22%;height:56%;width:1px;background:rgba(235,144,77,.25)}
+.nav-item>a::after,.nav-item>span::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%) scaleX(0);width:80%;height:3px;background:linear-gradient(90deg,transparent,var(--naranja),transparent);border-radius:2px 2px 0 0;transition:transform .3s cubic-bezier(.34,1.56,.64,1);transform-origin:center}
+.nav-item:hover>a,.nav-item:hover>span{color:#fff;background:rgba(235,144,77,.14)}
+.nav-item:hover>a::after,.nav-item:hover>span::after{transform:translateX(-50%) scaleX(1)}
+.chevron{font-size:8px;opacity:.7;transition:transform .25s;display:inline-block}
+.nav-item:hover .chevron{transform:rotate(180deg)}
+
+/* ── DROPDOWN ── */
+.dropdown{display:none;position:absolute;top:calc(100% + 3px);left:50%;transform:translateX(-50%);background:#fff;min-width:680px;box-shadow:0 24px 64px rgba(0,0,0,.18),0 2px 8px rgba(235,144,77,.12);z-index:400;border-radius:0 0 12px 12px;overflow:hidden;animation:dropIn .22s cubic-bezier(.22,1,.36,1) both}
+@keyframes dropIn{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.nav-item:hover .dropdown{display:flex}
+.dropdown:not(:has(.dropdown-group)){min-width:280px;flex-direction:column;padding:8px 0 12px}
+.dropdown:not(:has(.dropdown-group)) a{padding:9px 24px}
+.dropdown::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--naranja),#f5c060,var(--naranja))}
+.dropdown-group{flex:1;padding:28px 24px 24px;border-right:1px solid #f0ebe3}
+.dropdown-group:last-child{border-right:none}
+.dropdown-title{padding:0 0 12px 0;font-size:10px;font-weight:800;color:var(--naranja);letter-spacing:.18em;text-transform:uppercase;border-bottom:2px solid #f5e9d8;margin-bottom:10px}
+.dropdown a{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:13px;font-weight:500;color:#4a3f2f;transition:color .15s,padding-left .15s;border-radius:4px}
+.dropdown a::before{content:'›';color:var(--naranja);font-size:16px;line-height:1;opacity:0;transform:translateX(-6px);transition:opacity .15s,transform .15s}
+.dropdown a:hover{color:var(--naranja-oscuro);padding-left:4px}
+.dropdown a:hover::before{opacity:1;transform:translateX(0)}
+
+/* ── BREADCRUMB ── */
+.breadcrumb{max-width:1300px;margin:0 auto;padding:16px 24px 0;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gris)}
+.breadcrumb a{color:var(--gris);transition:color .2s}
+.breadcrumb a:hover{color:var(--naranja)}
+.breadcrumb .sep{color:var(--borde)}
+.breadcrumb .current{color:var(--cafe);font-weight:600}
+
+/* ── LAYOUT PRODUCTO ── */
+.product-wrap{max-width:1300px;margin:0 auto;padding:28px 24px 64px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;align-content:start}
+
+/* ── GALERÍA ── */
+.gallery{position:sticky;top:var(--sticky-top,150px);display:flex;flex-direction:column;gap:12px;align-self:start}
+.gallery-main{border-radius:6px;overflow:hidden;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;position:relative;cursor:zoom-in;transition:background .4s ease}
+.gallery-main img{width:100%;height:100%;object-fit:contain;padding:28px;transition:transform .4s ease}
+.gallery-main:hover img{transform:scale(1.06)}
+.gallery-badge-wrap{position:absolute;top:14px;left:14px;display:flex;flex-direction:column;gap:6px}
+.g-badge{background:var(--naranja);color:#fff;font-size:10px;font-weight:800;padding:4px 10px;border-radius:2px;letter-spacing:.06em;text-transform:uppercase}
+.g-badge.natural{background:#5a8a3c}
+.gallery-thumbs{display:flex;gap:10px;flex-wrap:wrap}
+.thumb{width:72px;height:72px;border-radius:4px;overflow:hidden;border:2px solid var(--borde);cursor:pointer;background:var(--gris-claro);transition:border-color .2s;flex-shrink:0}
+.thumb.active{border-color:var(--naranja)}
+.thumb:hover{border-color:var(--naranja-oscuro)}
+.thumb img{width:100%;height:100%;object-fit:contain;padding:6px}
+
+/* ── INFO PRODUCTO ── */
+.product-info{display:flex;flex-direction:column;gap:0;align-self:start}
+.prod-brand{font-size:11px;font-weight:800;color:var(--naranja);letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px}
+.prod-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--cafe);line-height:1.2;margin-bottom:12px}
+.prod-rating{display:flex;align-items:center;gap:8px;margin-bottom:18px}
+.stars{color:#f5c060;font-size:15px;letter-spacing:2px}
+.prod-price-wrap{display:flex;align-items:baseline;gap:12px;margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--borde);flex-wrap:wrap}
+.price-main{font-size:28px;font-weight:800;color:var(--naranja-oscuro)}
+.prod-desc-short{font-size:14px;color:var(--gris);line-height:1.8;margin-bottom:24px}
+
+/* ── SELECTOR DE COLOR ── */
+.color-label{font-size:12px;font-weight:700;color:var(--cafe);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+.color-label span{font-weight:600;color:var(--naranja);text-transform:none;letter-spacing:0;font-size:13px}
+.color-options{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.color-btn{display:flex;flex-direction:column;align-items:center;gap:7px;padding:10px 14px;border:2px solid var(--borde);border-radius:6px;background:#fff;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--cafe);cursor:pointer;transition:all .2s;min-width:64px}
+.color-btn:hover{border-color:var(--naranja);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.color-btn.active{border-color:var(--naranja);background:#fef8f2;box-shadow:0 4px 14px rgba(235,144,77,.2)}
+.color-swatch{width:32px;height:32px;border-radius:50%;border:3px solid rgba(0,0,0,.1);flex-shrink:0;transition:transform .2s}
+.color-btn.active .color-swatch{transform:scale(1.15);border-color:rgba(0,0,0,.18)}
+.color-btn.blanco .color-swatch{border-color:var(--borde)}
+
+/* ── CANTIDAD ── */
+.qty-label{font-size:12px;font-weight:700;color:var(--cafe);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.qty-wrap{display:flex;align-items:center;margin-bottom:20px;width:fit-content;border:2px solid var(--borde);border-radius:3px;overflow:hidden}
+.qty-btn{width:42px;height:42px;background:var(--gris-claro);border:none;font-size:18px;font-weight:700;color:var(--cafe);cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center}
+.qty-btn:hover{background:#ebebeb}
+.qty-input{width:52px;height:42px;border:none;border-left:2px solid var(--borde);border-right:2px solid var(--borde);text-align:center;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:var(--cafe);outline:none}
+
+/* ── CTA ── */
+.cta-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.btn-carrito{width:100%;padding:15px;background:var(--naranja);color:#fff;border:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:background .2s,transform .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-carrito:hover{background:var(--naranja-oscuro);transform:translateY(-1px)}
+.btn-comprar{width:100%;padding:15px;background:var(--cafe);color:#fff;border:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:background .2s}
+.btn-comprar:hover{background:var(--cafe-claro)}
+
+/* ── TRUST STRIP ── */
+.trust-strip{display:flex;border:1px solid var(--borde);border-radius:4px;overflow:hidden;margin-bottom:24px}
+.trust-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:14px 8px;text-align:center;border-right:1px solid var(--borde);gap:6px}
+.trust-item:last-child{border-right:none}
+.trust-icon{font-size:22px}
+.trust-text{font-size:10px;font-weight:700;color:var(--cafe);letter-spacing:.04em;text-transform:uppercase;line-height:1.3}
+
+/* ── ACORDEÓN ── */
+.accordion{border-top:1px solid var(--borde)}
+.accordion-item{border-bottom:1px solid var(--borde)}
+.accordion-header{width:100%;background:none;border:none;padding:16px 0;display:flex;align-items:center;justify-content:space-between;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--cafe);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.accordion-icon{font-size:20px;color:var(--naranja);transition:transform .25s;font-weight:400;line-height:1}
+.accordion-item.open .accordion-icon{transform:rotate(45deg)}
+.accordion-body{display:none;font-size:13px;color:var(--gris);line-height:1.8;padding-bottom:16px}
+.accordion-body ul{padding-left:20px;margin-top:4px}
+.accordion-body ul li{margin-bottom:4px}
+.accordion-item.open .accordion-body{display:block}
+
+/* ── DETALLE FULL ── */
+.prod-detail-section{background:var(--gris-claro);padding:56px 0}
+.prod-detail-inner{max-width:1300px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.detail-text h2{font-family:'Playfair Display',serif;font-size:26px;color:var(--cafe);margin-bottom:16px}
+.detail-text p{font-size:14px;color:var(--gris);line-height:1.8;margin-bottom:14px}
+.detail-props{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.detail-prop{background:#fff;border:1px solid var(--borde);border-radius:4px;padding:14px 16px}
+.detail-prop .dp-label{font-size:10px;font-weight:800;color:var(--naranja);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+.detail-prop .dp-val{font-size:14px;font-weight:600;color:var(--cafe)}
+.detail-img img{width:100%;height:420px;object-fit:cover;border-radius:6px}
+
+/* ── RELACIONADOS ── */
+.related-section{padding:56px 0 72px}
+.container{max-width:1300px;margin:0 auto;padding:0 24px}
+.section-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--cafe);margin-bottom:28px;text-align:center}
+.prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.prod-card{background:#fff;border:1px solid var(--borde);border-radius:4px;overflow:hidden;transition:box-shadow .2s,transform .2s;cursor:pointer}
+.prod-card:hover{box-shadow:0 8px 28px rgba(0,0,0,.12);transform:translateY(-3px)}
+.prod-img-wrap{position:relative;overflow:hidden;background:var(--gris-claro)}
+.prod-img-wrap img{width:100%;height:220px;object-fit:contain;padding:12px;transition:transform .3s}
+.prod-card:hover .prod-img-wrap img{transform:scale(1.04)}
+.prod-badge{position:absolute;top:10px;left:10px;background:var(--naranja);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:2px;letter-spacing:.05em;text-transform:uppercase}
+.prod-badge.agotado{background:#aaa}
+.prod-info{padding:14px 16px 18px}
+.prod-name{font-size:13px;font-weight:600;color:var(--cafe);margin-bottom:6px;line-height:1.4}
+.prod-price{font-size:15px;font-weight:700;color:var(--naranja-oscuro)}
+.btn-add{margin-top:10px;width:100%;background:var(--naranja);color:#fff;border:none;padding:9px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .2s;border-radius:2px}
+.btn-add:hover{background:var(--naranja-oscuro)}
+.ver-todos{font-size:13px;font-weight:700;color:var(--cafe);letter-spacing:.06em;text-transform:uppercase;border-bottom:2px solid var(--cafe);display:inline-block;padding-bottom:2px;transition:color .2s,border-color .2s}
+.ver-todos:hover{color:var(--naranja);border-color:var(--naranja)}
+.ver-todos-wrap{text-align:center;margin-top:28px}
+
+/* ── FOOTER ── */
+footer{background:var(--cafe);color:rgba(255,255,255,.7);padding:48px 0 24px}
+.footer-inner{max-width:1300px;margin:0 auto;padding:0 24px}
+.footer-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.footer-logo{color:#fff;font-size:20px;font-family:'Playfair Display',serif;margin-bottom:14px}
+.footer-logo span{color:var(--naranja)}
+.footer-desc{font-size:13px;line-height:1.8;max-width:260px}
+.footer-social{display:flex;gap:12px;margin-top:18px}
+.footer-social a{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.7);font-size:13px;transition:all .2s}
+.footer-social a:hover{background:var(--naranja);border-color:var(--naranja);color:#fff}
+.footer-col h4{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:8px}
+.footer-col ul li a{font-size:13px;color:rgba(255,255,255,.6);transition:color .2s}
+.footer-col ul li a:hover{color:var(--naranja)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:20px;font-size:12px;text-align:center;color:rgba(255,255,255,.4)}
+
+/* ── SEARCH OVERLAY ── */
+.search-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:flex-start;justify-content:center;padding-top:80px}
+.search-overlay.open{display:flex}
+.search-box{background:#fff;border-radius:4px;padding:24px;width:100%;max-width:600px;position:relative}
+.search-box input{width:100%;border:2px solid var(--naranja);border-radius:2px;padding:12px 16px;font-family:'Montserrat',sans-serif;font-size:15px;outline:none}
+.search-close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--gris)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .product-wrap{grid-template-columns:1fr;gap:32px}
+  .gallery{position:static}
+  .prod-detail-inner{grid-template-columns:1fr}
+  .detail-img{order:-1}
+  .detail-img img{height:300px}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  /* Menú hamburguesa — nav se gestiona desde script.js */
+  nav{overflow-x:visible}
+}
+@media(max-width:768px){
+  /* Header compacto */
+  .header-top{padding:0 16px;height:60px}
+  .logo-img{width:52px;height:52px}
+  .logo-name{font-size:16px}
+  .header-icons{gap:12px}
+  .header-icons a span{display:none}
+  .header-icons a{font-size:0;gap:0}
+  .header-icons a .icon-svg{width:22px;height:22px}
+  /* Galería de miniaturas: scroll horizontal */
+  .gallery-thumbs{display:flex;overflow-x:auto;gap:10px;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+  .gallery-thumb{flex:0 0 72px;height:72px}
+  /* Producto */
+  .prod-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .color-options{gap:8px;flex-wrap:wrap}
+  .color-btn{min-width:52px;padding:10px 12px;font-size:12px}
+  /* Cantidad: botones más grandes para el dedo */
+  .qty-btn{width:42px;height:42px;font-size:18px}
+  .qty-input{width:48px;height:42px;font-size:16px}
+  /* Botón comprar */
+  .btn-buy{padding:16px;font-size:14px}
+  /* Trust strip */
+  .trust-strip{flex-wrap:wrap}
+  .trust-item{flex:0 0 50%}
+  /* Página */
+  .page-wrap,.product-section{padding-left:16px;padding-right:16px}
+}
+@media(max-width:600px){
+  .prod-title{font-size:24px}
+  .price-main{font-size:22px}
+  .trust-strip{flex-wrap:wrap}
+  .trust-item{flex:0 0 50%;border-bottom:1px solid var(--borde)}
+  .trust-item:nth-child(2){border-right:none}
+  .prod-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .prod-card .prod-img-wrap{height:130px}
+  .prod-name{font-size:12px}
+  .footer-grid{grid-template-columns:1fr}
+  /* Imagen principal más alta */
+  .detail-img img{height:260px}
+  /* Descripción de pestañas */
+  .tabs-nav{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab-btn{white-space:nowrap;font-size:12px;padding:10px 14px}
+}
+@media(max-width:400px){
+  .prod-title{font-size:20px}
+  .price-main{font-size:19px}
+  .color-btn{min-width:44px;padding:8px}
+  .prod-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .footer-grid{grid-template-columns:1fr}
+  .trust-item{flex:0 0 100%;border-right:none}
+}
+
+/* ══════════════════════════════════════════
+   MENÚ HAMBURGUESA — Móvil
+══════════════════════════════════════════ */
+.nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:40px;height:40px;cursor:pointer;background:none;border:none;padding:4px;flex-shrink:0}
+.nav-toggle span{display:block;height:2px;background:#fff;border-radius:2px;transition:transform .3s,opacity .3s,width .3s;transform-origin:center}
+.nav-toggle span:nth-child(1){width:24px}
+.nav-toggle span:nth-child(2){width:18px}
+.nav-toggle span:nth-child(3){width:24px}
+.nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);width:24px}
+.nav-toggle.open span:nth-child(2){opacity:0;width:0}
+.nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);width:24px}
+
+@media(max-width:768px){
+  .header-top{padding:0 16px;height:60px}
+  .logo-img{width:52px;height:52px}
+  .logo-name{font-size:16px}
+  .logo-name span{font-size:9px}
+  .header-icons a span{display:none}
+  .header-icons{gap:12px}
+  .header-icons a{gap:0;font-size:0}
+  .header-icons a .icon-svg{width:22px;height:22px}
+  .cart-count-badge{font-size:10px;margin-left:2px}
+
+  nav{position:sticky;top:60px}
+  .nav-toggle{display:flex}
+  .nav-inner{flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0;max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
+  .nav-inner.open{max-height:600px}
+
+  nav > .nav-toggle-bar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:48px}
+  .nav-toggle-label{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+
+  .nav-item{flex:none;width:100%;justify-content:flex-start;border-bottom:1px solid rgba(255,255,255,.07)}
+  .nav-item>a,.nav-item>span{justify-content:flex-start;padding:14px 20px;font-size:11px;width:100%}
+  .nav-item+.nav-item>a::before,.nav-item+.nav-item>span::before{display:none}
+
+  .dropdown{display:none;position:static;transform:none;min-width:100%;box-shadow:none;border-radius:0;animation:none;background:rgba(0,0,0,.2);flex-direction:column;padding:8px 0 12px}
+  .nav-item:hover .dropdown,.nav-item.open .dropdown{display:flex}
+  .dropdown::before{display:none}
+  .dropdown-group{padding:12px 20px 8px 32px;border-right:none;border-bottom:1px solid rgba(255,255,255,.06)}
+  .dropdown-group:last-child{border-bottom:none}
+  .dropdown-title{color:rgba(235,144,77,.8)}
+  .dropdown a{color:rgba(255,255,255,.75);padding:6px 0;font-size:12px}
+  .dropdown a:hover{color:var(--naranja);padding-left:4px}
+
+  .product-wrap{grid-template-columns:1fr;gap:32px}
+  .gallery{position:static}
+  .prod-detail-inner{grid-template-columns:1fr}
+  .detail-img{order:-1}
+  .detail-img img{height:300px}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .header-top{height:56px}
+  .logo-img{width:44px;height:44px}
+  .logo-name{font-size:14px}
+  nav{top:56px}
+  .prod-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:24px}
+}
+@media(max-width:380px){
+  .footer-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT -->
+<div class="announce"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <a href="index.html" class="logo-wrap">
+      <img class="logo-img" src="logo.png" alt="Cana'an Xu'x">
+      <div class="logo-name">
+        Cana´an Xu´x
+        <span>Apicultoras Tenosiquenses</span>
+      </div>
+    </a>
+    <div class="header-icons">
+      <a href="#" onclick="toggleSearch(); return false">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        Buscar
+      </a>
+      <a href="#">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Ingresar
+      </a>
+      <a href="#" id="cart-btn">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Carrito <span class="cart-count-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-item"><a href="../../index.html">Inicio</a></div>
+    <div class="nav-item"><a href="../../nosotros.html">Nosotros</a></div>
+    <div class="nav-item">
+      <span>Productos <span class="chevron">▾</span></span>
+      <div class="dropdown">
+        <div class="dropdown-group">
+          <div class="dropdown-title">Productos de la Colmena</div>
+          <a href="miel.html">Miel</a>
+          <a href="#">Miel en panal</a>
+          <a href="#">Jabones</a>
+        </div>
+        <div class="dropdown-group">
+          <div class="dropdown-title">Otros Productos</div>
+          <a href="#">Gotas</a>
+          <a href="#">Dulces</a>
+          <a href="../../velas.html">Velas</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item"><a href="../../abejas.html">Abejas</a></div>
+    <div class="nav-item"><a href="../../centro_rescate.html">Centro de Rescate</a></div>
+    <div class="nav-item"><a href="#">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="../../contacto.html">Contacto</a></div>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="#">Inicio</a><span class="sep"> › </span>
+  <a href="#">Productos</a><span class="sep"> › </span>
+  <a href="velas.html">Velas</a><span class="sep"> › </span>
+  <span class="current">Vela de Colores</span>
+</div>
+
+<!-- PRODUCTO -->
+<div class="product-wrap">
+
+  <!-- GALERÍA -->
+  <div class="gallery">
+    <div class="gallery-main" id="galleryMain" style="background:#f5e8e0">
+      <div class="gallery-badge-wrap">
+        <span class="g-badge">Artesanal</span>
+        <span class="g-badge natural">Cera natural</span>
+      </div>
+      <img id="mainImg" src="imagenesV/vela_cafe-1.jpeg" alt="Vela de colores"/>
+    </div>
+    <div class="gallery-thumbs" id="thumbsContainer"></div>
+  </div>
+
+  <!-- INFO -->
+  <div class="product-info">
+    <p class="prod-brand">Cana´an Xu´x</p>
+    <h1 class="prod-title">Veladora artesanal de colores </h1>
+
+    <div class="prod-rating">
+      <span class="stars">★★★★★</span>
+    </div>
+
+    <div class="prod-price-wrap">
+      <span class="price-main" id="priceMain">$65.00</span>
+    </div>
+
+    <p class="prod-desc-short">
+      Velas artesanales elaboradas con cera de abeja 100% natural, disponibles en cinco colores cuidadosamente seleccionados.
+      Cada pieza es teñida con pigmentos seguros y moldeada a mano, con el cálido aroma característico de la cera de abeja.
+      Perfectas para decorar, regalar o crear el ambiente ideal.
+    </p>
+
+    <!-- SELECTOR DE COLOR -->
+    <p class="color-label">Color: <span id="selectedColor">Café</span></p>
+    <div class="color-options" id="colorOptions">
+      <button class="color-btn active" onclick="selectColor(this,'cafe')">
+        <span class="color-swatch" style="background:#7b4f2e"></span>
+        Café
+      </button>
+      <button class="color-btn" onclick="selectColor(this,'amarillo')">
+        <span class="color-swatch" style="background:#f5d438"></span>
+        Amarillo
+      </button>
+      <button class="color-btn" onclick="selectColor(this,'rosado')">
+        <span class="color-swatch" style="background:#a13052"></span>
+        Rosado
+      </button>
+      <button class="color-btn" onclick="selectColor(this,'azul')">
+        <span class="color-swatch" style="background:#a0c8e8"></span>
+        Azul claro
+      </button>
+      <button class="color-btn blanco" onclick="selectColor(this,'blanco')">
+        <span class="color-swatch" style="background:#ffffff"></span>
+        Blanco
+      </button>
+    </div>
+
+    <!-- CANTIDAD -->
+    <p class="qty-label">Cantidad</p>
+    <div class="qty-wrap">
+      <button class="qty-btn" onclick="changeQty(-1)">−</button>
+      <input class="qty-input" id="qtyInput" type="number" value="1" min="1" max="99" readonly/>
+      <button class="qty-btn" onclick="changeQty(1)">+</button>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-wrap">
+      <button class="btn-carrito" id="btnCarrito" onclick="addToCartProduct()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        Agregar al carrito
+      </button>
+      <button class="btn-comprar">Comprar ahora</button>
+    </div>
+
+    <!-- ACORDEÓN -->
+    <div class="accordion">
+      <div class="accordion-item open">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Descripción <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <p>Nuestras veladoras de colores están elaboradas artesanalmente con cera de abeja pura proveniente de nuestras colmenas del sureste mexicano. Teñidas con pigmentos seguros y moldeadas a mano, cada pieza es única.</p>
+          <p>El color se distribuye de manera uniforme a lo largo de toda la vela. El aroma suave y cálido de la cera de abeja permanece intacto sin necesidad de fragancias artificiales.</p>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Modo de uso y conservación <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <p>Coloca la vela sobre una superficie estable y resistente al calor. Mantén la mecha recortada a 1 cm para una llama limpia y pareja. Aleja de corrientes de aire, materiales inflamables, niños y mascotas. No dejes encendida sin supervisión.</p>
+          <p>Conserva en lugar fresco y seco, alejada de la luz solar directa para preservar el color. Al ser artesanal, ligeras variaciones de tono entre piezas son normales y forman parte de su encanto.</p>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Características <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <ul>
+            <li>Material: cera de abeja 100% natural</li>
+            <li>Colores: café, amarillo, rosado, azul claro y blanco</li>
+            <li>Pigmentos seguros, sin colorantes tóxicos</li>
+            <li>Aroma natural de cera de abeja</li>
+            <li>Elaboración: artesanal, moldeada a mano</li>
+            <li>Ideal para decoración o regalo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DESCRIPCIÓN DETALLADA -->
+<div class="prod-detail-section">
+  <div class="prod-detail-inner">
+    <div class="detail-text">
+      <h2>Color y naturaleza en perfecta armonía</h2>
+      <p>Cada vela de nuestra colección de colores está pensada para complementar cualquier espacio con calidez y personalidad. Desde el cálido tono café hasta el suave blanco, cada color tiene su propio carácter.</p>
+      <p>Fabricadas con cera de abeja 100% pura, ofrecen una combustión más limpia y duradera que las velas convencionales de parafina, y un aroma suave y natural que transforma cualquier ambiente.</p>
+      <div class="detail-props">
+        <div class="detail-prop"><div class="dp-label">Material</div><div class="dp-val">Cera de abeja pura</div></div>
+        <div class="detail-prop"><div class="dp-label">Colores</div><div class="dp-val" id="detailColor">Café</div></div>
+        <div class="detail-prop"><div class="dp-label">Origen</div><div class="dp-val">Sureste de México</div></div>
+        <div class="detail-prop"><div class="dp-label">Elaboración</div><div class="dp-val">Artesanal</div></div>
+      </div>
+    </div>
+    <div class="detail-img">
+      <img src="imagenesV/vela_colores-detalle.jpeg" alt="Velas de colores artesanales"
+           onerror="this.src='https://placehold.co/600x420/f5e8d0/c96a2a?text=Velas+Artesanales'"/>
+    </div>
+  </div>
+</div>
+
+<!-- RELACIONADOS -->
+<div class="related-section">
+  <div class="container">
+    <h2 class="section-title">También te puede gustar</h2>
+    <div class="prod-grid">
+      <div class="prod-card" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+          <span class="prod-badge">Popular</span>
+          <img src="imagenesV/vela_hexagonoVioleta.png" alt="Veladora Hexagonal"
+               onerror="this.src='https://placehold.co/300x300/f5e8f5/ad6799?text=Vela+Hexagonal'"/>
+        </div>
+        <div class="prod-info">
+          <p class="prod-name">Veladora hexagonal violeta</p>
+          <p class="prod-price">$60.00</p>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+      <div class="prod-card" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+          <span class="prod-badge">Nuevo</span>
+          <img src="imagenesV/vela_oso-1.jpeg" alt="Vela Oso"
+               onerror="this.src='https://placehold.co/300x300/fff3e0/c96a2a?text=Vela+Oso'"/>
+        </div>
+        <div class="prod-info">
+          <p class="prod-name">Veladora figura de oso</p>
+          <p class="prod-price">$75.00</p>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+      <div class="prod-card" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+          <img src="" alt="Miel Multiflora"/>
+        </div>
+        <div class="prod-info">
+          <p class="prod-name">Miel Multiflora 500 g</p>
+          <p class="prod-price">$145.00</p>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+      <div class="prod-card" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+          <span class="prod-badge">Nuevo</span>
+          <img src="" alt="Kit Velas"/>
+        </div>
+        <div class="prod-info">
+          <p class="prod-name">Kit de velas artesanales x3</p>
+          <p class="prod-price">$190.00</p>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+    </div>
+    <div class="ver-todos-wrap">
+      <a href="velas.html" class="ver-todos">Ver todas las velas →</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Cana´an <span>Xu´x</span></div>
+        <p class="footer-desc">Somos apicultores mexicanos. Ofrecemos miel de abeja pura y todos los productos derivados de la colmena.</p>
+        <div class="footer-social">
+          <a href="" target="_blank" title="Instagram">📷</a>
+          <a href="" target="_blank" title="Facebook">f</a>
+          <a href="" target="_blank" title="Pinterest">P</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Tienda</h4>
+        <ul>
+          <li><a href="#">Todo para el Apicultor</a></li>
+          <li><a href="#">Productos de la Colmena</a></li>
+          <li><a href="#">Miel y Salud</a></li>
+          <li><a href="#">Belleza</a></li>
+          <li><a href="#">Bebidas a Base de Miel</a></li>
+          <li><a href="#">KITs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Experiencias</h4>
+        <ul>
+          <li><a href="#">Apicultor por un día</a></li>
+          <li><a href="#">Cata de Hidromiel</a></li>
+          <li><a href="#">La ruta de las abejas</a></li>
+          <li><a href="#">Curso básico</a></li>
+          <li><a href="#">Salva enjambres</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="#">Nosotros</a></li>
+          <li><a href="#">Servicios</a></li>
+          <li><a href="#">Catálogos</a></li>
+          <li><a href="#">Contacto</a></li>
+          <li><a href="#">Puntos de Venta</a></li>
+          <li><a href="#">Beneficios de la miel</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 · Todos los derechos reservados · Hecho en México</div>
+  </div>
+</footer>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay">
+  <div class="search-box">
+    <button class="search-close">✕</button>
+    <input type="text" placeholder="Buscar productos…"/>
+  </div>
+</div>
+
+<script>
+// ── DATOS POR COLOR ──
+// Ajusta los nombres de archivo por los tuyos reales.
+// bgColor: color de fondo de la galería que combina con cada vela.
+const colorData = {
+  cafe: {
+    nombre: 'Café',
+    bgColor: '#f5e8e0',
+    fotos: [
+      'imagenesV/vela_coloresCafe.png',
+      'imagenesV/vela_coloresCafe1.png',
+      'imagenesV/vela_coloresCafe2.png',
+    ]
+  },
+  amarillo: {
+    nombre: 'Amarillo',
+    bgColor: '#fdf9e3',
+    fotos: [
+      'imagenesV/vela_coloresAmarillo.png',
+      'imagenesV/vela_coloresAmarillo1.png',
+      'imagenesV/vela_coloresAmarillo2.png',
+    ]
+  },
+  rosado: {
+    nombre: 'Rosado',
+    bgColor: '#fdf0f4',
+    fotos: [
+      'imagenesV/vela_coloresRosado.png',
+      'imagenesV/vela_coloresRosado1.png',
+      'imagenesV/vela_coloresRosado2.png',
+    ]
+  },
+  azul: {
+    nombre: 'Azul claro',
+    bgColor: '#eef5fc',
+    fotos: [
+      'imagenesV/vela_coloresAzulclaro.png',
+      'imagenesV/vela_coloresAzulclaro1.png',
+      'imagenesV/vela_coloresAzulclaro2.png',
+
+    ]
+  },
+  blanco: {
+    nombre: 'Blanco',
+    bgColor: '#f7f7f7',
+    fotos: [
+      'imagenesV/vela_blanco-1.jpeg',
+      'imagenesV/vela_blanco-2.jpeg',
+      'imagenesV/vela_blanco-3.jpeg',
+    ]
+  }
+};
+
+let activeColor = 'cafe';
+let activeThumbIndex = 0;
+
+function renderThumbs(colorKey) {
+  const container = document.getElementById('thumbsContainer');
+  const fotos = colorData[colorKey].fotos;
+  container.innerHTML = '';
+  fotos.forEach((src, i) => {
+    const div = document.createElement('div');
+    div.className = 'thumb' + (i === 0 ? ' active' : '');
+    div.onclick = () => switchImg(div, src, i);
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = 'Vista ' + (i + 1);
+    div.appendChild(img);
+    container.appendChild(div);
+  });
+}
+
+function switchImg(thumb, src, idx) {
+  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
+  document.getElementById('mainImg').src = src;
+  activeThumbIndex = idx;
+}
+
+function selectColor(btn, colorKey) {
+  activeColor = colorKey;
+  activeThumbIndex = 0;
+
+  // Botones activos
+  document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Nombre del color
+  document.getElementById('selectedColor').textContent = colorData[colorKey].nombre;
+  document.getElementById('detailColor').textContent = colorData[colorKey].nombre;
+
+  // Fondo de galería
+  document.getElementById('galleryMain').style.background = colorData[colorKey].bgColor;
+
+  // Imagen principal y thumbs
+  const fotos = colorData[colorKey].fotos;
+  document.getElementById('mainImg').src = fotos[0];
+  renderThumbs(colorKey);
+}
+
+// ── CANTIDAD ──
+function changeQty(delta) {
+  const input = document.getElementById('qtyInput');
+  input.value = Math.max(1, Math.min(99, parseInt(input.value) + delta));
+}
+
+// ── CARRITO PRINCIPAL ──
+let count = 0;
+function addToCartProduct() {
+  const qty = parseInt(document.getElementById('qtyInput').value);
+  count += qty;
+  document.getElementById('cart-count').textContent = count;
+  const btn = document.getElementById('btnCarrito');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '✓ &nbsp;Agregado al carrito';
+  btn.style.background = '#4caf50';
+  setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 1800);
+}
+
+// ── CARRITO RELACIONADOS ──
+function addToCart(card) {
+  const btn = card.querySelector('.btn-add');
+  if (btn.disabled) return;
+  count++;
+  document.getElementById('cart-count').textContent = count;
+  const orig = btn.textContent;
+  btn.textContent = '✓ Agregado';
+  btn.style.background = '#4caf50';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1600);
+}
+
+// ── BUSCADOR ──
+function toggleSearch() {
+  document.querySelector('.search-overlay').classList.toggle('open');
+}
+document.querySelector('.search-overlay').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
+document.querySelector('.search-close').addEventListener('click', function() {
+  document.querySelector('.search-overlay').classList.remove('open');
+});
+
+// ── ACORDEÓN ──
+function toggleAccordion(btn) {
+  btn.closest('.accordion-item').classList.toggle('open');
+}
+
+// ── STICKY TOP DINÁMICO ──
+function setStickyTop() {
+  const h = document.querySelector('header');
+  const n = document.querySelector('nav');
+  const total = (h ? h.offsetHeight : 0) + (n ? n.offsetHeight : 0) + 16;
+  document.documentElement.style.setProperty('--sticky-top', total + 'px');
+}
+setStickyTop();
+window.addEventListener('resize', setStickyTop);
+
+// ── INIT ──
+renderThumbs('cafe');
+document.getElementById('mainImg').src = colorData['cafe'].fotos[0];
+
+// ─── MENÚ HAMBURGUESA ───
+(function () {
+  const nav = document.querySelector("nav");
+  if (!nav) return;
+
+  const toggleBar = document.createElement("div");
+  toggleBar.className = "nav-toggle-bar";
+
+  const label = document.createElement("span");
+  label.className = "nav-toggle-label";
+  label.textContent = "Menú";
+
+  const btn = document.createElement("button");
+  btn.className = "nav-toggle";
+  btn.setAttribute("aria-label", "Abrir menú");
+  btn.innerHTML = "<span></span><span></span><span></span>";
+
+  toggleBar.appendChild(label);
+  toggleBar.appendChild(btn);
+  nav.insertBefore(toggleBar, nav.firstChild);
+
+  const navInner = nav.querySelector(".nav-inner");
+
+  btn.addEventListener("click", function () {
+    const isOpen = navInner.classList.toggle("open");
+    btn.classList.toggle("open", isOpen);
+    btn.setAttribute("aria-label", isOpen ? "Cerrar menú" : "Abrir menú");
+    label.style.opacity = isOpen ? "0" : "";
+  });
+
+  nav.querySelectorAll(".nav-item").forEach(function(item) {
+    const trigger = item.querySelector(":scope > span");
+    const dropdown = item.querySelector(".dropdown");
+    if (!trigger || !dropdown) return;
+    trigger.addEventListener("click", function (e) {
+      if (window.innerWidth > 768) return;
+      e.stopPropagation();
+      item.classList.toggle("open");
+      nav.querySelectorAll(".nav-item.open").forEach(function(other) {
+        if (other !== item) other.classList.remove("open");
+      });
+    });
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!nav.contains(e.target)) {
+      navInner.classList.remove("open");
+      btn.classList.remove("open");
+      label.style.opacity = "";
+      nav.querySelectorAll(".nav-item.open").forEach(function(i) { i.classList.remove("open"); });
+    }
+  });
+
+  window.addEventListener("resize", function () {
+    if (window.innerWidth > 768) {
+      navInner.classList.remove("open");
+      btn.classList.remove("open");
+      label.style.opacity = "";
+    }
+  });
+})();
+</script>
+
+<!-- BOTÓN FLOTANTE WHATSAPP -->
+<a href="https://wa.me/521XXXXXXXXXX" 
+   class="whatsapp-float" 
+   target="_blank" 
+   rel="noopener noreferrer" 
+   title="Contáctanos por WhatsApp">
+  <!-- REEMPLAZA src CON LA RUTA A TU LOGO PERSONALIZADO DE WHATSAPP -->
+  <img src="imagen/whatsapp-logo.png" 
+       alt="WhatsApp" 
+       class="whatsapp-logo"
+       onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+  <!-- Ícono SVG de respaldo si no encuentra tu imagen -->
+  <svg class="whatsapp-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 2.822.736 5.469 2.027 7.769L0 32l8.469-2.002A15.929 15.929 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.771-1.853l-.485-.288-5.027 1.188 1.216-4.895-.317-.502A13.248 13.248 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.271-9.959c-.398-.199-2.352-1.161-2.716-1.293-.364-.132-.629-.199-.894.199-.265.398-1.028 1.293-1.26 1.559-.232.265-.464.299-.862.1-.398-.199-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.132-.265.066-.497-.033-.696-.1-.199-.894-2.155-1.226-2.95-.322-.773-.649-.668-.894-.68-.232-.012-.497-.014-.762-.014a1.46 1.46 0 00-1.06.497c-.364.398-1.393 1.361-1.393 3.317s1.426 3.846 1.625 4.111c.199.265 2.806 4.285 6.797 5.988.951.41 1.693.655 2.271.839.954.303 1.823.26 2.509.158.765-.114 2.352-.961 2.684-1.89.332-.928.332-1.724.232-1.89-.099-.165-.364-.265-.762-.464z"/>
+  </svg>
+</a>
+</body>
+</html>
