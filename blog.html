@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blog y Eventos — Cana´an Xu´x</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<style>
+
+/* ════════════════════════════════
+   HERO BLOG
+════════════════════════════════ */
+.blog-hero {
+  position: relative;
+  height: 320px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: #1a2e10;
+  background-image: url('banner_blog.png');
+  background-size: cover;
+  background-position: center;
+}
+.blog-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(15,30,8,.85) 0%, rgba(15,30,8,.5) 55%, rgba(15,30,8,.2) 100%);
+}
+.blog-hero-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 60%);
+}
+.blog-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 52px;
+  width: 100%;
+}
+.blog-breadcrumb {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+  margin-bottom: 14px;
+}
+.blog-breadcrumb a { color: var(--naranja); text-decoration: none; }
+.blog-hero-tag {
+  display: inline-block;
+  background: rgba(235,144,77,.2);
+  color: var(--naranja);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 2px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(235,144,77,.35);
+}
+.blog-hero-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 24px rgba(0,0,0,.4);
+}
+.blog-hero-content p {
+  font-size: 15px;
+  color: rgba(255,255,255,.7);
+  max-width: 520px;
+  line-height: 1.75;
+}
+
+/* ════════════════════════════════
+   BARRA DE CATEGORÍAS
+════════════════════════════════ */
+.blog-cats {
+  background: #fff;
+  border-bottom: 1px solid var(--borde);
+  position: sticky;
+  top: 116px;
+  z-index: 100;
+  padding: 14px 0;
+}
+.blog-cats-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.blog-cat-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--gris-claro);
+  border: 1px solid var(--borde);
+  border-radius: 2px;
+  padding: 6px 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cafe);
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .04em;
+}
+.blog-cat-btn:hover,
+.blog-cat-btn.active {
+  background: var(--naranja);
+  border-color: var(--naranja);
+  color: #fff;
+}
+.blog-cats-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--gris);
+}
+.blog-cats-count strong { color: var(--cafe); }
+
+/* ════════════════════════════════
+   LAYOUT PRINCIPAL
+════════════════════════════════ */
+.blog-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 48px;
+  align-items: start;
+}
+
+/* ════════════════════════════════
+   GRID DE ENTRADAS
+════════════════════════════════ */
+.blog-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+/* Entrada destacada ocupa todo el ancho */
+.blog-card.featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.blog-card.featured .blog-card-img {
+  height: 100%;
+  min-height: 260px;
+}
+
+.blog-card {
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow .22s, transform .22s;
+  display: flex;
+  flex-direction: column;
+}
+.blog-card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,.10);
+  transform: translateY(-3px);
+}
+
+/* Imagen de la entrada */
+.blog-card-img {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #c8dfa0, #a8c878);
+  flex-shrink: 0;
+}
+.blog-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .35s ease;
+}
+.blog-card:hover .blog-card-img img {
+  transform: scale(1.04);
+}
+
+/* Placeholder cuando no hay imagen */
+.blog-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #f5e8d8, #e8d0b0);
+}
+.blog-img-placeholder svg {
+  width: 48px;
+  height: 48px;
+  opacity: .35;
+  stroke: var(--cafe);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.blog-img-placeholder span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cafe);
+  opacity: .4;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* Etiqueta de categoría sobre la imagen */
+.blog-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: var(--naranja);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+.blog-badge.evento  { background: #3a7a1a; }
+.blog-badge.comunidad { background: #1a5a7a; }
+.blog-badge.apicultura { background: #7a4a1a; }
+
+/* Cuerpo de la tarjeta */
+.blog-card-body {
+  padding: 20px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.blog-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.blog-card-date {
+  font-size: 11px;
+  color: var(--gris);
+  font-weight: 500;
+  letter-spacing: .04em;
+}
+.blog-card-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--borde);
+}
+.blog-card-author {
+  font-size: 11px;
+  color: var(--naranja);
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.blog-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--cafe);
+  line-height: 1.3;
+  margin-bottom: 10px;
+  transition: color .2s;
+}
+.blog-card:hover .blog-card-title { color: var(--naranja); }
+.blog-card.featured .blog-card-title { font-size: 24px; }
+
+.blog-card-excerpt {
+  font-size: 13px;
+  color: var(--gris);
+  line-height: 1.75;
+  flex: 1;
+  margin-bottom: 16px;
+}
+.blog-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--borde);
+  padding-top: 14px;
+  margin-top: auto;
+}
+.blog-read-more {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--naranja);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: gap .2s;
+}
+.blog-read-more:hover { gap: 9px; }
+.blog-card-photos-count {
+  font-size: 11px;
+  color: var(--gris);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.blog-card-photos-count svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--gris);
+  fill: none;
+  stroke-width: 1.8;
+}
+
+/* Separador de carga más */
+.blog-load-more {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 12px 0 4px;
+}
+.btn-load-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid var(--cafe);
+  background: transparent;
+  color: var(--cafe);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  padding: 12px 28px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.btn-load-more:hover {
+  background: var(--cafe);
+  color: #fff;
+}
+
+/* ════════════════════════════════
+   SIDEBAR
+════════════════════════════════ */
+.blog-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: sticky;
+  top: 170px;
+}
+.sidebar-block {
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.sidebar-block-title {
+  background: var(--cafe);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: 12px 18px;
+}
+.sidebar-block-body {
+  padding: 16px 18px;
+}
+
+/* Categorías en sidebar */
+.sidebar-cats {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sidebar-cats li a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--cafe);
+  font-weight: 500;
+  transition: background .15s, color .15s;
+  text-decoration: none;
+}
+.sidebar-cats li a:hover {
+  background: var(--gris-claro);
+  color: var(--naranja);
+}
+.sidebar-cats li a span {
+  font-size: 11px;
+  background: var(--gris-claro);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  padding: 1px 8px;
+  color: var(--gris);
+}
+
+/* Entradas recientes */
+.sidebar-recent {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.sidebar-recent li {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.sidebar-recent-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--gris-claro);
+}
+.sidebar-recent-info a {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cafe);
+  line-height: 1.4;
+  display: block;
+  text-decoration: none;
+  transition: color .15s;
+}
+.sidebar-recent-info a:hover { color: var(--naranja); }
+.sidebar-recent-date {
+  font-size: 11px;
+  color: var(--gris);
+  margin-top: 3px;
+}
+
+/* Galería rápida de fotos */
+.sidebar-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.sidebar-gallery-item {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--gris-claro);
+  position: relative;
+}
+.sidebar-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .3s;
+}
+.sidebar-gallery-item:hover img { transform: scale(1.08); }
+.sidebar-gallery-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5e8d8, #e0cca0);
+  font-size: 18px;
+  opacity: .5;
+}
+
+/* ════════════════════════════════
+   MODAL ENTRADA COMPLETA
+════════════════════════════════ */
+.blog-modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 1000;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+}
+.blog-modal-bg.open { display: flex; }
+.blog-modal {
+  background: #fff;
+  border-radius: 10px;
+  max-width: 760px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  animation: modalIn .25s ease;
+  margin: auto;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.blog-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.45);
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s;
+}
+.blog-modal-close:hover { background: var(--naranja); }
+.blog-modal-hero {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  background: var(--gris-claro);
+}
+.blog-modal-body {
+  padding: 28px 32px 36px;
+}
+.blog-modal-badge {
+  display: inline-block;
+  background: var(--naranja);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 2px;
+  margin-bottom: 12px;
+}
+.blog-modal-badge.evento    { background: #3a7a1a; }
+.blog-modal-badge.comunidad { background: #1a5a7a; }
+.blog-modal-badge.apicultura{ background: #7a4a1a; }
+.blog-modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: var(--cafe);
+  line-height: 1.25;
+  margin-bottom: 10px;
+}
+.blog-modal-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: var(--gris);
+}
+.blog-modal-meta strong { color: var(--naranja); }
+.blog-modal-content {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.85;
+}
+.blog-modal-content p { margin-bottom: 14px; }
+.blog-modal-content h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--cafe);
+  margin: 20px 0 8px;
+}
+
+/* Galería de fotos dentro del modal */
+.blog-modal-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 20px;
+}
+.blog-modal-gallery img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform .25s, filter .25s;
+}
+.blog-modal-gallery img:hover {
+  transform: scale(1.03);
+  filter: brightness(1.05);
+}
+.blog-modal-gallery .gallery-placeholder {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #f0e8d8, #ddd0b0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  opacity: .4;
+}
+
+/* ════════════════════════════════
+   RESPONSIVE
+════════════════════════════════ */
+@media (max-width: 900px) {
+  .blog-page {
+    grid-template-columns: 1fr;
+    padding: 32px 16px 60px;
+  }
+  .blog-sidebar { position: static; }
+  .blog-hero-content h1 { font-size: 34px; }
+  .blog-card.featured {
+    grid-template-columns: 1fr;
+  }
+  .blog-card.featured .blog-card-img { min-height: 200px; }
+}
+@media (max-width: 600px) {
+  .blog-grid { grid-template-columns: 1fr; }
+  .blog-hero { height: 260px; }
+  .blog-hero-content h1 { font-size: 26px; }
+  .blog-hero-content { padding: 0 16px 36px; }
+  .blog-modal-body { padding: 20px 18px 28px; }
+  .blog-modal-title { font-size: 22px; }
+  .blog-modal-gallery { grid-template-columns: repeat(2, 1fr); }
+  .blog-cats { top: 68px; }
+}
+</style>
+</head>
+<body>
+
+<div class="announce"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <a href="index.html" class="logo-wrap">
+      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
+      <div class="logo-name">
+        Cana´an Xu´x
+        <span>Apicultoras Tenosiquenses</span>
+      </div>
+    </a>
+    <div class="header-icons">
+      <a href="#" onclick="toggleSearch(); return false">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        Buscar
+      </a>
+      <a href="#">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Ingresar
+      </a>
+      <a href="#" id="cart-btn">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Carrito <span class="cart-count-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-item"><a href="index.html">Inicio</a></div>
+    <div class="nav-item"><a href="nosotros.html">Nosotros</a></div>
+    <div class="nav-item">
+      <span>Productos <span class="chevron">▾</span></span>
+      <div class="dropdown">
+        <div class="dropdown-group">
+          <div class="dropdown-title">Productos de la Colmena</div>
+          <a href="miel.html">Miel</a>
+          <a href="#">Miel en panal</a>
+          <a href="#">Jabones</a>
+        </div>
+        <div class="dropdown-group">
+          <div class="dropdown-title">Otros Productos</div>
+          <a href="#">Gotas</a>
+          <a href="#">Dulces</a>
+          <a href="velas.html">Velas</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item"><a href="abejas.html">Abejas</a></div>
+    <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
+    <div class="nav-item"><a href="blog.html" class="active">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="contacto.html">Contacto</a></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="blog-hero">
+  <div class="blog-hero-overlay"></div>
+  <div class="blog-hero-content">
+    <div class="blog-breadcrumb">
+      <a href="index.html">Inicio</a> / Blog y Eventos
+    </div>
+    <span class="blog-hero-tag">Noticias · Eventos · Galería · Comunidad</span>
+    <h1>Blog y Eventos</h1>
+    <p>Documentamos nuestra historia, nuestros eventos y la vida de las abejas en el Cañón del Usumacinta.</p>
+  </div>
+</div>
+
+<!-- BARRA DE CATEGORÍAS -->
+<div class="blog-cats">
+  <div class="blog-cats-inner">
+    <button class="blog-cat-btn active" onclick="filtrarBlog('todo', this)">Todos</button>
+    <button class="blog-cat-btn" onclick="filtrarBlog('evento', this)">Eventos</button>
+    <button class="blog-cat-btn" onclick="filtrarBlog('apicultura', this)">Apicultura</button>
+    <button class="blog-cat-btn" onclick="filtrarBlog('comunidad', this)">Comunidad</button>
+    <button class="blog-cat-btn" onclick="filtrarBlog('galeria', this)">Galería de fotos</button>
+    <span class="blog-cats-count"><strong id="blog-count">4</strong> entradas</span>
+  </div>
+</div>
+
+<!-- LAYOUT: GRID + SIDEBAR -->
+<div class="blog-page">
+
+  <!-- GRID DE ENTRADAS -->
+  <div class="blog-grid" id="blog-grid">
+
+    <!-- ══ ENTRADA 1 — DESTACADA ══
+         Para agregar tu foto: pon la ruta en src=""
+         Para editar el texto: modifica el data-* de este div -->
+    <div class="blog-card featured" data-cat="evento"
+         data-titulo="Primer Festival de la Miel en Tenosique"
+         data-fecha="1 junio 2025"
+         data-autor="Cana´an Xu´x"
+         data-badge="evento"
+         data-fotos="3"
+         data-resumen="Celebramos nuestro primer festival con productoras locales, degustaciones de miel y exposición de productos artesanales ante más de 200 visitantes."
+         data-contenido="Fue un día histórico para nuestra organización. El primer Festival de la Miel en Tenosique reunió a productoras de la región, visitantes de todo Tabasco y representantes de instituciones aliadas. Las mesas de degustación mostraron la variedad de mieles que producimos: miel oscura del manglar, miel clara de flores silvestres y la preciada miel de abeja melipona. Las niñas y niños disfrutaron del taller de elaboración de velas de cera de abeja, mientras los adultos conocieron de cerca el proceso de extracción artesanal. Fue también una oportunidad para fortalecer los lazos entre las apicultoras del Cañón del Usumacinta y compartir experiencias sobre el cuidado de las colmenas."
+         onclick="abrirEntrada(this)">
+      <div class="blog-card-img">
+        <!-- REEMPLAZA src CON TU FOTO DEL EVENTO -->
+        <img src="imagen/blog/evento-festival.jpg" alt="Festival de la Miel"
+             onerror="this.style.display='none'">
+        <div class="blog-img-placeholder">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span>Agregar foto del evento</span>
+        </div>
+        <span class="blog-badge evento">Evento</span>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-date">1 junio 2025</span>
+          <span class="blog-card-dot"></span>
+          <span class="blog-card-author">Cana´an Xu´x</span>
+        </div>
+        <div class="blog-card-title">Primer Festival de la Miel en Tenosique</div>
+        <p class="blog-card-excerpt">Celebramos nuestro primer festival con productoras locales, degustaciones de miel y exposición de productos artesanales ante más de 200 visitantes.</p>
+        <div class="blog-card-footer">
+          <a class="blog-read-more" href="#">Leer más →</a>
+          <span class="blog-card-photos-count">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            3 fotos
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ENTRADA 2 ══ -->
+    <div class="blog-card" data-cat="apicultura"
+         data-titulo="Cosecha de temporada: miel de flores silvestres"
+         data-fecha="15 mayo 2025"
+         data-autor="Cana´an Xu´x"
+         data-badge="apicultura"
+         data-fotos="5"
+         data-resumen="La temporada de lluvias trajo una floración excepcional en el Cañón del Usumacinta. Documentamos el proceso completo de cosecha artesanal."
+         data-contenido="La temporada de lluvias de este año favoreció una floración abundante en las riberas del Usumacinta. Las colmenas estuvieron en su mejor momento y pudimos documentar cada paso del proceso de cosecha: desde la revisión de los marcos hasta el centrifugado y envasado. La miel obtenida tiene un color ámbar claro y un aroma floral inconfundible. Parte de esta producción ya está disponible en nuestra tienda en línea."
+         onclick="abrirEntrada(this)">
+      <div class="blog-card-img">
+        <!-- REEMPLAZA src CON TU FOTO -->
+        <img src="imagen/blog/cosecha-miel.jpg" alt="Cosecha de miel"
+             onerror="this.style.display='none'">
+        <div class="blog-img-placeholder">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span>Agregar foto</span>
+        </div>
+        <span class="blog-badge apicultura">Apicultura</span>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-date">15 mayo 2025</span>
+          <span class="blog-card-dot"></span>
+          <span class="blog-card-author">Cana´an Xu´x</span>
+        </div>
+        <div class="blog-card-title">Cosecha de temporada: miel de flores silvestres</div>
+        <p class="blog-card-excerpt">La temporada de lluvias trajo una floración excepcional en el Cañón del Usumacinta. Documentamos el proceso completo de cosecha artesanal.</p>
+        <div class="blog-card-footer">
+          <a class="blog-read-more" href="#">Leer más →</a>
+          <span class="blog-card-photos-count">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            5 fotos
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ENTRADA 3 ══ -->
+    <div class="blog-card" data-cat="comunidad"
+         data-titulo="Taller de velas para mujeres de la comunidad"
+         data-fecha="3 abril 2025"
+         data-autor="Cana´an Xu´x"
+         data-badge="comunidad"
+         data-fotos="8"
+         data-resumen="Impartimos un taller de elaboración de velas artesanales con cera de abeja para 18 mujeres de Tenosique, fortaleciendo el emprendimiento local."
+         data-contenido="Dieciocho mujeres de distintas colonias de Tenosique participaron en el taller de elaboración de velas con cera de abeja. Durante cuatro horas aprendieron a medir, fundir, colorear y moldear la cera para crear velas con diferentes formas. Al finalizar, cada participante se llevó a casa su propia vela elaborada con sus manos y los conocimientos para seguir produciendo. Este taller forma parte de nuestro compromiso con el liderazgo y la prosperidad de las mujeres de nuestra tierra."
+         onclick="abrirEntrada(this)">
+      <div class="blog-card-img">
+        <!-- REEMPLAZA src CON TU FOTO -->
+        <img src="imagen/blog/taller-velas.jpg" alt="Taller de velas"
+             onerror="this.style.display='none'">
+        <div class="blog-img-placeholder">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span>Agregar foto</span>
+        </div>
+        <span class="blog-badge comunidad">Comunidad</span>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-date">3 abril 2025</span>
+          <span class="blog-card-dot"></span>
+          <span class="blog-card-author">Cana´an Xu´x</span>
+        </div>
+        <div class="blog-card-title">Taller de velas para mujeres de la comunidad</div>
+        <p class="blog-card-excerpt">Impartimos un taller de elaboración de velas artesanales con cera de abeja para 18 mujeres de Tenosique, fortaleciendo el emprendimiento local.</p>
+        <div class="blog-card-footer">
+          <a class="blog-read-more" href="#">Leer más →</a>
+          <span class="blog-card-photos-count">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            8 fotos
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ENTRADA 4 ══ -->
+    <div class="blog-card" data-cat="galeria"
+         data-titulo="Galería: el Cañón del Usumacinta en flor"
+         data-fecha="10 marzo 2025"
+         data-autor="Cana´an Xu´x"
+         data-badge="galeria"
+         data-fotos="12"
+         data-resumen="Una selección de fotografías que documentan la riqueza del Área de Protección de Flora y Fauna Cañón del Usumacinta durante la floración de primavera."
+         data-contenido="El Área de Protección de Flora y Fauna Cañón del Usumacinta es el hogar de nuestras colmenas y la fuente de la riqueza de nuestra miel. Esta galería reúne imágenes captadas durante los recorridos de revisión de colmenas en marzo, cuando la floración silvestre está en su punto más alto. Cada fotografía es un testimonio del ecosistema que cuidamos y de las razones por las que nuestra miel tiene un sabor único e irrepetible."
+         onclick="abrirEntrada(this)">
+      <div class="blog-card-img">
+        <!-- REEMPLAZA src CON TU FOTO -->
+        <img src="imagen/blog/galeria-usumacinta.jpg" alt="Cañón del Usumacinta"
+             onerror="this.style.display='none'">
+        <div class="blog-img-placeholder">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span>Agregar foto</span>
+        </div>
+        <span class="blog-badge">Galería</span>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-date">10 marzo 2025</span>
+          <span class="blog-card-dot"></span>
+          <span class="blog-card-author">Cana´an Xu´x</span>
+        </div>
+        <div class="blog-card-title">Galería: el Cañón del Usumacinta en flor</div>
+        <p class="blog-card-excerpt">Una selección de fotografías que documentan la riqueza del Área de Protección de Flora y Fauna Cañón del Usumacinta durante la floración de primavera.</p>
+        <div class="blog-card-footer">
+          <a class="blog-read-more" href="#">Ver galería →</a>
+          <span class="blog-card-photos-count">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            12 fotos
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PLANTILLA PARA NUEVA ENTRADA ══
+         Copia este bloque y pega debajo para agregar más entradas.
+         Cambia: data-cat, data-titulo, data-fecha, data-resumen, data-contenido, data-fotos
+         Categorías disponibles: evento | apicultura | comunidad | galeria
+    <div class="blog-card" data-cat="evento"
+         data-titulo="Título de tu entrada"
+         data-fecha="DD mes AAAA"
+         data-autor="Cana´an Xu´x"
+         data-badge="evento"
+         data-fotos="0"
+         data-resumen="Resumen breve que aparece en la tarjeta."
+         data-contenido="Texto completo de la entrada que aparece al hacer clic."
+         onclick="abrirEntrada(this)">
+      <div class="blog-card-img">
+        <img src="imagen/blog/tu-foto.jpg" alt="Descripción"
+             onerror="this.style.display='none'">
+        <div class="blog-img-placeholder">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span>Agregar foto</span>
+        </div>
+        <span class="blog-badge evento">Evento</span>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-date">DD mes AAAA</span>
+          <span class="blog-card-dot"></span>
+          <span class="blog-card-author">Cana´an Xu´x</span>
+        </div>
+        <div class="blog-card-title">Título de tu entrada</div>
+        <p class="blog-card-excerpt">Resumen breve que aparece en la tarjeta.</p>
+        <div class="blog-card-footer">
+          <a class="blog-read-more" href="#">Leer más →</a>
+          <span class="blog-card-photos-count">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            0 fotos
+          </span>
+        </div>
+      </div>
+    </div>
+    -->
+
+  </div><!-- /blog-grid -->
+
+  <!-- SIDEBAR -->
+  <aside class="blog-sidebar">
+
+    <!-- Categorías -->
+    <div class="sidebar-block">
+      <div class="sidebar-block-title">Categorías</div>
+      <div class="sidebar-block-body">
+        <ul class="sidebar-cats">
+          <li><a href="#" onclick="filtrarBlog('todo', null); return false">Todos los temas <span>4</span></a></li>
+          <li><a href="#" onclick="filtrarBlog('evento', null); return false">Eventos <span>1</span></a></li>
+          <li><a href="#" onclick="filtrarBlog('apicultura', null); return false">Apicultura <span>1</span></a></li>
+          <li><a href="#" onclick="filtrarBlog('comunidad', null); return false">Comunidad <span>1</span></a></li>
+          <li><a href="#" onclick="filtrarBlog('galeria', null); return false">Galería de fotos <span>1</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Entradas recientes -->
+    <div class="sidebar-block">
+      <div class="sidebar-block-title">Entradas recientes</div>
+      <div class="sidebar-block-body">
+        <ul class="sidebar-recent">
+          <li>
+            <img class="sidebar-recent-img" src="imagen/blog/evento-festival.jpg" alt=""
+                 onerror="this.style.background='#f0e4d0'">
+            <div class="sidebar-recent-info">
+              <a href="#">Primer Festival de la Miel en Tenosique</a>
+              <div class="sidebar-recent-date">1 junio 2025</div>
+            </div>
+          </li>
+          <li>
+            <img class="sidebar-recent-img" src="imagen/blog/cosecha-miel.jpg" alt=""
+                 onerror="this.style.background='#f0e4d0'">
+            <div class="sidebar-recent-info">
+              <a href="#">Cosecha de temporada: miel de flores silvestres</a>
+              <div class="sidebar-recent-date">15 mayo 2025</div>
+            </div>
+          </li>
+          <li>
+            <img class="sidebar-recent-img" src="imagen/blog/taller-velas.jpg" alt=""
+                 onerror="this.style.background='#f0e4d0'">
+            <div class="sidebar-recent-info">
+              <a href="#">Taller de velas para mujeres de la comunidad</a>
+              <div class="sidebar-recent-date">3 abril 2025</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Mini galería -->
+    <div class="sidebar-block">
+      <div class="sidebar-block-title">Galería rápida</div>
+      <div class="sidebar-block-body">
+        <div class="sidebar-gallery">
+          <!-- REEMPLAZA cada src con tus fotos reales -->
+          <div class="sidebar-gallery-item">
+            <img src="imagen/blog/foto-1.jpg" alt="" onerror="this.style.display='none'">
+            <div class="sidebar-gallery-placeholder"></div>
+          </div>
+          <div class="sidebar-gallery-item">
+            <img src="imagen/blog/foto-2.jpg" alt="" onerror="this.style.display='none'">
+            <div class="sidebar-gallery-placeholder"></div>
+          </div>
+          <div class="sidebar-gallery-item">
+            <img src="imagen/blog/foto-3.jpg" alt="" onerror="this.style.display='none'">
+            <div class="sidebar-gallery-placeholder"></div>
+          </div>
+          <div class="sidebar-gallery-item">
+            <img src="imagen/blog/foto-4.jpg" alt="" onerror="this.style.display='none'">
+            <div class="sidebar-gallery-placeholder"></div>
+          </div>
+          <div class="sidebar-gallery-item">
+            <img src="imagen/blog/foto-5.jpg" alt="" onerror="this.style.display='none'">
+            <div class="sidebar-gallery-placeholder"></div>
+          </div>
+          <div class="sidebar-gallery-item">
+            <img src="imagen/blog/foto-6.jpg" alt="" onerror="this.style.display='none'">
+            <div class="sidebar-gallery-placeholder"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+</div><!-- /blog-page -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Cana´an <span>Xu´x</span></div>
+        <p class="footer-desc">Somos apicultoras mexicanas. Ofrecemos miel de abeja pura y todos los productos derivados de la colmena.</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/mielorogdl/" target="_blank" title="Instagram">📷</a>
+          <a href="https://www.facebook.com/mielorogdl" target="_blank" title="Facebook">f</a>
+          <a href="https://www.pinterest.es/mielorogdl/" target="_blank" title="Pinterest">P</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Tienda</h4>
+        <ul>
+          <li><a href="#">Todo para el Apicultor</a></li>
+          <li><a href="#">Productos de la Colmena</a></li>
+          <li><a href="velas.html">Velas</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Aprende</h4>
+        <ul>
+          <li><a href="abejas.html">Tipos de abejas</a></li>
+          <li><a href="centro_rescate.html">Centro de Rescate</a></li>
+          <li><a href="blog.html">Blog y Eventos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="#">Puntos de Venta</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 · Todos los derechos reservados · Hecho en México</div>
+  </div>
+</footer>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay">
+  <div class="search-box">
+    <button class="search-close">✕</button>
+    <input type="text" placeholder="Buscar productos...">
+  </div>
+</div>
+
+<!-- MODAL ENTRADA COMPLETA -->
+<div class="blog-modal-bg" id="blogModal" onclick="cerrarModal(event)">
+  <div class="blog-modal" id="blogModalInner">
+    <button class="blog-modal-close" onclick="cerrarModal(null)">✕</button>
+    <!-- Foto principal de la entrada -->
+    <img class="blog-modal-hero" id="modalImg" src="" alt="">
+    <div class="blog-modal-body">
+      <span class="blog-modal-badge" id="modalBadge"></span>
+      <div class="blog-modal-title" id="modalTitulo"></div>
+      <div class="blog-modal-meta">
+        <span id="modalFecha"></span>
+        &nbsp;·&nbsp;
+        <strong id="modalAutor"></strong>
+      </div>
+      <div class="blog-modal-content" id="modalContenido"></div>
+      <!-- Galería de fotos de la entrada -->
+      <div class="blog-modal-gallery" id="modalGaleria"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTÓN FLOTANTE WHATSAPP -->
+<a href="https://wa.me/521XXXXXXXXXX"
+   class="whatsapp-float"
+   target="_blank"
+   rel="noopener noreferrer"
+   title="Contáctanos por WhatsApp">
+  <img src="imagen/whatsapp-logo.png"
+       alt="WhatsApp"
+       class="whatsapp-logo"
+       onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+  <svg class="whatsapp-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 2.822.736 5.469 2.027 7.769L0 32l8.469-2.002A15.929 15.929 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.771-1.853l-.485-.288-5.027 1.188 1.216-4.895-.317-.502A13.248 13.248 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.271-9.959c-.398-.199-2.352-1.161-2.716-1.293-.364-.132-.629-.199-.894.199-.265.398-1.028 1.293-1.26 1.559-.232.265-.464.299-.862.1-.398-.199-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.132-.265.066-.497-.033-.696-.1-.199-.894-2.155-1.226-2.95-.322-.773-.649-.668-.894-.68-.232-.012-.497-.014-.762-.014a1.46 1.46 0 00-1.06.497c-.364.398-1.393 1.361-1.393 3.317s1.426 3.846 1.625 4.111c.199.265 2.806 4.285 6.797 5.988.951.41 1.693.655 2.271.839.954.303 1.823.26 2.509.158.765-.114 2.352-.961 2.684-1.89.332-.928.332-1.724.232-1.89-.099-.165-.364-.265-.762-.464z"/>
+  </svg>
+</a>
+
+<script src="script.js"></script>
+<script>
+
+/* ─── FILTRO DE CATEGORÍAS ─── */
+function filtrarBlog(cat, btn) {
+  // Actualizar botones activos en la barra
+  document.querySelectorAll('.blog-cat-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const cards = document.querySelectorAll('#blog-grid .blog-card');
+  let visible = 0;
+
+  cards.forEach(card => {
+    const cardCat = card.dataset.cat || '';
+    const mostrar = (cat === 'todo' || cardCat === cat);
+    card.style.display = mostrar ? '' : 'none';
+    if (mostrar) visible++;
+  });
+
+  // Ajustar la entrada destacada: si está oculta, quitar el span especial
+  document.getElementById('blog-count').textContent = visible;
+}
+
+/* ─── MODAL: ABRIR ENTRADA ─── */
+function abrirEntrada(card) {
+  const d = card.dataset;
+  const modal = document.getElementById('blogModal');
+
+  // Imagen principal — usa la primera foto de la tarjeta si existe
+  const imgEl = card.querySelector('.blog-card-img img');
+  const modalImg = document.getElementById('modalImg');
+  if (imgEl && imgEl.style.display !== 'none' && imgEl.src) {
+    modalImg.src = imgEl.src;
+    modalImg.style.display = 'block';
+  } else {
+    modalImg.style.display = 'none';
+  }
+
+  // Badge de categoría
+  const badge = document.getElementById('modalBadge');
+  badge.textContent = d.badge ? d.badge.charAt(0).toUpperCase() + d.badge.slice(1) : 'Blog';
+  badge.className = 'blog-modal-badge ' + (d.badge || '');
+
+  document.getElementById('modalTitulo').textContent   = d.titulo || '';
+  document.getElementById('modalFecha').textContent    = d.fecha  || '';
+  document.getElementById('modalAutor').textContent    = d.autor  || '';
+  document.getElementById('modalContenido').innerHTML  =
+    (d.contenido || '').split('\n').map(p => p.trim() ? `<p>${p.trim()}</p>` : '').join('');
+
+  // Galería de fotos placeholder
+  // INSTRUCCIÓN: Para agregar fotos reales al modal, en el data-fotos del card
+  // pon el número de imágenes, y en data-galeria pon las rutas separadas por |
+  // Ejemplo: data-galeria="imagen/blog/foto1.jpg|imagen/blog/foto2.jpg"
+  const galeriaEl = document.getElementById('modalGaleria');
+  const rutasGaleria = d.galeria ? d.galeria.split('|') : [];
+  const nFotos = parseInt(d.fotos) || 0;
+
+  galeriaEl.innerHTML = '';
+  if (nFotos > 0) {
+    for (let i = 0; i < nFotos; i++) {
+      if (rutasGaleria[i]) {
+        const img = document.createElement('img');
+        img.src = rutasGaleria[i];
+        img.alt = 'Foto ' + (i + 1);
+        img.onerror = function() {
+          this.style.display = 'none';
+          this.nextElementSibling.style.display = 'flex';
+        };
+        galeriaEl.appendChild(img);
+      }
+      // Placeholder para fotos no cargadas
+      const ph = document.createElement('div');
+      ph.className = 'gallery-placeholder';
+      ph.textContent = ['🐝','🍯','🌸','🕯️','🌿','🐝'][i % 6];
+      if (rutasGaleria[i]) ph.style.display = 'none';
+      galeriaEl.appendChild(ph);
+    }
+  }
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+/* ─── MODAL: CERRAR ─── */
+function cerrarModal(e) {
+  if (e && e.target !== document.getElementById('blogModal')) return;
+  document.getElementById('blogModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') cerrarModal(null);
+});
+
+/* ─── DETENER PROPAGACIÓN EN LAS TARJETAS:
+   Los enlaces "Leer más" y botones dentro de la tarjeta no deben abrir el modal ─── */
+document.querySelectorAll('.blog-read-more').forEach(link => {
+  link.addEventListener('click', e => e.stopPropagation());
+});
+
+</script>
+</body>
+</html>

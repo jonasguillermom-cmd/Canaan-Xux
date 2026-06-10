@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cana´an Xu´x</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+<!-- ANNOUNCEMENT -->
+<div class="announce"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <a href="#" class="logo-wrap">
+      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
+      <div class="logo-name">
+        Cana´an Xu´x
+        <span>Apicultoras Tenosiquenses</span>
+      </div>
+    </a>
+    <div class="header-icons">
+      <a href="#" onclick="toggleSearch(); return false">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        Buscar
+      </a>
+      <a href="#">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Ingresar
+      </a>
+      <a href="#" id="cart-btn">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Carrito <span class="cart-count-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-item"><a href="index.html">Inicio</a></div>
+    <div class="nav-item"><a href="nosotros.html">Nosotros</a></div>
+    <div class="nav-item">
+      <span>Productos <span class="chevron">▾</span></span>
+      <div class="dropdown">
+        <div class="dropdown-group">
+          <div class="dropdown-title">Productos de la Colmena</div>
+          <a href="miel.html">Miel</a>
+          <a href="#">Miel en panal</a>
+          <a href="#">Jabones</a>
+        </div>
+        <div class="dropdown-group">
+          <div class="dropdown-title">Otros Productos</div>
+          <a href="#">Gotas</a>
+          <a href="#">Dulces</a>
+          <a href="velas.html">Velas</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item"><a href="abejas.html">Abejas</a></div>
+    <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
+    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="contacto.html">Contacto</a></div>
+  </div>
+</nav>
+
+<!-- HERO SLIDER -->
+<div class="hero">
+  <div class="hero-slide active">
+    <img src="imagen/inicio/inicio-1.png" alt="Experiencias">
+  </div>
+  <div class="hero-slide">
+    <img src="imagen/inicio/inicio-2.png" alt="Paquetes">
+  </div>
+  <button class="hero-arrow prev" onclick="changeSlide(-1)">&#8592;</button>
+  <button class="hero-arrow next" onclick="changeSlide(1)">&#8594;</button>
+  <div class="hero-nav">
+    <button class="hero-dot active" onclick="goSlide(0)"></button>
+    <button class="hero-dot" onclick="goSlide(1)"></button>
+  </div>
+</div>
+
+<!-- LO MÁS VENDIDO -->
+<section class="section" style="background:#fff">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:12px">
+      <img src="imagen/logo.png" alt="Abeja" style="height:56px;object-fit:contain">
+    </div>
+    <h2 class="section-title">¡Lo más vendido!</h2>
+    <div class="prod-grid">
+
+      <div class="prod-card" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+          <img src="" alt="Miel Mantequilla Cruda">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Miel Mantequilla Cruda</div>
+          <div class="prod-price">$ 40.00</div>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <span class="prod-badge agotado">Agotado</span>
+          <img src="" alt="Acondicionador sólido con miel">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Acondicionador sólido con miel</div>
+          <div class="prod-price sold">Agotado</div>
+          <button class="btn-add disabled" disabled>Agotado</button>
+        </div>
+      </div>
+
+      <div class="prod-card" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+          <img src="productos/Pvelas/imagenesV/vela_hexagonoVioleta.png" alt="Vela hexágono violeta">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Vela hexágono violeta</div>
+          <div class="prod-price">$ 60.00</div>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+
+    </div>
+    <div class="ver-todos-wrap"><a href="#" class="ver-todos">Ver todos los productos</a></div>
+  </div>
+</section>
+
+<!-- NUESTRAS COLECCIONES -->
+<section class="section" style="background:var(--gris-claro)">
+  <div class="container">
+    <h2 class="section-title">Nuestras Colecciones</h2>
+    <div class="coll-grid">
+      <a href="#" class="coll-card">
+        <img src="" alt="Todo para el Apicultor">
+        <div class="coll-label">Todo para el Apicultor</div>
+      </a>
+      <a href="#" class="coll-card">
+        <img src="" alt="Productos de la Colmena">
+        <div class="coll-label">Productos de la Colmena</div>
+      </a>
+      <a href="#" class="coll-card" style="background:#e8d5b0">
+        <img src="" alt="Miel y Salud" style="object-fit:contain;padding:20px">
+        <div class="coll-label">Miel y Salud</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- OTROS PRODUCTOS -->
+<section class="section" style="background:#fff">
+  <div class="container">
+    <h2 class="section-title left">Otros Productos</h2>
+    <div class="prod-grid">
+
+      <div class="prod-card" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+          <img src="" alt="Cacaos con Miel">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Cacaos con Miel</div>
+          <div class="prod-price">$ 40.00</div>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <span class="prod-badge agotado">Agotado</span>
+          <img src="" alt="Crema Ligera">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Crema Ligera</div>
+          <div class="prod-price sold">Agotado</div>
+          <button class="btn-add disabled" disabled>Agotado</button>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <span class="prod-badge agotado">Agotado</span>
+          <img src="" alt="Galletas con Polen">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Galletas con Polen</div>
+          <div class="prod-price sold">Agotado</div>
+          <button class="btn-add disabled" disabled>Agotado</button>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <span class="prod-badge agotado">Agotado</span>
+          <img src="" alt="Contorno de Ojos">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Contorno de Ojos</div>
+          <div class="prod-price sold">Agotado</div>
+          <button class="btn-add disabled" disabled>Agotado</button>
+        </div>
+      </div>
+
+    </div>
+    <div class="ver-todos-wrap"><a href="#" class="ver-todos">Ver todos los productos</a></div>
+  </div>
+</section>
+
+<!-- ACERCA DE -->
+<div class="about-strip">
+  <div class="about-inner">
+    <div class="about-text">
+      <div style="text-align:center;margin-bottom:16px">
+        <img src="https://cdn.shopify.com/s/files/1/0010/0660/0310/files/exagono.png?4715548033019962595" alt="" style="height:60px;object-fit:contain">
+      </div>
+      <h2>La miel pura de Cana´an Xu´x, extraída con cuidado en Tenosique, Tabasco.</h2>
+      <p>Somos apicultoras tenosiquenses comprometidas con las abejas y las comunidades que las cuidan. Ofrecemos miel pura y todos los productos derivados de la colmena.</p>
+      <p>Brindamos pláticas, cursos de apicultura y asesorías para el manejo adecuado de apiarios.</p>
+      <a href="nosotros.html" class="btn-link">¡Conoce más sobre nosotros!</a>
+    </div>
+    <div>
+      <p style="font-size:14px;color:var(--gris);line-height:1.8;margin-bottom:24px">
+        Somos parte de ese sistema productivo que se inicia en el vuelo de las abejas de flor en flor, que pasa por un proceso artesanal de cosecha y que termina en la puerta de tu casa o negocio.
+      </p>
+      <div class="icon-cats">
+        <div class="icon-cat">
+          <img src="https://fernandorueda.studio/demos/mielOro/Miel-a-Granel.png" alt="Miel a Granel">
+          <span>Miel a Granel</span>
+        </div>
+        <div class="icon-cat">
+          <img src="https://fernandorueda.studio/demos/mielOro/Todo-para-el-Apicultor.png" alt="Todo para el Apicultor">
+          <span>Todo para el Apicultor</span>
+        </div>
+        <div class="icon-cat">
+          <img src="https://fernandorueda.studio/demos/mielOro/Productos-de-la-Colmena.png" alt="Productos de la Colmena">
+          <span>Productos de la Colmena</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ASESORÍA -->
+<div class="asesoria">
+  <div class="asesoria-inner">
+    <div class="asesoria-imgs">
+      <img src="https://mieloro.com.mx/cdn/shop/files/apicultores-miel-mexico_ed581441-d2e6-4b7e-b6f4-b4826e7be80e_600x600@2x.jpg?v=1613669038" alt="Apicultores">
+      <img src="https://mieloro.com.mx/cdn/shop/files/educacion-miel-colmenas-ninos_b15e7c44-ecef-419e-a2c8-fd68b52b65e1_600x600@2x.jpg?v=1613669038" alt="Educación">
+    </div>
+    <div>
+      <h2>Asesoría a nuevos productores</h2>
+      <h3>¿Eres nuevo en el mundo de la apicultura?</h3>
+      <p>No dudes en consultarnos, podemos ofrecerte asesoría para mejorar tu sistema productivo apícola y la salud de tus colmenas.</p>
+      <p>Tenemos amplia experiencia en el mundo de la apicultura en el sureste.</p>
+      <a href="contacto.html" class="btn-link">¿Quieres mejorar tus procesos productivos?</a>
+    </div>
+  </div>
+</div>
+
+<!-- APRENDIENDO DE LAS COLMENAS -->
+<div class="about-strip">
+  <div class="about-inner">
+    <div class="about-text">
+      <h2>Aprendiendo de las colmenas</h2>
+      <p>Queremos fomentar la cultura del cuidado de las abejas y el medio ambiente desde los primeros años.</p>
+      <p>Por ello impartimos pláticas, talleres y cursos donde las niñas y niños aprenden sobre la vida de las abejas y su cuidado.</p>
+      <p>Creemos que la educación ambiental es una estrategia necesaria para acercar a las nuevas generaciones a la naturaleza y al consumo responsable.</p>
+      <a href="contacto.html" class="btn-link">¿Quieres llevar a los expertos a tu escuela?</a>
+    </div>
+    <div class="about-imgs">
+      <img src="" alt="Apicultores">
+      <img src="" alt="Educación">
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCIAS -->
+<section class="section" style="background:#fff">
+  <div class="container">
+    <h2 class="section-title">Experiencias</h2>
+    <div class="exp-grid">
+
+      <div class="exp-card">
+        <img src="" alt="Apicultor por un día">
+        <div class="exp-body">
+          <div>
+            <h3>Apicultor por un día</h3>
+            <p>Conviértete en apicultor por un día, acércate a la naturaleza y conoce más sobre las propiedades de la miel y las abejas.</p>
+          </div>
+          <a href="#" class="exp-link">Ver más →</a>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <img src="" alt="Curso básico en Apicultura">
+        <div class="exp-body">
+          <div>
+            <h3>Curso básico en Apicultura</h3>
+            <p>Iníciate en el mundo de la apicultura y conoce las herramientas básicas, teóricas y prácticas, para la instalación, revisión y manejo de colmenas.</p>
+          </div>
+          <a href="#" class="exp-link">Ver más →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Cana´an <span>Xu´x</span></div>
+        <p class="footer-desc">Somos apicultoras mexicanas. Ofrecemos miel de abeja pura y todos los productos derivados de la colmena.</p>
+        <div class="footer-social">
+          <a href="" target="_blank" title="Instagram">📷</a>
+          <a href="" target="_blank" title="Facebook">f</a>
+          <a href="" target="_blank" title="Pinterest">P</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Tienda</h4>
+        <ul>
+          <li><a href="#">Todo para el Apicultor</a></li>
+          <li><a href="#">Productos de la Colmena</a></li>
+          <li><a href="#">Miel y Salud</a></li>
+          <li><a href="#">Belleza</a></li>
+          <li><a href="#">Bebidas a Base de Miel</a></li>
+          <li><a href="#">KITs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Experiencias</h4>
+        <ul>
+          <li><a href="#">Apicultor por un día</a></li>
+          <li><a href="#">Cata de Hidromiel</a></li>
+          <li><a href="#">La ruta de las abejas</a></li>
+          <li><a href="#">Curso básico</a></li>
+          <li><a href="centro_rescate.html">Salva enjambres</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="#">Servicios</a></li>
+          <li><a href="#">Catálogos</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="#">Puntos de Venta</a></li>
+          <li><a href="#">Beneficios de la miel</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 · Todos los derechos reservados · Hecho en México</div>
+  </div>
+</footer>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay">
+  <div class="search-box">
+    <button class="search-close">✕</button>
+    <input type="text" placeholder="Buscar productos...">
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+<!-- BOTÓN FLOTANTE WHATSAPP -->
+<a href="https://wa.me/521XXXXXXXXXX" 
+   class="whatsapp-float" 
+   target="_blank" 
+   rel="noopener noreferrer" 
+   title="Contáctanos por WhatsApp">
+  <!-- REEMPLAZA src CON LA RUTA A TU LOGO PERSONALIZADO DE WHATSAPP -->
+  <img src="imagen/whatsapp-logo.png" 
+       alt="WhatsApp" 
+       class="whatsapp-logo"
+       onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+  <!-- Ícono SVG de respaldo si no encuentra tu imagen -->
+  <svg class="whatsapp-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 2.822.736 5.469 2.027 7.769L0 32l8.469-2.002A15.929 15.929 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.771-1.853l-.485-.288-5.027 1.188 1.216-4.895-.317-.502A13.248 13.248 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.271-9.959c-.398-.199-2.352-1.161-2.716-1.293-.364-.132-.629-.199-.894.199-.265.398-1.028 1.293-1.26 1.559-.232.265-.464.299-.862.1-.398-.199-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.132-.265.066-.497-.033-.696-.1-.199-.894-2.155-1.226-2.95-.322-.773-.649-.668-.894-.68-.232-.012-.497-.014-.762-.014a1.46 1.46 0 00-1.06.497c-.364.398-1.393 1.361-1.393 3.317s1.426 3.846 1.625 4.111c.199.265 2.806 4.285 6.797 5.988.951.41 1.693.655 2.271.839.954.303 1.823.26 2.509.158.765-.114 2.352-.961 2.684-1.89.332-.928.332-1.724.232-1.89-.099-.165-.364-.265-.762-.464z"/>
+  </svg>
+</a>
+</body>
+</html>

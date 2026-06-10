@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contacto — Cana´an Xu´x</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<style>
+.con-hero{position:relative;height:300px;display:flex;align-items:flex-end;overflow:hidden;background:#1a2e10;background-image:url('banner_contacto.png') /* ← PON AQUÍ EL NOMBRE DE TU IMAGEN */;background-size:cover;background-position:center}
+.con-hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(15,30,8,.85) 0%,rgba(15,30,8,.5) 55%,rgba(15,30,8,.2) 100%)}
+.con-hero-overlay::before{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 60%)}
+.con-hero-content{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:0 24px 48px;width:100%}
+.con-breadcrumb{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px}
+.con-breadcrumb a{color:var(--naranja);text-decoration:none}
+.con-hero-tag{display:inline-block;background:rgba(235,144,77,.2);color:var(--naranja);font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;padding:5px 14px;border-radius:2px;margin-bottom:14px;border:1px solid rgba(235,144,77,.35)}
+.con-hero-content h1{font-family:'Playfair Display',serif;font-size:46px;font-weight:700;color:#fff;line-height:1.1;margin-bottom:8px;text-shadow:0 2px 24px rgba(0,0,0,.4)}
+.con-hero-content p{font-size:15px;color:rgba(255,255,255,.7);max-width:500px;line-height:1.75}
+.con-page{max-width:1100px;margin:0 auto;padding:56px 24px 0}
+.con-cards-title{font-family:'Playfair Display',serif;font-size:28px;color:var(--cafe);margin-bottom:8px}
+.con-cards-sub{font-size:14px;color:var(--gris);margin-bottom:32px;line-height:1.7}
+.con-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;margin-bottom:60px}
+.con-card{border:1px solid var(--borde);border-radius:10px;padding:28px 20px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;background:#fff;transition:box-shadow .22s,transform .22s,border-color .22s;text-decoration:none;color:inherit;position:relative;overflow:hidden}
+.con-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--color-brand,var(--naranja));transform:scaleX(0);transition:transform .25s ease}
+.con-card:hover::before{transform:scaleX(1)}
+.con-card:hover{box-shadow:0 8px 32px rgba(0,0,0,.10);transform:translateY(-4px);border-color:transparent}
+.con-card-icon{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bg-icon,#f5f0e8);flex-shrink:0;transition:transform .25s}
+.con-card:hover .con-card-icon{transform:scale(1.08)}
+.con-card-icon svg{width:28px;height:28px;fill:var(--color-brand,var(--naranja))}
+.con-card-label{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gris)}
+.con-card-value{font-size:15px;font-weight:700;color:var(--cafe);line-height:1.3}
+.con-card-hint{font-size:11px;color:var(--gris);line-height:1.5}
+.con-card.whatsapp{--color-brand:#25d366;--bg-icon:#e8fbef}
+.con-card.facebook{--color-brand:#1877f2;--bg-icon:#e7f0fd}
+.con-card.instagram{--color-brand:#e1306c;--bg-icon:#fde8ef}
+.con-card.tiktok{--color-brand:#000;--bg-icon:#f0f0f0}
+.con-card.youtube{--color-brand:#ff0000;--bg-icon:#ffe8e8}
+.con-card.tel{--color-brand:var(--naranja);--bg-icon:#fef3e8}
+.con-card.email{--color-brand:#0072c6;--bg-icon:#e8f2fb}
+.con-divisor{display:flex;align-items:center;gap:20px;margin-bottom:48px}
+.con-divisor-line{flex:1;height:1px;background:var(--borde)}
+.con-divisor-label{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gris);white-space:nowrap}
+.con-mapa-section{margin-bottom:0}
+.con-mapa-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+.con-mapa-header-text h2{font-family:'Playfair Display',serif;font-size:28px;color:var(--cafe);margin-bottom:8px}
+.con-mapa-header-text p{font-size:14px;color:var(--gris);line-height:1.7;max-width:480px}
+.con-direccion-chips{display:flex;flex-direction:column;gap:10px;min-width:220px}
+.con-chip{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--cafe);line-height:1.5}
+.con-chip-icon{width:32px;height:32px;border-radius:50%;background:#fef3e8;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.con-chip-icon svg{width:16px;height:16px;stroke:var(--naranja);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.con-chip strong{display:block;font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--naranja);margin-bottom:1px}
+.con-mapa-wrap{border-radius:12px;overflow:hidden;border:1px solid var(--borde);box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.con-mapa-wrap iframe{display:block;width:100%;height:440px;border:none}
+.con-mapa-edit-hint{background:linear-gradient(135deg,#fef3e8,#fff8f0);border:1.5px dashed var(--naranja);border-radius:10px;padding:22px 24px;margin-top:16px;display:flex;align-items:flex-start;gap:14px;font-size:13px;color:var(--cafe);line-height:1.7}
+.con-mapa-edit-hint svg{width:22px;height:22px;stroke:var(--naranja);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;margin-top:2px}
+.con-mapa-edit-hint strong{display:block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--naranja);margin-bottom:4px}
+.con-cierre{background:linear-gradient(135deg,#2a2510,#3d3520);margin-top:56px;padding:48px 24px;text-align:center}
+.con-cierre h3{font-family:'Playfair Display',serif;font-size:28px;color:#fff;margin-bottom:10px}
+.con-cierre p{font-size:14px;color:rgba(255,255,255,.6);max-width:480px;margin:0 auto 24px;line-height:1.75}
+.con-cierre-btns{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.btn-cierre-wa{display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;padding:13px 26px;border-radius:4px;text-decoration:none;transition:background .2s,transform .2s}
+.btn-cierre-wa:hover{background:#1ebe57;transform:translateY(-2px)}
+.btn-cierre-tel{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;padding:13px 26px;border-radius:4px;text-decoration:none;transition:background .2s}
+.btn-cierre-tel:hover{background:rgba(255,255,255,.18)}
+@media(max-width:700px){.con-hero{height:240px}.con-hero-content h1{font-size:30px}.con-cards-grid{grid-template-columns:1fr 1fr}.con-mapa-header{flex-direction:column}.con-mapa-wrap iframe{height:300px}.con-page{padding:36px 16px 0}}
+@media(max-width:420px){.con-cards-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="announce"></div>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="logo-wrap">
+      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
+      <div class="logo-name">Cana´an Xu´x<span>Apicultoras Tenosiquenses</span></div>
+    </a>
+    <div class="header-icons">
+      <a href="#" onclick="toggleSearch(); return false">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>Buscar
+      </a>
+      <a href="#">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Ingresar
+      </a>
+      <a href="#" id="cart-btn">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Carrito <span class="cart-count-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-item"><a href="index.html">Inicio</a></div>
+    <div class="nav-item"><a href="nosotros.html">Nosotros</a></div>
+    <div class="nav-item">
+      <span>Productos <span class="chevron">▾</span></span>
+      <div class="dropdown">
+        <div class="dropdown-group">
+          <div class="dropdown-title">Productos de la Colmena</div>
+          <a href="miel.html">Miel</a>
+          <a href="#">Miel en panal</a>
+          <a href="#">Jabones</a>
+        </div>
+        <div class="dropdown-group">
+          <div class="dropdown-title">Otros Productos</div>
+          <a href="#">Gotas</a>
+          <a href="#">Dulces</a>
+          <a href="velas.html">Velas</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item"><a href="abejas.html">Abejas</a></div>
+    <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
+    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="contacto.html" class="active">Contacto</a></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="con-hero">
+  <div class="con-hero-overlay"></div>
+  <div class="con-hero-content">
+    <div class="con-breadcrumb"><a href="index.html">Inicio</a> / Contacto</div>
+    <span class="con-hero-tag">Teléfono · WhatsApp · Redes Sociales · Ubicación</span>
+    <h1>Contáctanos</h1>
+    <p>Estamos para atenderte. Escríbenos, llámanos o visítanos en Tenosique, Tabasco.</p>
+  </div>
+</div>
+
+<!-- CONTENIDO -->
+<div class="con-page">
+
+  <p class="con-cards-title">Encuéntranos en</p>
+  <p class="con-cards-sub">Elige el canal que prefieras para comunicarte con nosotras. Respondemos todos los días.</p>
+
+  <div class="con-cards-grid">
+
+    <!-- TELÉFONO 1 — cambia href="tel:+52..." y el número visible -->
+    <a class="con-card tel" href="tel:+529XXXXXXXXX">
+      <div class="con-card-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.29h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </div>
+      <span class="con-card-label">Teléfono 1</span>
+      <span class="con-card-value">+52 (9XX) XXX-XXXX</span><!-- REEMPLAZA -->
+      <span class="con-card-hint">Llamadas · Lun–Vie 9–18 h</span>
+    </a>
+
+    <!-- TELÉFONO 2 — cambia href="tel:+52..." y el número visible -->
+    <a class="con-card tel" href="tel:+529XXXXXXXXX">
+      <div class="con-card-icon">
+        <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </div>
+      <span class="con-card-label">Teléfono 2</span>
+      <span class="con-card-value">+52 (9XX) XXX-XXXX</span><!-- REEMPLAZA -->
+      <span class="con-card-hint">Celular · Disponible todo el día</span>
+    </a>
+
+    <!-- WHATSAPP — cambia 521XXXXXXXXXX -->
+    <a class="con-card whatsapp" href="https://wa.me/521XXXXXXXXXX" target="_blank" rel="noopener">
+      <div class="con-card-icon">
+        <svg viewBox="0 0 32 32"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.822.736 5.469 2.027 7.769L0 32l8.469-2.002A15.929 15.929 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.771-1.853l-.485-.288-5.027 1.188 1.216-4.895-.317-.502A13.248 13.248 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.271-9.959c-.398-.199-2.352-1.161-2.716-1.293-.364-.132-.629-.199-.894.199-.265.398-1.028 1.293-1.26 1.559-.232.265-.464.299-.862.1-.398-.199-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.132-.265.066-.497-.033-.696-.1-.199-.894-2.155-1.226-2.95-.322-.773-.649-.668-.894-.68-.232-.012-.497-.014-.762-.014a1.46 1.46 0 00-1.06.497c-.364.398-1.393 1.361-1.393 3.317s1.426 3.846 1.625 4.111c.199.265 2.806 4.285 6.797 5.988.951.41 1.693.655 2.271.839.954.303 1.823.26 2.509.158.765-.114 2.352-.961 2.684-1.89.332-.928.332-1.724.232-1.89-.099-.165-.364-.265-.762-.464z"/></svg>
+      </div>
+      <span class="con-card-label">WhatsApp</span>
+      <span class="con-card-value">Escríbenos</span>
+      <span class="con-card-hint">Respondemos en minutos</span>
+    </a>
+
+    <!-- FACEBOOK — cambia href y el @ -->
+    <a class="con-card facebook" href="https://www.facebook.com/TU_PAGINA" target="_blank" rel="noopener">
+      <div class="con-card-icon">
+        <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </div>
+      <span class="con-card-label">Facebook</span>
+      <span class="con-card-value">@TuPaginaFacebook</span><!-- REEMPLAZA -->
+      <span class="con-card-hint">Síguenos y mándanos un mensaje</span>
+    </a>
+
+    <!-- INSTAGRAM — cambia href y el @ -->
+    <a class="con-card instagram" href="https://www.instagram.com/TU_USUARIO" target="_blank" rel="noopener">
+      <div class="con-card-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </div>
+      <span class="con-card-label">Instagram</span>
+      <span class="con-card-value">@TuUsuarioIG</span><!-- REEMPLAZA -->
+      <span class="con-card-hint">Fotos, stories y reels</span>
+    </a>
+
+    <!-- TIKTOK — cambia href y el @ -->
+    <a class="con-card tiktok" href="https://www.tiktok.com/@TU_USUARIO" target="_blank" rel="noopener">
+      <div class="con-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+      </div>
+      <span class="con-card-label">TikTok</span>
+      <span class="con-card-value">@TuUsuarioTikTok</span><!-- REEMPLAZA -->
+      <span class="con-card-hint">Videos sobre nuestras abejas</span>
+    </a>
+
+    <!-- YOUTUBE — cambia href y nombre -->
+    <a class="con-card youtube" href="https://www.youtube.com/@TU_CANAL" target="_blank" rel="noopener">
+      <div class="con-card-icon">
+        <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.45A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.97C5.12 20 12 20 12 20s6.88 0 8.59-.45a2.78 2.78 0 0 0 1.95-1.97A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+      </div>
+      <span class="con-card-label">YouTube</span>
+      <span class="con-card-value">Cana´an Xu´x</span><!-- REEMPLAZA si cambia -->
+      <span class="con-card-hint">Tutoriales y documentales</span>
+    </a>
+
+    <!-- CORREO — cambia href y el texto del correo -->
+    <a class="con-card email" href="mailto:tucorreo@canaan.mx">
+      <div class="con-card-icon">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <span class="con-card-label">Correo electrónico</span>
+      <span class="con-card-value">tucorreo@canaan.mx</span><!-- REEMPLAZA -->
+      <span class="con-card-hint">Respuesta en menos de 24 h</span>
+    </a>
+
+  </div>
+
+  <!-- DIVISOR -->
+  <div class="con-divisor">
+    <div class="con-divisor-line"></div>
+    <span class="con-divisor-label">¿Cómo llegar?</span>
+    <div class="con-divisor-line"></div>
+  </div>
+
+  <!-- MAPA -->
+  <div class="con-mapa-section">
+    <div class="con-mapa-header">
+      <div class="con-mapa-header-text">
+        <h2>Nuestra ubicación</h2>
+        <p>Visítanos en Tenosique, Tabasco. Estamos disponibles para recibir pedidos en persona, dar asesorías y mostrarte nuestro proceso artesanal.</p>
+      </div>
+      <div class="con-direccion-chips">
+        <div class="con-chip">
+          <div class="con-chip-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><strong>Dirección</strong>Tu dirección, Colonia,<br>Tenosique, Tabasco, México</div><!-- REEMPLAZA -->
+        </div>
+        <div class="con-chip">
+          <div class="con-chip-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><strong>Horario</strong>Lun–Vie: 9:00 – 18:00 h<br>Sábados: 9:00 – 14:00 h</div>
+        </div>
+        <div class="con-chip">
+          <div class="con-chip-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.29h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div><strong>Teléfonos</strong>+52 (9XX) XXX-XXXX<br>+52 (9XX) XXX-XXXX</div><!-- REEMPLAZA -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MAPA DE GOOGLE MAPS
+         INSTRUCCIONES:
+         1. Abre maps.google.com y busca tu negocio o marca tu pin
+         2. Clic en "Compartir" → pestaña "Insertar un mapa"
+         3. Copia el iframe completo que te aparece
+         4. Reemplaza el iframe de abajo con el tuyo
+    ══════════════════════════════════════════════════════════════ -->
+    <div class="con-mapa-wrap">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60555.6!2d-91.4186!3d17.4743!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85ef7adf8d8b0001%3A0x5a7b123456789abc!2sTenosique%2C+Tabasco%2C+M%C3%A9xico!5e0!3m2!1ses-419!2smx!4v1700000000000"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Ubicación Cana´an Xu´x — Tenosique, Tabasco">
+      </iframe>
+    </div>
+
+
+
+</div><!-- /con-page -->
+
+<!-- FRANJA DE CIERRE -->
+<div class="con-cierre">
+  <h3>¿Lista para hacer tu pedido?</h3>
+  <p>Contáctanos directamente por WhatsApp o llámanos. Con gusto te atendemos y orientamos sobre nuestros productos.</p>
+  <div class="con-cierre-btns">
+    <a class="btn-cierre-wa" href="https://wa.me/521XXXXXXXXXX" target="_blank" rel="noopener"><!-- REEMPLAZA -->
+      <svg width="18" height="18" viewBox="0 0 32 32" fill="white"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.822.736 5.469 2.027 7.769L0 32l8.469-2.002A15.929 15.929 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm7.271 19.374c-.398-.199-2.352-1.161-2.716-1.293-.364-.132-.629-.199-.894.199-.265.398-1.028 1.293-1.26 1.559-.232.265-.464.299-.862.1-.398-.199-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.132-.265.066-.497-.033-.696-.1-.199-.894-2.155-1.226-2.95-.322-.773-.649-.668-.894-.68-.232-.012-.497-.014-.762-.014a1.46 1.46 0 00-1.06.497c-.364.398-1.393 1.361-1.393 3.317s1.426 3.846 1.625 4.111c.199.265 2.806 4.285 6.797 5.988.951.41 1.693.655 2.271.839.954.303 1.823.26 2.509.158.765-.114 2.352-.961 2.684-1.89.332-.928.332-1.724.232-1.89-.099-.165-.364-.265-.762-.464z"/></svg>
+      Escribir por WhatsApp
+    </a>
+    <a class="btn-cierre-tel" href="tel:+529XXXXXXXXX"><!-- REEMPLAZA -->
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.29h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      Llamar ahora
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Cana´an <span>Xu´x</span></div>
+        <p class="footer-desc">Somos apicultoras mexicanas. Ofrecemos miel de abeja pura y todos los productos derivados de la colmena.</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/" target="_blank" title="Instagram">📷</a>
+          <a href="https://www.facebook.com/" target="_blank" title="Facebook">f</a>
+          <a href="https://www.tiktok.com/" target="_blank" title="TikTok">♪</a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Tienda</h4><ul><li><a href="#">Todo para el Apicultor</a></li><li><a href="#">Productos de la Colmena</a></li><li><a href="velas.html">Velas</a></li></ul></div>
+      <div class="footer-col"><h4>Aprende</h4><ul><li><a href="abejas.html">Tipos de abejas</a></li><li><a href="centro_rescate.html">Centro de Rescate</a></li><li><a href="blog.html">Blog y Eventos</a></li></ul></div>
+      <div class="footer-col"><h4>Empresa</h4><ul><li><a href="nosotros.html">Nosotros</a></li><li><a href="contacto.html">Contacto</a></li><li><a href="#">Puntos de Venta</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">© 2025 · Todos los derechos reservados · Hecho en México</div>
+  </div>
+</footer>
+
+<div class="search-overlay">
+  <div class="search-box">
+    <button class="search-close">✕</button>
+    <input type="text" placeholder="Buscar productos...">
+  </div>
+</div>
+
+<!-- BOTÓN FLOTANTE WHATSAPP -->
+<a href="https://wa.me/521XXXXXXXXXX" class="whatsapp-float" target="_blank" rel="noopener noreferrer" title="Contáctanos por WhatsApp">
+  <img src="imagen/whatsapp-logo.png" alt="WhatsApp" class="whatsapp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+  <svg class="whatsapp-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:none"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.822.736 5.469 2.027 7.769L0 32l8.469-2.002A15.929 15.929 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.771-1.853l-.485-.288-5.027 1.188 1.216-4.895-.317-.502A13.248 13.248 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.271-9.959c-.398-.199-2.352-1.161-2.716-1.293-.364-.132-.629-.199-.894.199-.265.398-1.028 1.293-1.26 1.559-.232.265-.464.299-.862.1-.398-.199-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.132-.265.066-.497-.033-.696-.1-.199-.894-2.155-1.226-2.95-.322-.773-.649-.668-.894-.68-.232-.012-.497-.014-.762-.014a1.46 1.46 0 00-1.06.497c-.364.398-1.393 1.361-1.393 3.317s1.426 3.846 1.625 4.111c.199.265 2.806 4.285 6.797 5.988.951.41 1.693.655 2.271.839.954.303 1.823.26 2.509.158.765-.114 2.352-.961 2.684-1.89.332-.928.332-1.724.232-1.89-.099-.165-.364-.265-.762-.464z"/></svg>
+</a>
+
+<script src="script.js"></script>
+</body>
+</html>

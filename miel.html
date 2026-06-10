@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Miel — Cana´an Xu´x</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<style>
+  /* ─── BANNER DE COLECCIÓN ─── */
+  .coll-banner {
+    position: relative;
+    height: 260px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #2a2510 0%, #3d3520 60%, #5a3a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .coll-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(235,144,77,.07) 1px, transparent 0);
+    background-size: 28px 28px;
+  }
+
+  .coll-banner-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: .28;
+  }
+
+  .coll-banner-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    padding: 0 24px;
+  }
+
+  .coll-banner-content .breadcrumb {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+    margin-bottom: 12px;
+  }
+
+  .coll-banner-content .breadcrumb a {
+    color: var(--naranja);
+    text-decoration: none;
+  }
+
+  .coll-banner-content h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .coll-banner-content p {
+    font-size: 14px;
+    color: rgba(255,255,255,.7);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ─── BARRA DE RESULTADOS / FILTROS TOP ─── */
+  .coll-toolbar {
+    background: #fff;
+    border-bottom: 1px solid var(--borde);
+    padding: 14px 0;
+    position: sticky;
+    top: 116px;
+    z-index: 100;
+  }
+
+  .coll-toolbar-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .coll-count {
+    font-size: 13px;
+    color: var(--gris);
+    white-space: nowrap;
+  }
+
+  .coll-count strong {
+    color: var(--cafe);
+    font-weight: 700;
+  }
+
+  .filter-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+
+  .filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--gris-claro);
+    border: 1px solid var(--borde);
+    border-radius: 2px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--cafe);
+    cursor: pointer;
+    transition: all .2s;
+    letter-spacing: .03em;
+  }
+
+  .filter-tag:hover,
+  .filter-tag.active {
+    background: var(--naranja);
+    border-color: var(--naranja);
+    color: #fff;
+  }
+
+  .coll-sort {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .coll-sort label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--cafe);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .coll-sort select {
+    border: 1px solid var(--borde);
+    border-radius: 2px;
+    padding: 7px 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    color: var(--cafe);
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .coll-sort select:focus { border-color: var(--naranja); }
+
+  /* ─── LAYOUT PRINCIPAL ─── */
+  .coll-layout {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    display: block;
+  }
+
+  /* ─── SIDEBAR FILTROS — OCULTO ─── */
+  .coll-sidebar {
+    display: none;
+  }
+
+  .filter-section {
+    border-bottom: 1px solid var(--borde);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+
+  .filter-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .filter-heading {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--cafe);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .filter-heading .toggle-icon {
+    font-size: 14px;
+    color: var(--naranja);
+    transition: transform .2s;
+  }
+
+  .filter-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .filter-list li label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #4a3f2f;
+    cursor: pointer;
+    transition: color .15s;
+  }
+
+  .filter-list li label:hover { color: var(--naranja); }
+
+  .filter-list li input[type="checkbox"] {
+    accent-color: var(--naranja);
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+  }
+
+  .filter-list li .f-count {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--gris);
+  }
+
+  .price-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .price-range input[type="number"] {
+    width: 80px;
+    border: 1px solid var(--borde);
+    border-radius: 2px;
+    padding: 7px 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    color: var(--cafe);
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .price-range input:focus { border-color: var(--naranja); }
+  .price-range span { font-size: 12px; color: var(--gris); }
+
+  .btn-apply-price {
+    width: 100%;
+    margin-top: 12px;
+    background: var(--cafe);
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    padding: 9px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .2s;
+  }
+
+  .btn-apply-price:hover { background: var(--naranja); }
+
+  /* ─── GRID PRODUCTOS ─── */
+  .coll-grid-products {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  /* Animación de entrada */
+  .prod-card {
+    animation: fadeUp .4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .prod-card:nth-child(1) { animation-delay: .05s; }
+  .prod-card:nth-child(2) { animation-delay: .10s; }
+  .prod-card:nth-child(3) { animation-delay: .15s; }
+  .prod-card:nth-child(4) { animation-delay: .20s; }
+  .prod-card:nth-child(5) { animation-delay: .25s; }
+  .prod-card:nth-child(6) { animation-delay: .30s; }
+  .prod-card:nth-child(7) { animation-delay: .35s; }
+  .prod-card:nth-child(8) { animation-delay: .40s; }
+  .prod-card:nth-child(9) { animation-delay: .45s; }
+
+  /* ─── PRODUCTO DESTACADO — imagen arriba, info abajo (igual que los demás) ─── */
+  .prod-card.featured {
+    grid-column: span 2;
+    /* SIN display:grid ni grid-template-columns — así imagen queda arriba y texto abajo */
+  }
+
+  .prod-card.featured .prod-img-wrap {
+    height: 280px;
+  }
+
+  .prod-card.featured .prod-img-wrap img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  /* Etiqueta de volumen */
+  .prod-volume {
+    font-size: 11px;
+    color: var(--gris);
+    margin-bottom: 4px;
+    font-weight: 500;
+    letter-spacing: .04em;
+  }
+
+  /* Estrellas */
+  .prod-stars {
+    color: var(--naranja);
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  /* Precio tachado */
+  .prod-price-old {
+    font-size: 12px;
+    color: var(--gris);
+    text-decoration: line-through;
+    margin-right: 6px;
+  }
+
+  .prod-price-wrap {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  /* Sin resultados */
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--gris);
+  }
+
+  .no-results h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--cafe);
+    margin-bottom: 10px;
+  }
+
+  /* Paginación */
+  .coll-pagination {
+    margin-top: 48px;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .page-btn {
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--borde);
+    border-radius: 2px;
+    background: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--cafe);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s;
+  }
+
+  .page-btn:hover,
+  .page-btn.active {
+    background: var(--naranja);
+    border-color: var(--naranja);
+    color: #fff;
+  }
+
+  /* Banner miel cruda — dentro del grid */
+  .promo-banner {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #3d3520 0%, #5a3a1a 100%);
+    border-radius: 4px;
+    padding: 32px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .promo-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(235,144,77,.09) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+
+  .promo-banner-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  .promo-banner-text h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .promo-banner-text p {
+    font-size: 13px;
+    color: rgba(255,255,255,.7);
+    line-height: 1.6;
+    max-width: 420px;
+  }
+
+  .promo-banner a {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    display: inline-block;
+    background: var(--naranja);
+    color: #fff;
+    padding: 12px 28px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background .2s;
+    white-space: nowrap;
+  }
+
+  .promo-banner a:hover { background: var(--naranja-oscuro); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    .coll-layout { grid-template-columns: 190px 1fr; }
+    .coll-grid-products { grid-template-columns: repeat(2, 1fr); }
+    .prod-card.featured { grid-column: span 2; }
+  }
+
+  @media (max-width: 768px) {
+    .coll-layout { grid-template-columns: 1fr; }
+    .coll-sidebar { position: static; }
+    .coll-toolbar { top: 68px; }
+    .coll-grid-products { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .prod-card.featured { grid-column: span 2; }
+    .prod-card.featured .prod-img-wrap { height: 200px; }
+    .coll-banner { height: 200px; }
+    .coll-banner-content h1 { font-size: 28px; }
+    .promo-banner { flex-direction: column; text-align: center; }
+    .filter-tags { display: none; }
+    /* Sidebar oculta en móvil, mostrar como filtros expandibles */
+    .coll-sidebar { border-radius: 8px; margin-bottom: 16px; }
+    .coll-page { padding: 0 16px 60px; }
+  }
+
+  @media (max-width: 480px) {
+    .coll-grid-products { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .prod-card.featured { grid-column: span 2; }
+    /* Tarjetas más compactas */
+    .prod-card .prod-img-wrap { height: 130px; }
+    .prod-card .prod-name { font-size: 12px; }
+    .prod-card .prod-price { font-size: 13px; }
+    .btn-add { font-size: 11px; padding: 8px; }
+    /* Banner */
+    .coll-banner { height: 160px; }
+    .coll-banner-content h1 { font-size: 22px; }
+    .coll-toolbar { flex-wrap: wrap; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT -->
+<div class="announce"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <a href="index.html" class="logo-wrap">
+      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
+      <div class="logo-name">
+        Cana´an Xu´x
+        <span>Apicultoras Tenosiquenses</span>
+      </div>
+    </a>
+
+    <div class="header-icons">
+      <a href="#" onclick="toggleSearch(); return false">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        Buscar
+      </a>
+      <a href="#">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Ingresar
+      </a>
+      <a href="#" id="cart-btn">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Carrito <span class="cart-count-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-item"><a href="index.html">Inicio</a></div>
+    <div class="nav-item"><a href="#">Nosotros</a></div>
+    <div class="nav-item">
+      <span>Productos <span class="chevron">▾</span></span>
+      <div class="dropdown">
+        <div class="dropdown-group">
+          <div class="dropdown-title">Productos de la Colmena</div>
+          <a href="miel.html">Miel</a>
+          <a href="#">Miel en panal</a>
+          <a href="#">Jabones</a>
+        </div>
+        <div class="dropdown-group">
+          <div class="dropdown-title">Otros Productos</div>
+          <a href="#">Gotas</a>
+          <a href="#">Dulces</a>
+          <a href="velas.html">Velas</a>
+        </div>
+      </div>
+    </div>
+        <!-- Abejas -->
+    <div class="nav-item">
+      <span>Abejas <span class="chevron">▾</span></span>
+      <div class="dropdown">
+
+        <div class="dropdown-group">
+          <div class="dropdown-title">Tipos de abejas</div>
+          <a href="miel.html">Miel</a>
+          <a href="#">Miel en panal</a>
+          <a href="#">Jabones</a>
+        </div>
+
+      </div>
+    </div>
+    <div class="nav-item"><a href="#">Centro de Rescate</a></div>
+    <div class="nav-item"><a href="#">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="#">Contacto</a></div>
+  </div>
+</nav>
+
+<!-- BANNER COLECCIÓN -->
+<div class="coll-banner">
+  <img class="coll-banner-img"
+    src="https://mieloro.com.mx/cdn/shop/files/MO_BannerExperiencias5_1920x.png?v=1697607842"
+    alt="Miel Cana'an Xu'x">
+  <div class="coll-banner-content">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a> &nbsp;/&nbsp; Productos &nbsp;/&nbsp; Miel
+    </div>
+    <h1>Nuestra Miel</h1>
+    <p>Miel 100% pura extraída con amor de las colmenas de Tenosique, Tabasco. Variedad de flores silvestres, sin aditivos ni conservadores.</p>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="coll-toolbar">
+  <div class="coll-toolbar-inner">
+    <span class="coll-count"><strong id="product-count">9</strong> productos</span>
+
+    <div class="filter-tags">
+      <button class="filter-tag active" onclick="filterProducts('all', this)">Todos</button>
+      <button class="filter-tag" onclick="filterProducts('pura', this)">Miel Pura</button>
+      <button class="filter-tag" onclick="filterProducts('cruda', this)">Miel Cruda</button>
+      <button class="filter-tag" onclick="filterProducts('mezcla', this)">Con Mezcla</button>
+      <button class="filter-tag" onclick="filterProducts('granelito', this)">Tamaño Familiar</button>
+    </div>
+
+    <div class="coll-sort">
+      <label for="sort-select">Ordenar:</label>
+      <select id="sort-select" onchange="sortProducts(this.value)">
+        <option value="featured">Destacados</option>
+        <option value="price-asc">Precio: menor a mayor</option>
+        <option value="price-desc">Precio: mayor a menor</option>
+        <option value="name-asc">Nombre A–Z</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT PRINCIPAL -->
+<div class="coll-layout">
+
+  <!-- SIDEBAR FILTROS -->
+  <aside class="coll-sidebar">
+
+    <div class="filter-section">
+      <div class="filter-heading" onclick="toggleFilter(this)">
+        Tipo de Miel
+        <span class="toggle-icon">−</span>
+      </div>
+      <ul class="filter-list">
+        <li><label><input type="checkbox" checked> Miel Pura <span class="f-count">6</span></label></li>
+        <li><label><input type="checkbox"> Miel Cruda <span class="f-count">2</span></label></li>
+        <li><label><input type="checkbox"> Miel Cremosa <span class="f-count">1</span></label></li>
+        <li><label><input type="checkbox"> Miel con Mezclas <span class="f-count">3</span></label></li>
+      </ul>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-heading" onclick="toggleFilter(this)">
+        Presentación
+        <span class="toggle-icon">−</span>
+      </div>
+      <ul class="filter-list">
+        <li><label><input type="checkbox"> 250 g <span class="f-count">4</span></label></li>
+        <li><label><input type="checkbox"> 500 g <span class="f-count">5</span></label></li>
+        <li><label><input type="checkbox"> 1 kg <span class="f-count">3</span></label></li>
+        <li><label><input type="checkbox"> Granel <span class="f-count">2</span></label></li>
+      </ul>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-heading" onclick="toggleFilter(this)">
+        Precio
+        <span class="toggle-icon">−</span>
+      </div>
+      <div class="price-range">
+        <input type="number" placeholder="$ Min" min="0" value="">
+        <span>—</span>
+        <input type="number" placeholder="$ Máx" min="0" value="">
+      </div>
+      <button class="btn-apply-price">Aplicar</button>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-heading" onclick="toggleFilter(this)">
+        Disponibilidad
+        <span class="toggle-icon">−</span>
+      </div>
+      <ul class="filter-list">
+        <li><label><input type="checkbox" checked> En stock <span class="f-count">7</span></label></li>
+        <li><label><input type="checkbox"> Agotado <span class="f-count">2</span></label></li>
+      </ul>
+    </div>
+
+  </aside>
+
+  <!-- GRID PRODUCTOS -->
+  <div class="coll-products">
+    <div class="coll-grid-products" id="products-grid">
+        <!-- Producto 1 -->
+<div class="prod-card" data-category="pura" data-price="120">
+  <div class="prod-img-wrap">
+    <a href="###">
+      <img src="https://mieloro.com.mx/cdn/shop/products/JengibreIMG_5447_3_300x300.jpg?v=1632185302" alt="Miel con Jengibre">
+    </a>
+  </div>
+
+  <div class="prod-info">
+    <div class="prod-volume">250 g</div>
+    <div class="prod-name">Miel con Jengibre</div>
+    <div class="prod-price-wrap">
+      <span class="prod-price">$ 120.00</span>
+    </div>
+    <button class="btn-add" onclick="addToCart(this)">Agregar al carrito</button>
+  </div>
+</div>
+
+      <!-- Producto 2 -->
+      <div class="prod-card" data-category="pura" data-price="120" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+            <a href="###"></a>
+          <img src="https://mieloro.com.mx/cdn/shop/products/JengibreIMG_5447_3_300x300.jpg?v=1632185302" alt="Miel con Jengibre">
+        </div>
+        <div class="prod-info">
+          <div class="prod-volume">250 g</div>
+          <div class="prod-name">Miel con Jengibre</div>
+          <div class="prod-price-wrap">
+            <span class="prod-price">$ 120.00</span>
+          </div>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+
+      <!-- Producto 3 -->
+      <div class="prod-card" data-category="pura" data-price="95" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+            <a href="###"></a>
+          <img src="https://mieloro.com.mx/cdn/shop/products/ExtractoPropoleo30mlIMG_4564_3_1_300x300.jpg?v=1635354695" alt="Miel Pura Silvestre">
+        </div>
+        <div class="prod-info">
+          <div class="prod-volume">250 g</div>
+          <div class="prod-name">Miel Pura Silvestre</div>
+          <div class="prod-price-wrap">
+            <span class="prod-price">$ 95.00</span>
+          </div>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+
+      <!-- Banner promocional dentro del grid -->
+      <div class="promo-banner">
+        <div class="promo-banner-text">
+          <h3>🍯 Miel directa del apiario</h3>
+          <p>Cosechamos en Tenosique, Tabasco. Cero intermediarios, máxima frescura. Conoce nuestro proceso de extracción artesanal.</p>
+        </div>
+        <a href="#">Conocer proceso</a>
+      </div>
+
+      <!-- Producto 4 -->
+      <div class="prod-card" data-category="cruda" data-price="160" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+          <img src="https://mieloro.com.mx/cdn/shop/products/JaleaReal_IMG_4655_2_300x300.jpg?v=1651015305" alt="Miel Cruda 500g">
+        </div>
+        <div class="prod-info">
+          <div class="prod-stars">★★★★★</div>
+          <div class="prod-volume">500 g</div>
+          <div class="prod-name">Miel Cruda Natural 500 g</div>
+          <div class="prod-price-wrap">
+            <span class="prod-price">$ 160.00</span>
+          </div>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+
+      <!-- Producto 5 -->
+      <div class="prod-card" data-category="mezcla" data-price="140" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+          <span class="prod-badge nuevo">Nuevo</span>
+          <img src="https://mieloro.com.mx/cdn/shop/files/FotosproductosyKITS_3_63e011b0-99dc-4e31-9c88-ae4390d327c0_300x300.png?v=1774480203" alt="Miel con Canela">
+        </div>
+        <div class="prod-info">
+          <div class="prod-stars">★★★★☆</div>
+          <div class="prod-volume">250 g</div>
+          <div class="prod-name">Miel con Canela y Clavo</div>
+          <div class="prod-price-wrap">
+            <span class="prod-price">$ 140.00</span>
+          </div>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+
+      <!-- Producto 6 -->
+      <div class="prod-card" data-category="granelito" data-price="310" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+          <img src="https://mieloro.com.mx/cdn/shop/products/JengibreIMG_5447_3_300x300.jpg?v=1632185302" alt="Miel Familiar 1kg">
+        </div>
+        <div class="prod-info">
+          <div class="prod-stars">★★★★★</div>
+          <div class="prod-volume">1 kg</div>
+          <div class="prod-name">Miel Pura Familiar 1 kg</div>
+          <div class="prod-price-wrap">
+            <span class="prod-price-old">$ 360.00</span>
+            <span class="prod-price">$ 310.00</span>
+          </div>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+
+      <!-- Producto 7 — Agotado -->
+      <div class="prod-card" data-category="pura" data-price="80">
+        <div class="prod-img-wrap" onclick="openDetail(this.closest('.prod-card'))" style="cursor:pointer">
+          <span class="prod-badge agotado">Agotado</span>
+          <img src="https://mieloro.com.mx/cdn/shop/files/62_300x300.png?v=1712865934" alt="Miel de Flor de Naranja">
+        </div>
+        <div class="prod-info">
+          <div class="prod-stars" style="color:#ccc">★★★★★</div>
+          <div class="prod-volume">250 g</div>
+          <div class="prod-name" onclick="openDetail(this.closest('.prod-card'))" style="cursor:pointer">Miel de Flor de Naranja</div>
+          <div class="prod-price-wrap">
+            <span class="prod-price sold">Agotado</span>
+          </div>
+          <button class="btn-add disabled" disabled>Agotado</button>
+        </div>
+      </div>
+
+      <!-- Producto 8 -->
+      <div class="prod-card" data-category="cruda" data-price="220">
+        <div class="prod-img-wrap" onclick="openDetail(this.closest('.prod-card'))" style="cursor:pointer">
+          <img src="https://mieloro.com.mx/cdn/shop/products/ExtractoPropoleo30mlIMG_4564_3_1_300x300.jpg?v=1635354695" alt="Miel Cruda 1kg">
+        </div>
+        <div class="prod-info">
+          <div class="prod-stars">★★★★★</div>
+          <div class="prod-volume">1 kg</div>
+          <div class="prod-name" onclick="openDetail(this.closest('.prod-card'))" style="cursor:pointer">Miel Cruda Premium 1 kg</div>
+          <div class="prod-price-wrap">
+            <span class="prod-price">$ 220.00</span>
+          </div>
+          <button class="btn-add" onclick="addToCart(this.closest('.prod-card'))">Agregar al carrito</button>
+        </div>
+      </div>
+
+      <!-- Producto 9 — Agotado -->
+      <div class="prod-card" data-category="mezcla" data-price="130">
+        <div class="prod-img-wrap" onclick="openDetail(this.closest('.prod-card'))" style="cursor:pointer">
+          <span class="prod-badge agotado">Agotado</span>
+          <img src="https://mieloro.com.mx/cdn/shop/files/FotosproductosyKITS_b0ca2e70-6845-42a1-bada-4fef58267197_300x300.png?v=1714851289" alt="Miel con Propóleo">
+        </div>
+        <div class="prod-info">
+          <div class="prod-stars" style="color:#ccc">★★★★☆</div>
+          <div class="prod-volume">250 g</div>
+          <div class="prod-name" onclick="openDetail(this.closest('.prod-card'))" style="cursor:pointer">Miel con Propóleo y Polen</div>
+          <div class="prod-price-wrap">
+            <span class="prod-price sold">Agotado</span>
+          </div>
+          <button class="btn-add disabled" disabled>Agotado</button>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- PAGINACIÓN -->
+    <div class="coll-pagination">
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">›</button>
+    </div>
+
+  </div><!-- /coll-products -->
+
+</div><!-- /coll-layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Cana´an <span>Xu´x</span></div>
+        <p class="footer-desc">Apicultores tenosiquenses. Miel 100% pura de Tabasco, cosechada con respeto a las abejas y la naturaleza.</p>
+        <div class="footer-social">
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="Facebook">f</a>
+          <a href="#" title="WhatsApp">✉</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Tienda</h4>
+        <ul>
+          <li><a href="miel.html">Miel</a></li>
+          <li><a href="#">Mezclas con Miel</a></li>
+          <li><a href="#">Miel y Salud</a></li>
+          <li><a href="#">Bebidas a Base de Miel</a></li>
+          <li><a href="#">KITs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Experiencias</h4>
+        <ul>
+          <li><a href="#">Apicultor por un día</a></li>
+          <li><a href="#">Cata de Hidromiel</a></li>
+          <li><a href="#">La ruta de las abejas</a></li>
+          <li><a href="#">Curso básico</a></li>
+          <li><a href="#">Salva enjambres</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="#">Nosotros</a></li>
+          <li><a href="#">Contacto</a></li>
+          <li><a href="#">Puntos de Venta</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Beneficios de la miel</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 · Todos los derechos reservados · Hecho en México 🇲🇽</div>
+  </div>
+</footer>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay">
+  <div class="search-box">
+    <button class="search-close">✕</button>
+    <input type="text" placeholder="Buscar productos...">
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  /* ─── FILTRO POR CATEGORÍA ─── */
+  function filterProducts(cat, btn) {
+    document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    const cards = document.querySelectorAll('#products-grid .prod-card');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const cardCat = card.dataset.category || '';
+      const show = (cat === 'all' || cardCat === cat);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    document.querySelectorAll('#products-grid .promo-banner').forEach(b => b.style.display = '');
+    document.getElementById('product-count').textContent = visible;
+  }
+
+  /* ─── ORDENAR ─── */
+  function sortProducts(val) {
+    const grid = document.getElementById('products-grid');
+    const cards = [...grid.querySelectorAll('.prod-card')];
+
+    cards.sort((a, b) => {
+      const pa = parseFloat(a.dataset.price) || 0;
+      const pb = parseFloat(b.dataset.price) || 0;
+      const na = a.querySelector('.prod-name')?.textContent || '';
+      const nb = b.querySelector('.prod-name')?.textContent || '';
+
+      if (val === 'price-asc') return pa - pb;
+      if (val === 'price-desc') return pb - pa;
+      if (val === 'name-asc') return na.localeCompare(nb, 'es');
+      return 0;
+    });
+
+    const banner = grid.querySelector('.promo-banner');
+    cards.forEach(c => grid.appendChild(c));
+    if (banner) grid.appendChild(banner);
+  }
+
+  /* ─── TOGGLE FILTROS SIDEBAR ─── */
+  function toggleFilter(heading) {
+    const list = heading.nextElementSibling;
+    const icon = heading.querySelector('.toggle-icon');
+    if (!list) return;
+
+    const isOpen = list.style.display !== 'none';
+    list.style.display = isOpen ? 'none' : '';
+    icon.textContent = isOpen ? '+' : '−';
+  }
+</script>
+
+<!-- BOTÓN FLOTANTE WHATSAPP -->
+<a href="https://wa.me/521XXXXXXXXXX" 
+   class="whatsapp-float" 
+   target="_blank" 
+   rel="noopener noreferrer" 
+   title="Contáctanos por WhatsApp">
+  <!-- REEMPLAZA src CON LA RUTA A TU LOGO PERSONALIZADO DE WHATSAPP -->
+  <img src="imagen/whatsapp-logo.png" 
+       alt="WhatsApp" 
+       class="whatsapp-logo"
+       onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+  <!-- Ícono SVG de respaldo si no encuentra tu imagen -->
+  <svg class="whatsapp-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 2.822.736 5.469 2.027 7.769L0 32l8.469-2.002A15.929 15.929 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.771-1.853l-.485-.288-5.027 1.188 1.216-4.895-.317-.502A13.248 13.248 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.271-9.959c-.398-.199-2.352-1.161-2.716-1.293-.364-.132-.629-.199-.894.199-.265.398-1.028 1.293-1.26 1.559-.232.265-.464.299-.862.1-.398-.199-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.132-.265.066-.497-.033-.696-.1-.199-.894-2.155-1.226-2.95-.322-.773-.649-.668-.894-.68-.232-.012-.497-.014-.762-.014a1.46 1.46 0 00-1.06.497c-.364.398-1.393 1.361-1.393 3.317s1.426 3.846 1.625 4.111c.199.265 2.806 4.285 6.797 5.988.951.41 1.693.655 2.271.839.954.303 1.823.26 2.509.158.765-.114 2.352-.961 2.684-1.89.332-.928.332-1.724.232-1.89-.099-.165-.364-.265-.762-.464z"/>
+  </svg>
+</a>
+</body>
+</html>
