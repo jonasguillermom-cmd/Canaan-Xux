@@ -704,6 +704,1125 @@
 <nav>
   <div class="nav-inner">
     <div class="nav-item"><a href="index.html">Inicio</a></div>
+    <div class="nav-item"><a href="nosotros.html">Nosotros</a></div>
+    <div class="nav-item">
+      <span>Productos <span class="chevron">▾</span></span>
+      <div class="dropdown">
+        <div class="dropdown-group">
+          <div class="dropdown-title">Productos de la Colmena</div>
+          <a href="miel.html">Miel</a><a href="#">Miel en panal</a><a href="#">Jabones</a>
+        </div>
+        <div class="dropdown-group">
+          <div class="dropdown-title">Otros Productos</div>
+          <a href="#">Gotas</a><a href="#">Dulces</a><a href="velas.html">Velas</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item"><a href="abejas.html">Abejas</a></div>
+    <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
+    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="contacto.html">Contacto</a></div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<div class="mel-hero">
+  <!-- SLOT 1: Foto de fondo principal de la Apis mellifera o panal -->
+  <div class="mel-hero-bg-placeholder"></div>
+  <img class="mel-hero-bg" src="imagen_melifera/banner_melifera.png" alt="Apis mellifera"
+       onerror="this.style.display='none'">
+  <div class="mel-hero-overlay"></div>
+
+  <!-- SLOT 2: Imagen decorativa lateral (abeja de perfil, PNG sin fondo) -->
+  <div class="mel-hero-img-slot">
+    <img src="imagen_melifera/abeja_meliferaBanner.png" alt=""
+         onerror="this.outerHTML='<span class=\'img-placeholder\'>🐝</span>'">
+  </div>
+
+  <div class="mel-hero-content">
+    <div class="mel-breadcrumb">
+      <a href="index.html">Inicio</a> / <a href="abejas.html">Abejas</a> / Apis mellifera
+    </div>
+    <span class="mel-hero-tag">Con aguijón · Europea</span>
+    <h1>La abeja <em>Apis mellifera</em></h1>
+    <p>La abeja doméstica más conocida del mundo. Pilar de la apicultura moderna, gran productora de miel y polinizadora esencial de cultivos en los cinco continentes.</p>
+  </div>
+</div>
+
+<!-- CONTENIDO -->
+<div class="mel-page">
+
+  <!-- ══ 1. INTRODUCCIÓN ══ -->
+  <div class="mel-section">
+    <span class="mel-label">¿Quiénes son?</span>
+    <h2 class="mel-section-title">La abeja europea, reina de la apicultura</h2>
+
+    <div class="mel-intro-grid">
+      <div class="mel-intro-text">
+        <p>La <strong>Apis mellifera</strong>, conocida como abeja melífera o abeja europea, es el insecto polinizador más estudiado y criado en el mundo. Originaria de Europa, África y Asia occidental, fue introducida en América con la colonización española y hoy es la especie dominante en la apicultura comercial global.</p>
+        <p>A diferencia de las <em>Meliponinas</em> nativas, la Apis mellifera posee aguijón funcional que usa para defender su colonia. Vive en colonias enormes de hasta 80,000 individuos, construye sus panales con cera de abejas y puede producir entre 20 y 80 kg de miel al año por colmena bajo condiciones óptimas.</p>
+
+        <div class="mel-quick-facts">
+          <div class="mel-fact">
+            <div class="mel-fact-label">Nombre científico</div>
+            <div class="mel-fact-val">Apis mellifera Linnaeus, 1758</div>
+          </div>
+          <div class="mel-fact">
+            <div class="mel-fact-label">Tamaño</div>
+            <div class="mel-fact-val">12 – 20 mm según casta</div>
+          </div>
+          <div class="mel-fact">
+            <div class="mel-fact-label">¿Pica?</div>
+            <div class="mel-fact-val">Sí — aguijón con veneno (apitoxina)</div>
+          </div>
+          <div class="mel-fact">
+            <div class="mel-fact-label">Producción de miel</div>
+            <div class="mel-fact-val">20 – 80 kg por año / colmena</div>
+          </div>
+          <div class="mel-fact">
+            <div class="mel-fact-label">Región</div>
+            <div class="mel-fact-val">Mundial (introducida en América)</div>
+          </div>
+          <div class="mel-fact">
+            <div class="mel-fact-label">Estado</div>
+            <div class="mel-fact-val">Bajo presión por pesticidas y varroa</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLOT 3: Foto de Apis mellifera de cerca / colmena -->
+      <div class="mel-intro-img">
+        <img src="imagen_melifera/meliferas_panal.png" alt="Colmena de Apis mellifera"
+             onerror="this.style.display='none'">
+        <div class="img-caption">Apis mellifera sobre panal de cera — Tenosique, Tabasco</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="mel-divider">
+
+  <!-- ══ 2. GALERÍA DE IMÁGENES ══ -->
+  <div class="mel-section">
+    <span class="mel-label">Galería</span>
+    <h2 class="mel-section-title">En su entorno natural</h2>
+
+    <div class="mel-gallery-wrap">
+      <button class="mel-gallery-btn prev" id="galPrev" aria-label="Anterior">&#8592;</button>
+      <button class="mel-gallery-btn next" id="galNext" aria-label="Siguiente">&#8594;</button>
+
+      <div class="mel-gallery">
+        <div class="mel-gallery-track" id="galTrack">
+
+          <div class="mel-gallery-slot">
+            <img src="imagen_melifera/melifera_forrajeo.png" alt="Apis mellifera forrajeando" onerror="this.style.display='none'">
+            <div class="mel-gallery-slot-body">
+              <span class="slot-label">Comportamiento</span>
+              <span class="slot-title">Forrajeo en flor</span>
+            </div>
+          </div>
+
+          <div class="mel-gallery-slot">
+            <img src="imagen_apis/miel_apis.png" alt="Miel de Apis mellifera" onerror="this.style.display='none'">
+            <div class="mel-gallery-slot-body">
+              <span class="slot-label">Producto</span>
+              <span class="slot-title">Miel dorada</span>
+            </div>
+          </div>
+
+          <div class="mel-gallery-slot">
+            <img src="imagen_apis/colmena_apis.jpeg" alt="Colmenar" onerror="this.style.display='none'">
+            <div class="mel-gallery-slot-body">
+              <span class="slot-label">Crianza</span>
+              <span class="slot-title">Colmenar</span>
+            </div>
+          </div>
+
+          <div class="mel-gallery-slot">
+            <img src="imagen_melifera/melifera_panal_haxagonal.png" alt="Panal de cera" onerror="this.style.display='none'">
+            <div class="mel-gallery-slot-body">
+              <span class="slot-label">Arquitectura</span>
+              <span class="slot-title">Panal hexagonal</span>
+            </div>
+          </div>
+
+          <div class="mel-gallery-slot">
+            <img src="imagen_melifera/melifera_ReinaGaleria.png" alt="Abeja reina" onerror="this.style.display='none'">
+            <div class="mel-gallery-slot-body">
+              <span class="slot-label">Especie</span>
+              <span class="slot-title">Abeja reina</span>
+            </div>
+          </div>
+
+          <div class="mel-gallery-slot">
+            <img src="imagen_melifera/melifera_coloniaactiva.png" alt="Colonia en colmena" onerror="this.style.display='none'">
+            <div class="mel-gallery-slot-body">
+              <span class="slot-label">Hábitat</span>
+              <span class="slot-title">Colonia activa</span>
+            </div>
+          </div>
+
+        </div><!-- /track -->
+      </div><!-- /mel-gallery -->
+
+      <div class="mel-gallery-dots" id="galDots"></div>
+    </div><!-- /wrap -->
+  </div>
+
+  <hr class="mel-divider">
+
+  <!-- ══ 3. CARACTERÍSTICAS DE LA ESPECIE ══ -->
+  <div class="mel-section">
+    <div class="mel-species-grid">
+      <!-- SLOT 8: Foto detalle de la abeja / anatomía -->
+      <div class="mel-species-img">
+        <img src="imagen_melifera/melifera_reinaDetalle.png" alt="Anatomía Apis mellifera"
+             onerror="this.style.display='none'">
+      </div>
+
+      <div class="mel-species-info">
+        <span class="mel-label">Características</span>
+        <h3>Lo que hace única a la Apis mellifera</h3>
+        <ul class="mel-trait-list">
+          <li>
+
+            <div><strong>Aguijón funcional.</strong> Solo las obreras y la reina poseen aguijón. Al picar a humanos, la obrera muere porque el aguijón se desprende con su aparato digestivo.</div>
+          </li>
+          <li>
+
+            <div><strong>Panales de cera hexagonales.</strong> Construyen sus celdillas con cera que segregan de glándulas abdominales; la geometría hexagonal maximiza el espacio y minimiza el material.</div>
+          </li>
+          <li>
+
+            <div><strong>Danza de las abejas.</strong> Las exploradoras comunican la ubicación y distancia de fuentes de néctar mediante la famosa "danza en 8" descrita por Karl von Frisch (Nobel 1973).</div>
+          </li>
+          <li>
+
+            <div><strong>Alta producción de miel.</strong> Con menos del 20 % de humedad, su miel se conserva indefinidamente gracias a su acidez natural y bajo contenido de agua.</div>
+          </li>
+          <li>
+
+            <div><strong>Control de temperatura.</strong> Mantienen la colonia a ~35 °C mediante ventilación activa (aleteo) en verano y formación de racimo en invierno.</div>
+          </li>
+          <li>
+
+            <div><strong>Superorganismo social.</strong> Una reina fértil, 300–3,000 zánganos estacionales y hasta 80,000 obreras con roles especializados según su edad.</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="mel-divider">
+
+<!-- ══ 4. INFOGRAFÍA — ¿Por qué importan? ══ -->
+<div class="mel-section">
+  <div class="mel-infografia" style="
+    background-image: url('imagen_apis/fondo_importancia_apis.png');
+    background-size: cover;
+    background-position: center;
+  ">
+
+    <!-- Overlay -->
+    <div style="position:absolute;inset:0;background:rgba(20,12,0,0.75);z-index:0;"></div>
+
+    <div style="position:relative;z-index:1;">
+
+      <div class="mel-infografia-header">
+        <span class="mel-label" style="color:#f5d87a;">¿Por qué importan?</span>
+        <h2>El rol de la Apis mellifera en nuestro ecosistema</h2>
+        <p>Son responsables de la polinización de más de un tercio de los alimentos que consumimos. Su salud es directamente nuestra seguridad alimentaria.</p>
+      </div>
+
+      <div class="mel-info-row">
+
+        <!-- TARJETA 1 -->
+        <div class="mel-info-card">
+          <div class="mel-info-bubble">
+            <img src="imagen_melipona/seguridad_alimentariaMelipona.png" alt="Polinizan cultivos"
+                 style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                 onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🌽'}))">
+          </div>
+          <div class="mel-info-title">Polinizan cultivos</div>
+          <div class="mel-info-desc">Poliniza más de 90 cultivos comerciales, incluyendo almendras, aguacate, mango y cítricos.</div>
+        </div>
+
+        <!-- TARJETA 2 -->
+        <div class="mel-info-card">
+          <div class="mel-info-bubble">
+            <img src="imagen_melifera/meliferas_panal.png" alt="Producción de miel"
+                 style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                 onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🍯'}))">
+          </div>
+          <div class="mel-info-title">Producción de miel</div>
+          <div class="mel-info-desc">Produce la mayor parte de la miel comercial del mundo, con propiedades nutritivas y terapéuticas únicas.</div>
+        </div>
+
+        <!-- TARJETA 3 -->
+        <div class="mel-info-card">
+          <div class="mel-info-bubble">
+            <img src="productos/Pvelas/imagenesV/vela_oso.png" alt="Cera de abejas"
+                 style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                 onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:''}))">
+          </div>
+          <div class="mel-info-title">Cera y derivados</div>
+          <div class="mel-info-desc">Genera cera, propóleo, jalea real y apitoxina con aplicaciones en cosmética, medicina y gastronomía.</div>
+        </div>
+
+        <!-- TARJETA 4 -->
+        <div class="mel-info-card">
+          <div class="mel-info-bubble">
+            <img src="imagen_melifera/melifera_economia.png" alt="Economía local"
+                 style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                 onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'💰'}))">
+          </div>
+          <div class="mel-info-title">Economía local</div>
+          <div class="mel-info-desc">Sustenta miles de familias apicultoras en Tabasco y el sureste de México con ingresos directos e indirectos.</div>
+        </div>
+
+        <!-- TARJETA 5 -->
+        <div class="mel-info-card">
+          <div class="mel-info-bubble">
+            <img src="imagen_melipona/biodiversidad_melipona.png" alt="Biodiversidad"
+                 style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                 onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🌿'}))">
+          </div>
+          <div class="mel-info-title">Biodiversidad</div>
+          <div class="mel-info-desc">Contribuye a la reproducción de plantas silvestres y al equilibrio ecológico de los ecosistemas donde habita.</div>
+        </div>
+
+      </div><!-- /mel-info-row -->
+
+      <div class="mel-alert">
+        <span class="mel-alert-icon">⚠️</span>
+        <span>Las poblaciones de Apis mellifera enfrentan amenazas severas: el ácaro <strong>Varroa destructor</strong>, el uso indiscriminado de pesticidas y la pérdida de hábitat floral han reducido drásticamente las colonias silvestres en todo el mundo.</span>
+      </div>
+
+    </div><!-- /z-index wrapper -->
+  </div><!-- /mel-infografia -->
+</div><!-- /mel-section -->
+
+<hr class="mel-divider">
+
+  <!-- ══ 5. COLMENA Y MIEL ══ -->
+  <div class="mel-section">
+    <span class="mel-label">Su hogar y su miel</span>
+    <h2 class="mel-section-title">La colmena y la miel dorada</h2>
+
+    <div class="mel-hive-grid">
+      <!-- SLOT 9: Foto de la colmena / panal / cajas Langstroth -->
+      <div class="mel-hive-img">
+        <img src="imagen_melifera/melifera_hogarYmiel.png" alt="Interior de colmena Apis mellifera"
+             onerror="this.style.display='none'">
+      </div>
+
+      <div class="mel-hive-text">
+        <p>La colmena de la Apis mellifera puede construirse en cavidades naturales (huecos de árbol, grietas de roca) o en cajas-colmena diseñadas por el apicultor. La más utilizada en México es la <strong>colmena Langstroth</strong>, con marcos intercambiables de cera estampada que facilitan la inspección y la cosecha sin destruir el nido.</p>
+        <p>Adentro encontramos la cámara de cría —donde la reina pone hasta 2,000 huevos al día— y las alzas melarias donde las obreras depositan y maduran el néctar. Las celdillas se sellan con cera blanca cuando la miel alcanza menos del 20 % de humedad, garantizando su conservación natural.</p>
+        <p>La miel de Apis mellifera es más densa y de sabor más dulce que la de la melipona, con un amplio rango de aromas según las flores visitadas. En Tabasco, las floraciones de <strong>tajonal, campanilla y cítricos</strong> producen mieles de color ámbar claro con notas florales y afrutadas muy apreciadas en el mercado.</p>
+      </div>
+    </div>
+  </div>
+
+<!-- ══ CTA FINAL ══ -->
+<div class="mel-cta-band"
+     style="
+     background-image: linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)), url('imagen_melipona/bannerbajo_melipona.png');
+     background-size: cover;
+     background-position: center;
+     background-repeat: no-repeat;
+     color: #fff;
+     ">
+  <div>
+    <h3>¿Te interesa nuestra miel de Apis mellifera?</h3>
+    <p>Explora nuestra tienda de productos de la colmena o visita nuestro centro de rescate si encontraste un enjambre. Los reubicamos y les damos un nuevo hogar.</p>
+  </div>
+  <div class="mel-cta-btns">
+    <a href="velas.html" class="btn-mel-primary">Ver productos</a>
+    <a href="contacto.html" class="btn-mel-secondary">Contáctanos</a>
+  </div>
+</div>
+
+</div><!-- /mel-page -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Cana´an <span>Xu´x</span></div>
+        <p class="footer-desc">Somos apicultoras mexicanas. Ofrecemos miel de abeja pura y todos los productos derivados de la colmena.</p>
+        <div class="footer-social">
+          <a href="" target="_blank">📷</a>
+          <a href="" target="_blank">f</a>
+          <a href="" target="_blank">P</a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Tienda</h4><ul><li><a href="#">Todo para el Apicultor</a></li><li><a href="#">Productos de la Colmena</a></li><li><a href="#">Miel y Salud</a></li><li><a href="velas.html">Velas</a></li></ul></div>
+      <div class="footer-col"><h4>Aprende</h4><ul><li><a href="abejas.html">Tipos de abejas</a></li><li><a href="centro-rescate.html">Centro de Rescate</a></li><li><a href="#">Blog y Eventos</a></li></ul></div>
+      <div class="footer-col"><h4>Empresa</h4><ul><li><a href="#">Nosotros</a></li><li><a href="contacto.html">Contacto</a></li><li><a href="#">Puntos de Venta</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">© 2025 · Todos los derechos reservados · Hecho en México</div>
+  </div>
+</footer>
+
+<div class="search-overlay">
+  <div class="search-box">
+    <button class="search-close">✕</button>
+    <input type="text" placeholder="Buscar productos...">
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+(function(){
+  var track   = document.getElementById('galTrack');
+  var dotsEl  = document.getElementById('galDots');
+  var btnPrev = document.getElementById('galPrev');
+  var btnNext = document.getElementById('galNext');
+  if(!track) return;
+
+  var slides     = track.querySelectorAll('.mel-gallery-slot');
+  var total      = slides.length;
+  var perView    = window.innerWidth <= 620 ? 1 : 3;
+  var pages      = Math.ceil(total / perView);
+  var current    = 0;
+  var autoTimer;
+
+  /* Crear dots */
+  for(var i = 0; i < pages; i++){
+    var d = document.createElement('button');
+    d.className = 'mel-gallery-dot' + (i===0?' active':'');
+    d.setAttribute('aria-label','Página '+(i+1));
+    d.dataset.idx = i;
+    d.addEventListener('click', function(){ goTo(+this.dataset.idx); });
+    dotsEl.appendChild(d);
+  }
+
+  function slotWidth(){
+    return slides[0].offsetWidth + 8;
+  }
+
+  function goTo(idx){
+    current = (idx + pages) % pages;
+    var offset = current * perView * slotWidth();
+    track.style.transform = 'translateX(-' + offset + 'px)';
+    dotsEl.querySelectorAll('.mel-gallery-dot').forEach(function(d,i){
+      d.classList.toggle('active', i === current);
+    });
+    resetAuto();
+  }
+
+  function next(){ goTo(current + 1); }
+  function prev(){ goTo(current - 1); }
+
+  btnNext.addEventListener('click', next);
+  btnPrev.addEventListener('click', prev);
+
+  track.parentElement.addEventListener('mouseenter', function(){ clearInterval(autoTimer); });
+  track.parentElement.addEventListener('mouseleave', resetAuto);
+
+  function resetAuto(){
+    clearInterval(autoTimer);
+    autoTimer = setInterval(next, 3500);
+  }
+
+  /* Swipe táctil */
+  var startX = 0;
+  track.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; }, {passive:true});
+  track.addEventListener('touchend',   function(e){
+    var diff = startX - e.changedTouches[0].clientX;
+    if(Math.abs(diff) > 40){ diff > 0 ? next() : prev(); }
+  }, {passive:true});
+
+  resetAuto();
+})();
+</script>
+
+<!-- BOTÓN FLOTANTE WHATSAPP -->
+<a href="https://wa.me/521XXXXXXXXXX" 
+   class="whatsapp-float" 
+   target="_blank" 
+   rel="noopener noreferrer" 
+   title="Contáctanos por WhatsApp">
+  <img src="imagen/whatsapp-logo.png" 
+       alt="WhatsApp" 
+       class="whatsapp-logo"
+       onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+  <svg class="whatsapp-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 2.822.736 5.469 2.027 7.769L0 32l8.469-2.002A15.929 15.929 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.771-1.853l-.485-.288-5.027 1.188 1.216-4.895-.317-.502A13.248 13.248 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.271-9.959c-.398-.199-2.352-1.161-2.716-1.293-.364-.132-.629-.199-.894.199-.265.398-1.028 1.293-1.26 1.559-.232.265-.464.299-.862.1-.398-.199-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.132-.265.066-.497-.033-.696-.1-.199-.894-2.155-1.226-2.95-.322-.773-.649-.668-.894-.68-.232-.012-.497-.014-.762-.014a1.46 1.46 0 00-1.06.497c-.364.398-1.393 1.361-1.393 3.317s1.426 3.846 1.625 4.111c.199.265 2.806 4.285 6.797 5.988.951.41 1.693.655 2.271.839.954.303 1.823.26 2.509.158.765-.114 2.352-.961 2.684-1.89.332-.928.332-1.724.232-1.89-.099-.165-.364-.265-.762-.464z"/>
+  </svg>
+</a>
+</body>
+</html>}
+.mel-hero-bg-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(235,180,30,.08) 1px, transparent 0);
+  background-size: 30px 30px;
+}
+.mel-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(20,14,0,.92) 0%, rgba(20,14,0,.5) 50%, transparent 100%);
+}
+.mel-hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+  width: 100%;
+}
+.mel-breadcrumb {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 16px;
+}
+.mel-breadcrumb a { color: var(--naranja); text-decoration: none; }
+.mel-hero-tag {
+  display: inline-block;
+  background: rgba(160,100,10,.85);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 2px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(255,255,255,.2);
+}
+.mel-hero-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 52px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 20px rgba(0,0,0,.4);
+}
+.mel-hero-content h1 em {
+  font-style: italic;
+  color: #f5d87a;
+}
+.mel-hero-content p {
+  font-size: 15px;
+  color: rgba(255,255,255,.75);
+  max-width: 540px;
+  line-height: 1.75;
+}
+.mel-hero-img-slot {
+  position: absolute;
+  right: 80px;
+  bottom: 0;
+  width: 320px;
+  height: 400px;
+  z-index: 2;
+  background: transparent;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.mel-hero-img-slot img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 32px rgba(0,0,0,.5));
+}
+.mel-hero-img-slot .img-placeholder {
+  font-size: 180px;
+  line-height: 1;
+  filter: drop-shadow(0 8px 32px rgba(0,0,0,.4));
+  opacity: .6;
+}
+
+/* ════════════════════════════════
+   LAYOUT GENERAL
+════════════════════════════════ */
+.mel-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+.mel-section {
+  padding: 64px 0 0;
+}
+.mel-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--naranja);
+  margin-bottom: 10px;
+  display: block;
+}
+.mel-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px;
+  color: var(--cafe);
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+.mel-section-sub {
+  font-size: 14px;
+  color: var(--gris);
+  line-height: 1.8;
+  max-width: 600px;
+  margin-bottom: 40px;
+}
+.mel-divider {
+  border: none;
+  border-top: 1px solid var(--borde);
+  margin-top: 64px;
+}
+
+/* ════════════════════════════════
+   SECCIÓN DE INTRODUCCIÓN — 2 columnas
+════════════════════════════════ */
+.mel-intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+.mel-intro-text p {
+  font-size: 14px;
+  color: #4a3f2f;
+  line-height: 1.85;
+  margin-bottom: 16px;
+}
+.mel-intro-text p:last-child { margin-bottom: 0; }
+
+.mel-intro-img {
+  position: relative;
+  height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fdf8e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mel-intro-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.mel-intro-img .img-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,.7));
+  color: rgba(255,255,255,.85);
+  font-size: 11px;
+  padding: 24px 16px 12px;
+  font-style: italic;
+}
+.mel-intro-img-placeholder {
+  font-size: 100px;
+  opacity: .3;
+}
+
+/* Datos rápidos */
+.mel-quick-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 28px;
+}
+.mel-fact {
+  background: #f8f4ef;
+  border-left: 3px solid var(--naranja);
+  border-radius: 0 4px 4px 0;
+  padding: 14px 16px;
+}
+.mel-fact-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--naranja);
+  margin-bottom: 4px;
+}
+.mel-fact-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cafe);
+  line-height: 1.4;
+}
+
+/* ════════════════════════════════
+   CARRUSEL DE GALERÍA
+════════════════════════════════ */
+.mel-gallery-wrap {
+  position: relative;
+}
+.mel-gallery {
+  overflow: hidden;
+}
+.mel-gallery-track {
+  display: flex;
+  gap: 8px;
+  transition: transform .55s cubic-bezier(.25,.46,.45,.94);
+  will-change: transform;
+}
+.mel-gallery-slot {
+  flex: 0 0 calc(33.333% - 6px);
+  position: relative;
+  overflow: hidden;
+  background: #e6d9a8;
+  aspect-ratio: 3 / 4;
+  cursor: pointer;
+}
+.mel-gallery-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .55s cubic-bezier(.25,.46,.45,.94);
+}
+.mel-gallery-slot:hover img {
+  transform: scale(1.06);
+}
+.mel-gallery-slot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(25,18,0,.72) 0%, rgba(25,18,0,.15) 45%, transparent 100%);
+  z-index: 1;
+  transition: opacity .35s;
+}
+.mel-gallery-slot:hover::before { opacity: .9; }
+.mel-gallery-slot .slot-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  opacity: .18;
+  z-index: 0;
+}
+.mel-gallery-slot-body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: 28px 20px 22px;
+}
+.mel-gallery-slot .slot-label {
+  display: block;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(245,216,122,.9);
+  margin-bottom: 6px;
+}
+.mel-gallery-slot .slot-title {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.25;
+  text-shadow: 0 1px 8px rgba(0,0,0,.4);
+  transform: translateY(4px);
+  transition: transform .35s cubic-bezier(.25,.46,.45,.94);
+}
+.mel-gallery-slot:hover .slot-title { transform: translateY(0); }
+
+/* Flechas de navegación */
+.mel-gallery-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255,255,255,.92);
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  color: #4a3800;
+  box-shadow: 0 2px 12px rgba(0,0,0,.18);
+  transition: background .2s, transform .2s;
+  line-height: 1;
+}
+.mel-gallery-btn:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
+.mel-gallery-btn.prev { left: -22px; }
+.mel-gallery-btn.next { right: -22px; }
+
+/* Dots */
+.mel-gallery-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 18px;
+}
+.mel-gallery-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--borde, #d8cfc4);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background .25s, transform .25s;
+}
+.mel-gallery-dot.active {
+  background: var(--naranja, #c87941);
+  transform: scale(1.3);
+}
+
+/* ════════════════════════════════
+   ANATOMÍA / DATOS DE LA ESPECIE
+════════════════════════════════ */
+.mel-species-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+}
+.mel-species-img {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f5f0e8;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mel-species-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.mel-species-img .slot-icon { font-size: 80px; opacity: .2; }
+
+.mel-species-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: var(--cafe);
+  margin-bottom: 20px;
+}
+.mel-trait-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.mel-trait-list li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: #4a3f2f;
+  line-height: 1.6;
+}
+.mel-trait-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background: #fff8e1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* ════════════════════════════════
+   INFOGRAFÍA — ¿Por qué importan?
+════════════════════════════════ */
+.mel-infografia {
+  background-color: #1a1200;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  padding: 56px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.mel-infografia-header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-bottom: 48px;
+}
+.mel-infografia-header .mel-label { color: #f5d87a; }
+.mel-infografia-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.mel-infografia-header p {
+  font-size: 14px;
+  color: rgba(255,255,255,.6);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* 5 ítems en fila con conector */
+.mel-info-row {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+.mel-info-row::before {
+  content: '';
+  position: absolute;
+  top: 38px;
+  left: calc(10% + 16px);
+  right: calc(10% + 16px);
+  height: 2px;
+  background: linear-gradient(90deg, rgba(245,216,122,.15), rgba(245,216,122,.5), rgba(245,216,122,.15));
+  z-index: 0;
+}
+.mel-info-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.mel-info-bubble {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(245,216,122,.12);
+  border: 2px solid rgba(245,216,122,.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: border-color .25s, transform .25s;
+}
+.mel-info-card:hover .mel-info-bubble {
+  border-color: rgba(245,216,122,.6);
+  transform: scale(1.08);
+}
+.mel-info-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #f5d87a;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.mel-info-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,.6);
+  line-height: 1.55;
+}
+
+/* Alerta al pie de la infografía */
+.mel-alert {
+  position: relative;
+  z-index: 1;
+  margin-top: 36px;
+  background: rgba(235,144,77,.12);
+  border: 1px solid rgba(235,144,77,.3);
+  border-radius: 6px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: rgba(255,255,255,.75);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.mel-alert-icon { font-size: 22px; flex-shrink: 0; }
+
+/* ════════════════════════════════
+   NIDO / COLMENA — 2 columnas
+════════════════════════════════ */
+.mel-hive-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+.mel-hive-img {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f5edd0;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.mel-hive-img img { width: 100%; height: 100%; object-fit: cover; }
+.mel-hive-img .slot-icon { font-size: 80px; opacity: .2; }
+.mel-hive-text p {
+  font-size: 14px;
+  color: #4a3f2f;
+  line-height: 1.85;
+  margin-bottom: 14px;
+}
+
+/* ════════════════════════════════
+   CTA FINAL
+════════════════════════════════ */
+.mel-cta-band {
+  background: var(--cafe);
+  border-radius: 10px;
+  padding: 48px 40px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
+  margin-top: 64px;
+  position: relative;
+  overflow: hidden;
+}
+.mel-cta-band::before {
+  content: '🐝';
+  position: absolute;
+  right: 200px;
+  font-size: 120px;
+  opacity: .07;
+  line-height: 1;
+}
+.mel-cta-band h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.mel-cta-band p { font-size: 14px; color: rgba(255,255,255,.65); line-height: 1.7; }
+.mel-cta-btns { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+.btn-mel-primary {
+  background: var(--naranja);
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  transition: background .2s;
+}
+.btn-mel-primary:hover { background: var(--naranja-oscuro); }
+.btn-mel-secondary {
+  background: transparent;
+  color: rgba(255,255,255,.75);
+  border: 1px solid rgba(255,255,255,.25);
+  padding: 13px 28px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  transition: border-color .2s, color .2s;
+}
+.btn-mel-secondary:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+
+/* ════════════════════════════════
+   RESPONSIVE
+════════════════════════════════ */
+@media(max-width:960px){
+  .mel-intro-grid,.mel-species-grid,.mel-hive-grid{grid-template-columns:1fr;gap:32px}
+  .mel-info-row{grid-template-columns:repeat(3,1fr)}
+  .mel-info-row::before{display:none}
+  .mel-hero-img-slot{display:none}
+  .mel-hero-content h1{font-size:36px}
+  .mel-cta-band{grid-template-columns:1fr;text-align:center}
+  .mel-cta-btns{flex-direction:row;justify-content:center}
+  .mel-species-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:620px){
+  .mel-gallery-slot{flex: 0 0 calc(80% - 4px)}
+  .mel-gallery-btn.prev{left:-12px}
+  .mel-gallery-btn.next{right:-12px}
+  .mel-info-row{grid-template-columns:repeat(2,1fr)}
+  .mel-quick-facts{grid-template-columns:1fr}
+  .mel-hero{height:300px}
+  .mel-hero-content h1{font-size:26px}
+  .mel-infografia{padding:32px 20px}
+  .mel-cta-band{padding:32px 20px}
+  .mel-cta-btns{flex-direction:column}
+  .mel-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .mel-tabs-inner{padding:0 12px}
+  .mel-tab{white-space:nowrap;font-size:12px;padding:10px 14px}
+  .mel-page{padding:0 16px 60px}
+  .mel-section{padding:48px 0 0}
+  .mel-section-title{font-size:26px}
+  .mel-species-grid{grid-template-columns:1fr}
+  .mel-hive-grid{grid-template-columns:1fr}
+  .mel-cta-btns a{text-align:center;justify-content:center}
+}
+@media(max-width:400px){
+  .mel-info-row{grid-template-columns:1fr 1fr}
+  .mel-hero-content h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<div class="announce"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <a href="index.html" class="logo-wrap">
+      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
+      <div class="logo-name">Cana´an Xu´x<span>Apicultoras Tenosiquenses</span></div>
+    </a>
+    <div class="header-icons">
+      <a href="#" onclick="toggleSearch();return false">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>Buscar
+      </a>
+      <a href="#">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Ingresar
+      </a>
+      <a href="#" id="cart-btn">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Carrito <span class="cart-count-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-item"><a href="index.html">Inicio</a></div>
     <div class="nav-item"><a href="#">Nosotros</a></div>
     <div class="nav-item">
       <span>Productos <span class="chevron">▾</span></span>
