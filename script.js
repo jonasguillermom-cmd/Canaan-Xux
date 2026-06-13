@@ -5,12 +5,7 @@
 const SUPABASE_URL  = 'https://biiefknpnkynfobbetav.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
 const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON, {
-  auth: {
-    persistSession: true,       // mantener sesión en el mismo dispositivo
-    storageKey: 'canaan-xux',   // clave única para esta app
-  }
-});
+const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
 const PAGINAS_PROTEGIDAS = ['carrito.html'];
 
@@ -18,7 +13,6 @@ const PAGINAS_PROTEGIDAS = ['carrito.html'];
 let slide = 0;
 const slides = document.querySelectorAll('.hero-slide');
 const dots   = document.querySelectorAll('.hero-dot');
-
 function goSlide(n) {
   if (!slides.length) return;
   slides[slide].classList.remove('active');
@@ -43,7 +37,6 @@ document.querySelector('.search-close')?.addEventListener('click', function() {
 
 // ─── SESIÓN ───
 let usuarioActual = null;
-let menuAbierto = false;
 
 function actualizarHeaderUsuario() {
   const btnIngresar = document.getElementById('btn-ingresar');
@@ -53,14 +46,13 @@ function actualizarHeaderUsuario() {
   if (usuarioActual) {
     const nombre = usuarioActual.user_metadata?.nombre_completo || usuarioActual.email.split('@')[0];
     const nombreCorto = nombre.split(' ')[0];
-    if (txtSesion) txtSesion.textContent = '👤 ' + nombreCorto;
+    if (txtSesion) txtSesion.textContent = ' ' + nombreCorto;
     btnIngresar.href = '#';
     btnIngresar.onclick = toggleMenuUsuario;
   } else {
     if (txtSesion) txtSesion.textContent = 'Ingresar';
     btnIngresar.href = 'login.html';
     btnIngresar.onclick = null;
-    // Quitar menú si existe
     document.getElementById('menu-usuario')?.remove();
   }
 }
@@ -69,22 +61,15 @@ function toggleMenuUsuario(e) {
   e.preventDefault();
   e.stopPropagation();
   const existente = document.getElementById('menu-usuario');
-  if (existente) {
-    existente.remove();
-    menuAbierto = false;
-    return;
-  }
-  abrirMenuUsuario();
-}
+  if (existente) { existente.remove(); return; }
 
-function abrirMenuUsuario() {
   const menu = document.createElement('div');
   menu.id = 'menu-usuario';
   menu.style.cssText = `
-    position:fixed; top:68px; right:24px; background:#fff;
-    border:1px solid #e0e0e0; border-radius:10px;
-    box-shadow:0 4px 20px rgba(0,0,0,.15); z-index:9999;
-    min-width:200px; overflow:hidden;
+    position:fixed;top:68px;right:24px;background:#fff;
+    border:1px solid #e0e0e0;border-radius:10px;
+    box-shadow:0 4px 20px rgba(0,0,0,.15);z-index:9999;
+    min-width:200px;overflow:hidden;
   `;
   const nombre = usuarioActual.user_metadata?.nombre_completo || usuarioActual.email;
   menu.innerHTML = `
@@ -96,22 +81,17 @@ function abrirMenuUsuario() {
     <a href="#" id="btn-cerrar-sesion" style="display:block;padding:12px 16px;font-size:14px;color:#c0392b;text-decoration:none;">↩ Cerrar sesión</a>
   `;
   document.body.appendChild(menu);
-  menuAbierto = true;
 
-  // Botón cerrar sesión
   document.getElementById('btn-cerrar-sesion').addEventListener('click', function(e) {
     e.preventDefault();
     cerrarSesion();
   });
 
-  // Cerrar al hacer clic fuera
   setTimeout(() => {
     document.addEventListener('click', function cerrarFuera(ev) {
-      const menu = document.getElementById('menu-usuario');
-      const btn  = document.getElementById('btn-ingresar');
-      if (menu && !menu.contains(ev.target) && ev.target !== btn) {
-        menu.remove();
-        menuAbierto = false;
+      const m = document.getElementById('menu-usuario');
+      if (m && !m.contains(ev.target) && ev.target !== document.getElementById('btn-ingresar')) {
+        m.remove();
         document.removeEventListener('click', cerrarFuera);
       }
     });
@@ -127,10 +107,14 @@ async function cerrarSesion() {
   window.location.href = 'index.html';
 }
 
-async function inicializarSesion() {
+// ─── INICIALIZAR — todo dentro de DOMContentLoaded ───
+document.addEventListener('DOMContentLoaded', async () => {
+
+  // 1. Obtener sesión actual
   const { data } = await db.auth.getSession();
   usuarioActual = data?.session?.user || null;
 
+  // 2. Proteger páginas
   const paginaActual = window.location.pathname.split('/').pop();
   if (PAGINAS_PROTEGIDAS.includes(paginaActual) && !usuarioActual) {
     sessionStorage.setItem('redirigir_tras_login', paginaActual);
@@ -138,15 +122,16 @@ async function inicializarSesion() {
     return;
   }
 
+  // 3. Actualizar header y carrito
   actualizarHeaderUsuario();
   await actualizarBadgeCarrito();
-}
 
-// Detectar cambios de sesión en tiempo real
-db.auth.onAuthStateChange(async (event, session) => {
-  usuarioActual = session?.user || null;
-  actualizarHeaderUsuario();
-  await actualizarBadgeCarrito();
+  // 4. Escuchar cambios de sesión (login/logout en tiempo real)
+  db.auth.onAuthStateChange(async (event, session) => {
+    usuarioActual = session?.user || null;
+    actualizarHeaderUsuario();
+    await actualizarBadgeCarrito();
+  });
 });
 
 // ─── CARRITO ───
@@ -179,9 +164,9 @@ async function addToCart(card) {
 
   if (productoId) {
     const { error } = await db.from('carrito').upsert({
-      usuario_id:  usuarioActual.id,
+      usuario_id: usuarioActual.id,
       producto_id: productoId,
-      cantidad:    1
+      cantidad: 1
     }, { onConflict: 'usuario_id,producto_id' });
     if (!error) { mostrarConfirmacion(btn); await actualizarBadgeCarrito(); }
   } else {
@@ -211,6 +196,3 @@ document.getElementById('cart-btn')?.addEventListener('click', function(e) {
     window.location.href = 'carrito.html';
   }
 });
-
-// ─── INICIALIZAR ───
-document.addEventListener('DOMContentLoaded', inicializarSesion);
