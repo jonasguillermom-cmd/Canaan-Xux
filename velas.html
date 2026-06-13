@@ -500,25 +500,11 @@
     .coll-banner-content h1 { font-size: 28px; }
     .promo-banner { flex-direction: column; text-align: center; }
     .filter-tags { display: none; }
-    .coll-sidebar { border-radius: 8px; margin-bottom: 16px; }
-    .coll-page { padding: 0 16px 60px; }
   }
 
   @media (max-width: 480px) {
     .coll-grid-products { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .prod-card.featured { grid-column: span 2; }
-    /* Tarjetas de velas más compactas */
-    .prod-card .prod-img-wrap { height: 140px; }
-    .prod-name { font-size: 12px; }
-    .prod-price { font-size: 13px; }
-    .btn-add { font-size: 11px; padding: 8px; }
-    /* Swatches de color más pequeños */
-    .card-swatches { gap: 5px; }
-    .card-swatch { width: 16px; height: 16px; }
-    /* Banner */
-    .coll-banner { height: 160px; }
-    .coll-banner-content h1 { font-size: 22px; }
-    .coll-toolbar { flex-wrap: wrap; gap: 8px; }
   }
 </style>
 </head>
@@ -543,9 +529,9 @@
         <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
         Buscar
       </a>
-      <a href="#">
+      <a href="login.html" id="btn-ingresar">
         <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Ingresar
+        <span id="txt-sesion">Ingresar</span>
       </a>
       <a href="#" id="cart-btn">
         <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -559,13 +545,13 @@
 <nav>
   <div class="nav-inner">
     <div class="nav-item"><a href="index.html">Inicio</a></div>
-    <div class="nav-item"><a href="nosotros.html">Nosotros</a></div>
+    <div class="nav-item"><a href="#">Nosotros</a></div>
     <div class="nav-item">
       <span>Productos <span class="chevron">▾</span></span>
       <div class="dropdown">
         <div class="dropdown-group">
           <div class="dropdown-title">Productos de la Colmena</div>
-          <a href="#">Miel</a>
+          <a href="miel.html">Miel</a>
           <a href="#">Miel en panal</a>
           <a href="#">Jabones</a>
         </div>
@@ -577,10 +563,23 @@
         </div>
       </div>
     </div>
-    <div class="nav-item"><a href="abejas.html">Abejas</a></div>
-    <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
-    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
-    <div class="nav-item"><a href="contacto.html">Contacto</a></div>
+        <!-- Abejas -->
+    <div class="nav-item">
+      <span>Abejas <span class="chevron">▾</span></span>
+      <div class="dropdown">
+
+        <div class="dropdown-group">
+          <div class="dropdown-title">Tipos de abejas</div>
+          <a href="miel.html">Miel</a>
+          <a href="#">Miel en panal</a>
+          <a href="#">Jabones</a>
+        </div>
+
+      </div>
+    </div>
+    <div class="nav-item"><a href="#">Centro de Rescate</a></div>
+    <div class="nav-item"><a href="#">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="#">Contacto</a></div>
   </div>
 </nav>
 
@@ -687,7 +686,7 @@
     <div class="coll-grid-products" id="products-grid">
 
       <!-- Vela Hexagonales de colores -->
-      <div class="prod-card" data-category="hexagonal" data-price="60">
+      <div class="prod-card" data-category="hexagonal" data-price="60" onclick="addToCart(this)">
         <div class="prod-img-wrap">
           <span class="prod-badge nuevo">Popular</span>
           <a href="productos/Pvelas/vela_hexagonales.html">
@@ -701,15 +700,15 @@
           <div class="prod-price-wrap">
             <span class="prod-price">$ 60.00</span>
           </div>
-          <button class="btn-add" onclick="addToCart(this.closest('.prod-card')); event.stopPropagation()">Agregar al carrito</button>
+          <button class="btn-add">Agregar al carrito</button>
         </div>
       </div>
 
       <!-- Vela Oso -->
-      <div class="prod-card" data-category="oso" data-price="75">
+      <div class="prod-card" data-category="oso" data-price="75" onclick="addToCart(this)">
         <div class="prod-img-wrap">
           <span class="prod-badge nuevo">Popular </span>
-          <a href="productos/Pvelas/vela_oso.html">
+          <a href="vela_oso.html">
             <img src="productos/Pvelas/imagenesV/vela_oso.png" alt="Veladora Figura de Oso"
                  onerror="this.src='https://placehold.co/300x300/fff3e0/c96a2a?text=Vela+Oso'">
           </a>
@@ -720,21 +719,21 @@
           <div class="prod-price-wrap">
             <span class="prod-price">$ 75.00</span>
           </div>
-          <button class="btn-add" onclick="addToCart(this.closest('.prod-card')); event.stopPropagation()">Agregar al carrito</button>
+          <button class="btn-add">Agregar al carrito</button>
         </div>
       </div>
 
       <!-- Banner promocional dentro del grid -->
       <div class="promo-banner">
         <div class="promo-banner-text">
-          <h3>Velas de cera de abeja natural</h3>
+          <h3>&#128305; Velas de cera de abeja natural</h3>
           <p>Elaboradas artesanalmente en Tenosique, Tabasco, con cera pura de nuestras propias colmenas. Sin parafina, sin aditivos, con el aroma suave y c&#225;lido de la cera de abeja.</p>
         </div>
         <a href="#">Conocer proceso</a>
       </div>
 
       <!-- Vela de Color: Cafe -->
-      <div class="prod-card" data-category="color" data-price="65">
+      <div class="prod-card" data-category="color" data-price="65" onclick="addToCart(this)">
         <div class="prod-img-wrap">
           <a href="productos/Pvelas/vela_colores.html">
             <img src="productos/Pvelas/imagenesV/vela_coloresCafe.png" alt="Vela de Color Cafe"
@@ -754,12 +753,12 @@
           <div class="prod-price-wrap">
             <span class="prod-price">$ 65.00</span>
           </div>
-          <button class="btn-add" onclick="addToCart(this.closest('.prod-card')); event.stopPropagation()">Agregar al carrito</button>
+          <button class="btn-add">Agregar al carrito</button>
         </div>
       </div>
 
       <!-- Vela de Color: Amarillo -->
-      <div class="prod-card" data-category="color" data-price="65">
+      <div class="prod-card" data-category="color" data-price="65" onclick="addToCart(this)">
         <div class="prod-img-wrap">
           <a href="productos/Pvelas/vela_colores.html">
             <img src="productos/Pvelas/imagenesV/vela_coloresAmarillo.png" alt="Vela de Color Amarillo"
@@ -779,12 +778,12 @@
           <div class="prod-price-wrap">
             <span class="prod-price">$ 65.00</span>
           </div>
-          <button class="btn-add" onclick="addToCart(this.closest('.prod-card')); event.stopPropagation()">Agregar al carrito</button>
+          <button class="btn-add">Agregar al carrito</button>
         </div>
       </div>
 
       <!-- Vela de Color: Rosado -->
-      <div class="prod-card" data-category="color" data-price="65">
+      <div class="prod-card" data-category="color" data-price="65" onclick="addToCart(this)">
         <div class="prod-img-wrap">
           <a href="productos/Pvelas/vela_colores.html">
             <img src="productos/Pvelas/imagenesV/vela_coloresRosado.png" alt="Vela de Color Rosado"
@@ -804,12 +803,12 @@
           <div class="prod-price-wrap">
             <span class="prod-price">$ 65.00</span>
           </div>
-          <button class="btn-add" onclick="addToCart(this.closest('.prod-card')); event.stopPropagation()">Agregar al carrito</button>
+          <button class="btn-add">Agregar al carrito</button>
         </div>
       </div>
 
       <!-- Vela de Color: Azul Claro -->
-      <div class="prod-card" data-category="color" data-price="65">
+      <div class="prod-card" data-category="color" data-price="65" onclick="addToCart(this)">
         <div class="prod-img-wrap">
           <a href="productos/Pvelas/vela_colores.html">
             <img src="productos/Pvelas/imagenesV/vela_coloresAzulclaro.png" alt="Vela de Color Azul Claro"
@@ -829,12 +828,12 @@
           <div class="prod-price-wrap">
             <span class="prod-price">$ 65.00</span>
           </div>
-          <button class="btn-add" onclick="addToCart(this.closest('.prod-card')); event.stopPropagation()">Agregar al carrito</button>
+          <button class="btn-add">Agregar al carrito</button>
         </div>
       </div>
 
       <!-- Vela de Color: Blanco -->
-      <div class="prod-card" data-category="color" data-price="65">
+      <div class="prod-card" data-category="color" data-price="65" onclick="addToCart(this)">
         <div class="prod-img-wrap">
           <a href="vela_colores.html">
             <img src="imagenesV/vela_blanco-1.jpeg" alt="Vela de Color Blanco"
@@ -854,7 +853,7 @@
           <div class="prod-price-wrap">
             <span class="prod-price">$ 65.00</span>
           </div>
-          <button class="btn-add" onclick="addToCart(this.closest('.prod-card')); event.stopPropagation()">Agregar al carrito</button>
+          <button class="btn-add">Agregar al carrito</button>
         </div>
       </div>
 
@@ -875,7 +874,7 @@
     <div class="footer-grid">
       <div>
         <div class="footer-logo">Cana´an <span>Xu´x</span></div>
-        <p class="footer-desc">Apicultoras tenosiquenses. Miel 100% pura de Tabasco, cosechada con respeto a las abejas y la naturaleza.</p>
+        <p class="footer-desc">Apicultores tenosiquenses. Miel 100% pura de Tabasco, cosechada con respeto a las abejas y la naturaleza.</p>
         <div class="footer-social">
           <a href="#" title="Instagram">📷</a>
           <a href="#" title="Facebook">f</a>
@@ -925,6 +924,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 <script>
   /* ─── FILTRO POR CATEGORÍA ─── */
@@ -980,21 +980,11 @@
   }
 </script>
 
-<!-- BOTÓN FLOTANTE WHATSAPP -->
-<a href="https://wa.me/521XXXXXXXXXX" 
-   class="whatsapp-float" 
-   target="_blank" 
-   rel="noopener noreferrer" 
-   title="Contáctanos por WhatsApp">
-  <!-- REEMPLAZA src CON LA RUTA A TU LOGO PERSONALIZADO DE WHATSAPP -->
-  <img src="imagen/whatsapp-logo.png" 
-       alt="WhatsApp" 
-       class="whatsapp-logo"
-       onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-  <!-- Ícono SVG de respaldo si no encuentra tu imagen -->
-  <svg class="whatsapp-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:none">
-    <path d="M16 0C7.163 0 0 7.163 0 16c0 2.822.736 5.469 2.027 7.769L0 32l8.469-2.002A15.929 15.929 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.771-1.853l-.485-.288-5.027 1.188 1.216-4.895-.317-.502A13.248 13.248 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.271-9.959c-.398-.199-2.352-1.161-2.716-1.293-.364-.132-.629-.199-.894.199-.265.398-1.028 1.293-1.26 1.559-.232.265-.464.299-.862.1-.398-.199-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.132-.265.066-.497-.033-.696-.1-.199-.894-2.155-1.226-2.95-.322-.773-.649-.668-.894-.68-.232-.012-.497-.014-.762-.014a1.46 1.46 0 00-1.06.497c-.364.398-1.393 1.361-1.393 3.317s1.426 3.846 1.625 4.111c.199.265 2.806 4.285 6.797 5.988.951.41 1.693.655 2.271.839.954.303 1.823.26 2.509.158.765-.114 2.352-.961 2.684-1.89.332-.928.332-1.724.232-1.89-.099-.165-.364-.265-.762-.464z"/>
-  </svg>
-</a>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  cargarProductosCategoria('velas');
+});
+</script>
+
 </body>
 </html>
