@@ -182,13 +182,20 @@
         </div>
 
         <div class="field-sm">
-          <label>Categoría *</label>
-          <select id="prod-categoria">
-            <option value="">Selecciona...</option>
-            <option value="miel">Miel</option>
-            <option value="melipona">Melipona</option>
-            <option value="velas">Velas</option>
-            <option value="otros">Otros</option>
+          <label>Página donde aparece *</label>
+          <select id="prod-categoria" onchange="actualizarSubcategoria()">
+            <option value="">Selecciona página...</option>
+            <option value="miel">🍯 Miel — página miel.html</option>
+            <option value="velas">🕯️ Velas — página velas.html</option>
+            <option value="melipona">🐝 Melipona — página melipona.html</option>
+            <option value="otros">📦 Otros Productos — index.html</option>
+          </select>
+        </div>
+
+        <div class="field-sm">
+          <label>Subcategoría / Filtro</label>
+          <select id="prod-subcategoria">
+            <option value="">Selecciona página primero...</option>
           </select>
         </div>
 
@@ -239,6 +246,41 @@ const ADMIN_EMAIL = 'jonasguillermom@gmail.com';
 
 let adminActual = null;
 let fotoFile    = null;
+
+// ── SUBCATEGORÍAS POR PÁGINA ──
+const SUBCATEGORIAS = {
+  miel: [
+    { value: 'pura',      label: 'Miel Pura' },
+    { value: 'cruda',     label: 'Miel Cruda' },
+    { value: 'mezcla',    label: 'Con Mezcla' },
+    { value: 'granelito', label: 'Tamaño Familiar' },
+  ],
+  velas: [
+    { value: 'hexagonal', label: 'Hexagonal' },
+    { value: 'oso',       label: 'Figura de Oso' },
+    { value: 'color',     label: 'De Colores' },
+  ],
+  melipona: [
+    { value: 'pura',      label: 'Miel Pura Melipona' },
+    { value: 'medicinal', label: 'Uso Medicinal' },
+    { value: 'kit',       label: 'Kit / Set' },
+  ],
+  otros: [
+    { value: 'general',   label: 'Producto General' },
+  ],
+};
+
+function actualizarSubcategoria() {
+  const cat  = document.getElementById('prod-categoria').value;
+  const sub  = document.getElementById('prod-subcategoria');
+  const subs = SUBCATEGORIAS[cat] || [];
+
+  if (!subs.length) {
+    sub.innerHTML = '<option value="">Sin subcategoría</option>';
+    return;
+  }
+  sub.innerHTML = subs.map(s => `<option value="${s.value}">${s.label}</option>`).join('');
+}
 
 // ── LOGIN ──
 async function loginAdmin() {
@@ -315,10 +357,11 @@ async function guardarProducto() {
   const nombre    = document.getElementById('prod-nombre').value.trim();
   const precio    = parseFloat(document.getElementById('prod-precio').value);
   const categoria = document.getElementById('prod-categoria').value;
-  const stock     = parseInt(document.getElementById('prod-stock').value) || 0;
-  const desc      = document.getElementById('prod-desc').value.trim();
-  const activo    = document.getElementById('prod-activo').checked;
-  const editId    = document.getElementById('edit-id').value;
+  const stock       = parseInt(document.getElementById('prod-stock').value) || 0;
+  const desc        = document.getElementById('prod-desc').value.trim();
+  const activo      = document.getElementById('prod-activo').checked;
+  const subcategoria = document.getElementById('prod-subcategoria').value;
+  const editId      = document.getElementById('edit-id').value;
   const msg       = document.getElementById('form-msg');
   const btn       = document.getElementById('btn-guardar');
 
@@ -345,7 +388,7 @@ async function guardarProducto() {
     }
   }
 
-  const datos = { nombre, precio, categoria, descripcion: desc, stock, activo };
+  const datos = { nombre, precio, categoria, subcategoria, descripcion: desc, stock, activo };
   if (imagen_url) datos.imagen_url = imagen_url;
 
   let error;
@@ -386,7 +429,7 @@ async function cargarProductos() {
       <img src="${p.imagen_url || ''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8';this.src=''">
       <div class="prod-item-info">
         <div class="nombre">${p.nombre}</div>
-        <div class="meta">${p.categoria} • Stock: ${p.stock} • ${p.activo ? '✅ Visible' : '⛔ Oculto'}</div>
+        <div class="meta">${p.categoria}${p.subcategoria ? ' › ' + p.subcategoria : ''} • Stock: ${p.stock} • ${p.activo ? '✅ Visible' : '⛔ Oculto'}</div>
         <div class="precio">$${parseFloat(p.precio).toFixed(2)}</div>
       </div>
       <div class="prod-acciones">
@@ -409,6 +452,8 @@ async function editarProducto(id) {
   document.getElementById('prod-stock').value     = data.stock;
   document.getElementById('prod-desc').value      = data.descripcion || '';
   document.getElementById('prod-activo').checked  = data.activo;
+  actualizarSubcategoria();
+  if (data.subcategoria) document.getElementById('prod-subcategoria').value = data.subcategoria;
   document.getElementById('form-titulo').textContent = '✏️ Editando producto';
   document.getElementById('btn-cancelar').style.display = 'block';
 
