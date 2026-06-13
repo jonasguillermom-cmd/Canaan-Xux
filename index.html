@@ -300,55 +300,5 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 
-<script>
-async function cargarProductosIndex() {
-  const { data } = await db.from('productos')
-    .select('*')
-    .eq('activo', true)
-    .order('creado_en', { ascending: false });
-
-  if (!data || data.length === 0) {
-    document.getElementById('grid-vendidos').innerHTML = '<p style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Pronto tendremos productos disponibles.</p>';
-    document.getElementById('grid-otros').innerHTML = '';
-    return;
-  }
-
-  function tarjeta(p) {
-    const agotado = p.stock <= 0;
-    return `
-      <div class="prod-card" data-producto-id="${p.id}" ${!agotado ? 'onclick="addToCart(this)"' : ''}>
-        <div class="prod-img-wrap">
-          ${agotado ? '<span class="prod-badge agotado">Agotado</span>' : ''}
-          <img src="${p.imagen_url || ''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">${p.nombre}</div>
-          <div class="prod-price ${agotado ? 'sold' : ''}">
-            ${agotado ? 'Agotado' : '$ ' + parseFloat(p.precio).toFixed(2)}
-          </div>
-          <button class="btn-add" ${agotado ? 'disabled' : ''}>
-            ${agotado ? 'Agotado' : 'Agregar al carrito'}
-          </button>
-        </div>
-      </div>`;
-  }
-
-  // Primeros 3 → "Lo más vendido"
-  const vendidos = data.slice(0, 3);
-  // El resto → "Otros productos"
-  const otros    = data.slice(3);
-
-  document.getElementById('grid-vendidos').innerHTML = vendidos.map(tarjeta).join('') || '<p style="grid-column:1/-1;text-align:center;color:#7a7a6a;padding:20px">Agrega productos desde el panel admin.</p>';
-  document.getElementById('grid-otros').innerHTML    = otros.map(tarjeta).join('')    || '';
-}
-
-// Se llama desde DOMContentLoaded en script.js automáticamente
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", cargarProductosIndex);
-} else {
-  cargarProductosIndex();
-}
-</script>
-
 </body>
 </html>
