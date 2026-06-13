@@ -247,9 +247,32 @@ async function cargarProductosIndex() {
 }
 
 
-// ─── CARGAR PRODUCTOS EN PÁGINAS DE CATEGORÍA ───
+// ─── TARJETA DE PRODUCTO (reutilizable) ───
+function tarjetaProducto(p) {
+  const agotado = p.stock <= 0;
+  return `
+    <div class="prod-card" data-category="${p.subcategoria || ''}" data-producto-id="${p.id}" data-price="${p.precio}" ${!agotado ? 'onclick="addToCart(this)"' : ''}>
+      <div class="prod-img-wrap">
+        ${agotado ? '<span class="prod-badge agotado">Agotado</span>' : ''}
+        <img src="${p.imagen_url || ''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
+      </div>
+      <div class="prod-info">
+        <div class="prod-name">${p.nombre}</div>
+        ${p.descripcion ? `<div style="font-size:12px;color:#7a7a6a;margin:4px 0;">${p.descripcion}</div>` : ''}
+        <div class="prod-price ${agotado ? 'sold' : ''}">
+          ${agotado ? 'Agotado' : '$ ' + parseFloat(p.precio).toFixed(2)}
+        </div>
+        <button class="btn-add" ${agotado ? 'disabled' : ''}>
+          ${agotado ? 'Agotado' : 'Agregar al carrito'}
+        </button>
+      </div>
+    </div>`;
+}
+
+// ─── CARGAR PRODUCTOS EN PÁGINAS DE CATEGORÍA (miel, velas, melipona) ───
 async function cargarProductosCategoria(categoria) {
-  const grid = document.getElementById('grid-categoria');
+  // miel.html y velas.html usan id="products-grid"
+  const grid = document.getElementById('products-grid');
   if (!grid) return;
 
   const { data } = await db.from('productos')
@@ -263,26 +286,37 @@ async function cargarProductosCategoria(categoria) {
     return;
   }
 
-  function tarjeta(p) {
-    const agotado = p.stock <= 0;
-    return `
-      <div class="prod-card" data-category="${p.subcategoria || ''}" data-producto-id="${p.id}" data-price="${p.precio}" ${!agotado ? 'onclick="addToCart(this)"' : ''}>
-        <div class="prod-img-wrap">
-          ${agotado ? '<span class="prod-badge agotado">Agotado</span>' : ''}
-          <img src="${p.imagen_url || ''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">${p.nombre}</div>
-          ${p.descripcion ? `<div class="prod-desc" style="font-size:12px;color:#7a7a6a;margin:4px 0;">${p.descripcion}</div>` : ''}
-          <div class="prod-price ${agotado ? 'sold' : ''}">
-            ${agotado ? 'Agotado' : '$ ' + parseFloat(p.precio).toFixed(2)}
-          </div>
-          <button class="btn-add" ${agotado ? 'disabled' : ''}>
-            ${agotado ? 'Agotado' : 'Agregar al carrito'}
-          </button>
-        </div>
-      </div>`;
+  grid.innerHTML = data.map(tarjetaProducto).join('');
+
+  // Reactivar filtros si la página los tiene
+  if (typeof filterProducts === 'function') filterProducts('all', document.querySelector('.filter-tag'));
+}
+
+// ─── CARGAR PRODUCTOS EN INDEX ───
+async function cargarProductosIndex() {
+  const gridVendidos = document.getElementById('grid-vendidos');
+  const gridOtros    = document.getElementById('grid-otros');
+  if (!gridVendidos) return;
+
+  const { data } = await db.from('productos')
+    .select('*')
+    .eq('activo', true)
+    .eq('categoria', 'otros')
+    .order('creado_en', { ascending: false });
+
+  if (!data || data.length === 0) {
+    gridVendidos.innerHTML = '<p style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Pronto tendremos productos disponibles.</p>';
+    if (gridOtros) gridOtros.innerHTML = '';
+    return;
   }
 
-  grid.innerHTML = data.map(tarjeta).join('');
+  // Destacados = subcategoria 'destacado', Otros = el resto
+  const destacados = data.filter(p => p.subcategoria === 'destacado');
+  const otros      = data.filter(p => p.subcategoria !== 'destacado');
+
+  gridVendidos.innerHTML = destacados.length
+    ? destacados.map(tarjetaProducto).join('')
+    : '<p style="grid-column:1/-1;text-align:center;color:#7a7a6a;padding:20px">Agrega productos destacados desde el panel admin.</p>';
+
+  if (gridOtros) gridOtros.innerHTML = otros.map(tarjetaProducto).join('');
 }
