@@ -46,7 +46,7 @@ function actualizarHeaderUsuario() {
   if (usuarioActual) {
     const nombre = usuarioActual.user_metadata?.nombre_completo || usuarioActual.email.split('@')[0];
     const nombreCorto = nombre.split(' ')[0];
-    if (txtSesion) txtSesion.textContent = ' ' + nombreCorto;
+    if (txtSesion) txtSesion.textContent = '👤 ' + nombreCorto;
     btnIngresar.href = '#';
     btnIngresar.onclick = toggleMenuUsuario;
   } else {
