@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Iniciar Sesión — Cana'an Xu'x</title>
+<link rel="stylesheet" href="estilos.css">
+<style>
+  .auth-wrap {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gris-claro);
+    padding: 40px 16px;
+  }
+  .auth-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.08);
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 420px;
+  }
+  .auth-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--cafe);
+    margin-bottom: 6px;
+  }
+  .auth-card p.sub { font-size: 14px; color: var(--gris); margin-bottom: 28px; }
+  .auth-field { margin-bottom: 18px; }
+  .auth-field label { display: block; font-size: 13px; font-weight: 600; color: var(--cafe); margin-bottom: 6px; }
+  .auth-field input {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--borde); border-radius: 8px;
+    font-size: 15px; font-family: inherit; color: var(--cafe);
+    outline: none; transition: border-color .2s;
+  }
+  .auth-field input:focus { border-color: var(--naranja); }
+  .btn-auth {
+    width: 100%; background: var(--naranja); color: #fff;
+    border: none; border-radius: 8px; padding: 13px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    font-family: inherit; transition: background .2s; margin-top: 6px;
+  }
+  .btn-auth:hover { background: var(--naranja-oscuro); }
+  .btn-auth:disabled { background: #ccc; cursor: not-allowed; }
+  .auth-msg { margin-top: 14px; padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; }
+  .auth-msg.error  { background: #fdecea; color: #c0392b; display: block; }
+  .auth-msg.ok     { background: #eafaf1; color: #1e8449; display: block; }
+  .auth-switch { text-align: center; margin-top: 20px; font-size: 13px; color: var(--gris); }
+  .auth-switch a { color: var(--naranja); font-weight: 600; }
+  .olv-link { text-align: right; margin-top: -10px; margin-bottom: 18px; font-size: 12px; }
+  .olv-link a { color: var(--naranja); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="logo-wrap">
+      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
+      <div class="logo-name">Cana´an Xu´x <span>Apicultoras Tenosiquenses</span></div>
+    </a>
+  </div>
+</header>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h2>Iniciar sesión</h2>
+    <p class="sub">Accede a tu cuenta para ver tu carrito y realizar compras.</p>
+
+    <div class="auth-field">
+      <label>Correo electrónico</label>
+      <input type="email" id="login-email" placeholder="tu@correo.com">
+    </div>
+    <div class="auth-field">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="Tu contraseña"
+             onkeydown="if(event.key==='Enter') iniciarSesion()">
+    </div>
+    <div class="olv-link"><a href="#" onclick="olvidarPass()">¿Olvidaste tu contraseña?</a></div>
+
+    <button class="btn-auth" id="btn-login" onclick="iniciarSesion()">Entrar</button>
+    <div class="auth-msg" id="login-msg"></div>
+    <div class="auth-switch">¿No tienes cuenta? <a href="registro.html">Crea una gratis</a></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ⚠️ Reemplaza con tus datos reales */
+const SUPABASE_URL  = 'https://biiefknpnkynfobbetav.supabase.co';  // ← CAMBIA
+const SUPABASE_ANON = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';                 // ← CAMBIA
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+async function iniciarSesion() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  const msg   = document.getElementById('login-msg');
+  const btn   = document.getElementById('btn-login');
+
+  msg.className = 'auth-msg';
+  if (!email || !pass) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'Ingresa tu correo y contraseña.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Entrando...';
+
+  const { data, error } = await db.auth.signInWithPassword({ email, password: pass });
+
+  if (error) {
+    msg.className = 'auth-msg error';
+    msg.textContent = error.message.includes('Invalid')
+      ? 'Correo o contraseña incorrectos.'
+      : 'Error: ' + error.message;
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+    return;
+  }
+
+  // Sincronizar carrito local si había items sin cuenta
+  await sincronizarCarritoLocal(data.user.id);
+
+  msg.className = 'auth-msg ok';
+  msg.textContent = '¡Bienvenid@! Redirigiendo...';
+  setTimeout(() => {
+    const destino = sessionStorage.getItem('redirigir_tras_login') || 'index.html';
+    sessionStorage.removeItem('redirigir_tras_login');
+    window.location.href = destino;
+  }, 1000);
+}
+
+async function olvidarPass() {
+  const email = document.getElementById('login-email').value.trim();
+  const msg   = document.getElementById('login-msg');
+  if (!email) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'Ingresa tu correo primero.';
+    return;
+  }
+  await db.auth.resetPasswordForEmail(email);
+  msg.className = 'auth-msg ok';
+  msg.textContent = 'Te enviamos un enlace para restablecer tu contraseña.';
+}
+
+async function sincronizarCarritoLocal(userId) {
+  const carrito = JSON.parse(localStorage.getItem('carrito_canaan') || '[]');
+  if (!carrito.length) return;
+  for (const item of carrito) {
+    await db.from('carrito').upsert({
+      usuario_id: userId,
+      producto_id: item.id,
+      cantidad: item.cantidad
+    }, { onConflict: 'usuario_id,producto_id' });
+  }
+  localStorage.removeItem('carrito_canaan');
+}
+</script>
+</body>
+</html>
