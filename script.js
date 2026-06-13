@@ -126,6 +126,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   actualizarHeaderUsuario();
   await actualizarBadgeCarrito();
 
+  // 4. Cargar productos en index si aplica
+  if (typeof cargarProductosIndex === 'function') await cargarProductosIndex();
+
   // 4. Escuchar cambios de sesión (login/logout en tiempo real)
   db.auth.onAuthStateChange(async (event, session) => {
     usuarioActual = session?.user || null;
@@ -196,3 +199,49 @@ document.getElementById('cart-btn')?.addEventListener('click', function(e) {
     window.location.href = 'carrito.html';
   }
 });
+
+
+// ─── CARGAR PRODUCTOS EN INDEX DESDE SUPABASE ───
+async function cargarProductosIndex() {
+  const gridVendidos = document.getElementById('grid-vendidos');
+  const gridOtros    = document.getElementById('grid-otros');
+  if (!gridVendidos) return; // Solo corre en index.html
+
+  const { data } = await db.from('productos')
+    .select('*')
+    .eq('activo', true)
+    .order('creado_en', { ascending: false });
+
+  if (!data || data.length === 0) {
+    gridVendidos.innerHTML = '<p style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Pronto tendremos productos disponibles.</p>';
+    if (gridOtros) gridOtros.innerHTML = '';
+    return;
+  }
+
+  function tarjeta(p) {
+    const agotado = p.stock <= 0;
+    return `
+      <div class="prod-card" data-producto-id="${p.id}" ${!agotado ? 'onclick="addToCart(this)"' : ''}>
+        <div class="prod-img-wrap">
+          ${agotado ? '<span class="prod-badge agotado">Agotado</span>' : ''}
+          <img src="${p.imagen_url || ''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">${p.nombre}</div>
+          <div class="prod-price ${agotado ? 'sold' : ''}">
+            ${agotado ? 'Agotado' : '$ ' + parseFloat(p.precio).toFixed(2)}
+          </div>
+          <button class="btn-add" ${agotado ? 'disabled' : ''}>
+            ${agotado ? 'Agotado' : 'Agregar al carrito'}
+          </button>
+        </div>
+      </div>`;
+  }
+
+  const vendidos = data.slice(0, 3);
+  const otros    = data.slice(3);
+
+  gridVendidos.innerHTML = vendidos.map(tarjeta).join('') ||
+    '<p style="grid-column:1/-1;text-align:center;color:#7a7a6a;padding:20px">Agrega productos desde el panel admin.</p>';
+  if (gridOtros) gridOtros.innerHTML = otros.map(tarjeta).join('') || '';
+}
