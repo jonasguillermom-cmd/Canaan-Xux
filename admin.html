@@ -184,11 +184,12 @@
         <div class="field-sm">
           <label>Página donde aparece *</label>
           <select id="prod-categoria" onchange="actualizarSubcategoria()">
-            <option value="">Selecciona página...</option>
-            <option value="miel">🍯 Miel — página miel.html</option>
-            <option value="velas">🕯️ Velas — página velas.html</option>
-            <option value="melipona">🐝 Melipona — página melipona.html</option>
-            <option value="otros">📦 Otros Productos — index.html</option>
+            <option value="">Selecciona dónde aparece...</option>
+            <option value="miel">🍯 Miel → miel.html</option>
+            <option value="velas">🕯️ Velas → velas.html</option>
+            <option value="melipona">🐝 Melipona → melipona.html</option>
+            <option value="index-destacado">⭐ Index — Lo más vendido (primeros 3)</option>
+            <option value="index-otros">📦 Index — Otros productos</option>
           </select>
         </div>
 
@@ -252,8 +253,8 @@ const SUBCATEGORIAS = {
   miel: [
     { value: 'pura',      label: 'Miel Pura' },
     { value: 'cruda',     label: 'Miel Cruda' },
-    { value: 'mezcla',    label: 'Con Mezcla' },
-    { value: 'granelito', label: 'Tamaño Familiar' },
+    { value: 'mezcla',    label: 'Con Mezcla (Canela, Jengibre...)' },
+    { value: 'granelito', label: 'Tamaño Familiar / Granelito' },
   ],
   velas: [
     { value: 'hexagonal', label: 'Hexagonal' },
@@ -265,8 +266,11 @@ const SUBCATEGORIAS = {
     { value: 'medicinal', label: 'Uso Medicinal' },
     { value: 'kit',       label: 'Kit / Set' },
   ],
-  otros: [
-    { value: 'general',   label: 'Producto General' },
+  'index-destacado': [
+    { value: 'destacado', label: 'Aparece en "Lo más vendido"' },
+  ],
+  'index-otros': [
+    { value: 'otros', label: 'Aparece en "Otros Productos"' },
   ],
 };
 
@@ -388,7 +392,12 @@ async function guardarProducto() {
     }
   }
 
-  const datos = { nombre, precio, categoria, subcategoria, descripcion: desc, stock, activo };
+  // Mapear categorías del index a 'otros' con flag de sección
+  let categoriaReal = categoria;
+  let seccion = subcategoria;
+  if (categoria === 'index-destacado') { categoriaReal = 'otros'; seccion = 'destacado'; }
+  if (categoria === 'index-otros')     { categoriaReal = 'otros'; seccion = 'otros'; }
+  const datos = { nombre, precio, categoria: categoriaReal, subcategoria: seccion, descripcion: desc, stock, activo };
   if (imagen_url) datos.imagen_url = imagen_url;
 
   let error;
