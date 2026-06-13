@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel Admin — Cana'an Xu'x</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cafe: #3d3b1f; --naranja: #eb904d; --naranja-oscuro: #d4793a;
+    --gris: #7a7a6a; --gris-claro: #f5f0e8; --borde: #e0d8cc;
+  }
+  body { font-family: 'Montserrat', sans-serif; background: #f5f0e8; color: var(--cafe); }
+
+  /* ── LOGIN ADMIN ── */
+  .login-wrap {
+    min-height: 100vh; display: flex; align-items: center;
+    justify-content: center; background: var(--cafe);
+  }
+  .login-card {
+    background: #fff; border-radius: 14px; padding: 44px 40px;
+    width: 100%; max-width: 400px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.25);
+  }
+  .login-card .logo { text-align:center; margin-bottom:24px; }
+  .login-card .logo span { display:block; font-size:22px; font-weight:800; color:var(--cafe); }
+  .login-card .logo small { font-size:11px; color:var(--gris); text-transform:uppercase; letter-spacing:.1em; }
+  .login-card h2 { font-family:'Playfair Display',serif; font-size:22px; color:var(--cafe); margin-bottom:22px; text-align:center; }
+  .field { margin-bottom:16px; }
+  .field label { display:block; font-size:12px; font-weight:700; color:var(--gris); margin-bottom:6px; text-transform:uppercase; letter-spacing:.05em; }
+  .field input { width:100%; padding:11px 14px; border:1.5px solid var(--borde); border-radius:8px; font-size:14px; font-family:inherit; outline:none; transition:border-color .2s; }
+  .field input:focus { border-color:var(--naranja); }
+  .btn-login { width:100%; background:var(--naranja); color:#fff; border:none; border-radius:8px; padding:13px; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; margin-top:8px; transition:background .2s; }
+  .btn-login:hover { background:var(--naranja-oscuro); }
+  .btn-login:disabled { background:#ccc; cursor:not-allowed; }
+  .login-error { background:#fdecea; color:#c0392b; border-radius:8px; padding:10px 14px; font-size:13px; margin-top:12px; display:none; }
+  .login-error.show { display:block; }
+
+  /* ── PANEL ── */
+  .panel-wrap { display:none; min-height:100vh; }
+  .panel-header {
+    background:var(--cafe); color:#fff; padding:0 32px;
+    display:flex; align-items:center; justify-content:space-between; height:64px;
+  }
+  .panel-header .titulo { font-family:'Playfair Display',serif; font-size:20px; }
+  .panel-header .admin-info { font-size:13px; color:#ccc; display:flex; align-items:center; gap:16px; }
+  .btn-logout { background:rgba(255,255,255,.15); color:#fff; border:none; border-radius:6px; padding:7px 14px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; }
+  .btn-logout:hover { background:rgba(255,255,255,.25); }
+
+  .panel-body { display:grid; grid-template-columns:1fr 1fr; gap:28px; padding:32px; max-width:1200px; margin:0 auto; }
+
+  /* ── FORMULARIO NUEVO PRODUCTO ── */
+  .card { background:#fff; border-radius:12px; padding:28px; box-shadow:0 2px 12px rgba(0,0,0,.06); }
+  .card h3 { font-size:16px; font-weight:800; color:var(--cafe); margin-bottom:20px; padding-bottom:12px; border-bottom:2px solid var(--gris-claro); }
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .field-sm label { display:block; font-size:11px; font-weight:700; color:var(--gris); margin-bottom:5px; text-transform:uppercase; letter-spacing:.05em; }
+  .field-sm input, .field-sm select, .field-sm textarea {
+    width:100%; padding:9px 12px; border:1.5px solid var(--borde); border-radius:7px;
+    font-size:13px; font-family:inherit; outline:none; transition:border-color .2s;
+    color:var(--cafe);
+  }
+  .field-sm input:focus, .field-sm select:focus, .field-sm textarea:focus { border-color:var(--naranja); }
+  .field-sm textarea { resize:vertical; min-height:80px; }
+
+  /* Subir imagen */
+  .upload-area {
+    border: 2px dashed var(--borde); border-radius:10px; padding:28px;
+    text-align:center; cursor:pointer; transition:border-color .2s;
+    background:var(--gris-claro);
+  }
+  .upload-area:hover { border-color:var(--naranja); }
+  .upload-area input[type=file] { display:none; }
+  .upload-area .icon { font-size:32px; margin-bottom:8px; }
+  .upload-area p { font-size:13px; color:var(--gris); }
+  .upload-area p strong { color:var(--naranja); }
+  #preview-img { width:100%; max-height:180px; object-fit:cover; border-radius:8px; margin-top:12px; display:none; }
+
+  .btn-guardar { width:100%; background:var(--naranja); color:#fff; border:none; border-radius:8px; padding:12px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; margin-top:16px; transition:background .2s; }
+  .btn-guardar:hover { background:var(--naranja-oscuro); }
+  .btn-guardar:disabled { background:#ccc; cursor:not-allowed; }
+  .form-msg { margin-top:10px; padding:10px 14px; border-radius:8px; font-size:13px; display:none; }
+  .form-msg.ok { background:#eafaf1; color:#1e8449; display:block; }
+  .form-msg.error { background:#fdecea; color:#c0392b; display:block; }
+
+  /* ── LISTA DE PRODUCTOS ── */
+  .prod-lista { display:flex; flex-direction:column; gap:12px; max-height:600px; overflow-y:auto; }
+  .prod-item {
+    display:flex; align-items:center; gap:14px;
+    border:1px solid var(--borde); border-radius:10px; padding:12px;
+    background:#fafafa;
+  }
+  .prod-item img { width:60px; height:60px; object-fit:cover; border-radius:7px; background:var(--gris-claro); }
+  .prod-item-info { flex:1; }
+  .prod-item-info .nombre { font-weight:700; font-size:13px; color:var(--cafe); }
+  .prod-item-info .meta { font-size:12px; color:var(--gris); margin-top:2px; }
+  .prod-item-info .precio { font-size:14px; font-weight:800; color:var(--naranja); margin-top:4px; }
+  .prod-acciones { display:flex; gap:8px; flex-shrink:0; }
+  .btn-editar, .btn-eliminar-p {
+    border:none; border-radius:6px; padding:6px 12px; font-size:12px;
+    font-weight:700; cursor:pointer; font-family:inherit;
+  }
+  .btn-editar { background:#e8f4fd; color:#2980b9; }
+  .btn-eliminar-p { background:#fdecea; color:#c0392b; }
+
+  /* Toggle activo */
+  .toggle-activo { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--gris); }
+  .toggle-activo input[type=checkbox] { width:16px; height:16px; accent-color:var(--naranja); }
+
+  .empty-lista { text-align:center; padding:32px; color:var(--gris); font-size:13px; }
+
+  @media (max-width:768px) {
+    .panel-body { grid-template-columns:1fr; }
+    .form-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ADMINISTRADOR ── -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-card">
+    <div class="logo">
+      <span>🐝 Cana'an Xu'x</span>
+      <small>Panel de Administración</small>
+    </div>
+    <h2>Iniciar sesión</h2>
+    <div class="field">
+      <label>Correo administrador</label>
+      <input type="email" id="admin-email" placeholder="admin@canaan.com"
+             onkeydown="if(event.key==='Enter') loginAdmin()">
+    </div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="admin-pass" placeholder="Tu contraseña"
+             onkeydown="if(event.key==='Enter') loginAdmin()">
+    </div>
+    <button class="btn-login" id="btn-login-admin" onclick="loginAdmin()">Entrar al panel</button>
+    <div class="login-error" id="login-error">Correo o contraseña incorrectos.</div>
+  </div>
+</div>
+
+<!-- ── PANEL PRINCIPAL ── -->
+<div class="panel-wrap" id="panel-wrap">
+
+  <div class="panel-header">
+    <div class="titulo">🐝 Panel de Administración</div>
+    <div class="admin-info">
+      <span id="admin-nombre">Administrador</span>
+      <button class="btn-logout" onclick="logoutAdmin()">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <div class="panel-body">
+
+    <!-- Formulario nuevo producto -->
+    <div class="card">
+      <h3 id="form-titulo">➕ Nuevo Producto</h3>
+      <input type="hidden" id="edit-id">
+
+      <div class="form-grid">
+        <div class="field-sm full">
+          <label>Foto del producto</label>
+          <div class="upload-area" onclick="document.getElementById('foto-input').click()">
+            <input type="file" id="foto-input" accept="image/*" onchange="previsualizarFoto(this)">
+            <div class="icon">📷</div>
+            <p>Haz clic para subir una foto<br><strong>JPG, PNG o WEBP</strong></p>
+          </div>
+          <img id="preview-img" src="" alt="Vista previa">
+        </div>
+
+        <div class="field-sm full">
+          <label>Nombre del producto *</label>
+          <input type="text" id="prod-nombre" placeholder="Ej: Miel de Melipona 250ml">
+        </div>
+
+        <div class="field-sm">
+          <label>Precio (MXN) *</label>
+          <input type="number" id="prod-precio" placeholder="0.00" min="0" step="0.01">
+        </div>
+
+        <div class="field-sm">
+          <label>Categoría *</label>
+          <select id="prod-categoria">
+            <option value="">Selecciona...</option>
+            <option value="miel">Miel</option>
+            <option value="melipona">Melipona</option>
+            <option value="velas">Velas</option>
+            <option value="otros">Otros</option>
+          </select>
+        </div>
+
+        <div class="field-sm">
+          <label>Stock (unidades)</label>
+          <input type="number" id="prod-stock" placeholder="0" min="0">
+        </div>
+
+        <div class="field-sm" style="display:flex;align-items:flex-end;">
+          <label class="toggle-activo">
+            <input type="checkbox" id="prod-activo" checked>
+            Producto visible en tienda
+          </label>
+        </div>
+
+        <div class="field-sm full">
+          <label>Descripción</label>
+          <textarea id="prod-desc" placeholder="Describe el producto, sus beneficios, ingredientes..."></textarea>
+        </div>
+      </div>
+
+      <button class="btn-guardar" id="btn-guardar" onclick="guardarProducto()">💾 Guardar producto</button>
+      <button class="btn-guardar" id="btn-cancelar" onclick="cancelarEdicion()" style="display:none;background:#ccc;color:#333;margin-top:8px;">✕ Cancelar edición</button>
+      <div class="form-msg" id="form-msg"></div>
+    </div>
+
+    <!-- Lista de productos -->
+    <div class="card">
+      <h3>📦 Productos en tienda</h3>
+      <div class="prod-lista" id="prod-lista">
+        <div class="empty-lista">Cargando productos...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL  = 'https://biiefknpnkynfobbetav.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// ── CORREO DEL ADMINISTRADOR ──
+// ⚠️ Cambia esto por el correo con el que te registraste como admin
+const ADMIN_EMAIL = 'jonasguillermom@gmail.com';
+
+let adminActual = null;
+let fotoFile    = null;
+
+// ── LOGIN ──
+async function loginAdmin() {
+  const email = document.getElementById('admin-email').value.trim();
+  const pass  = document.getElementById('admin-pass').value;
+  const btn   = document.getElementById('btn-login-admin');
+  const err   = document.getElementById('login-error');
+  err.classList.remove('show');
+
+  if (!email || !pass) { err.textContent = 'Ingresa tu correo y contraseña.'; err.classList.add('show'); return; }
+
+  // Verificar que sea el admin
+  if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+    err.textContent = 'No tienes permisos de administrador.';
+    err.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Entrando...';
+
+  const { data, error } = await db.auth.signInWithPassword({ email, password: pass });
+
+  if (error) {
+    err.textContent = 'Correo o contraseña incorrectos.';
+    err.classList.add('show');
+    btn.disabled = false; btn.textContent = 'Entrar al panel';
+    return;
+  }
+
+  adminActual = data.user;
+  mostrarPanel();
+}
+
+function mostrarPanel() {
+  document.getElementById('login-wrap').style.display = 'none';
+  document.getElementById('panel-wrap').style.display = 'block';
+  const nombre = adminActual.user_metadata?.nombre_completo || adminActual.email.split('@')[0];
+  document.getElementById('admin-nombre').textContent = '👤 ' + nombre;
+  cargarProductos();
+}
+
+async function logoutAdmin() {
+  await db.auth.signOut();
+  adminActual = null;
+  document.getElementById('login-wrap').style.display = 'flex';
+  document.getElementById('panel-wrap').style.display = 'none';
+}
+
+// ── PREVISUALIZAR FOTO ──
+function previsualizarFoto(input) {
+  fotoFile = input.files[0];
+  if (!fotoFile) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('preview-img');
+    img.src = e.target.result;
+    img.style.display = 'block';
+  };
+  reader.readAsDataURL(fotoFile);
+}
+
+// ── SUBIR FOTO A SUPABASE STORAGE ──
+async function subirFoto(file) {
+  const ext      = file.name.split('.').pop();
+  const nombre   = `producto_${Date.now()}.${ext}`;
+  const { data, error } = await db.storage.from('productos').upload(nombre, file, { upsert: true });
+  if (error) { console.error(error); return null; }
+  const { data: url } = db.storage.from('productos').getPublicUrl(nombre);
+  return url.publicUrl;
+}
+
+// ── GUARDAR PRODUCTO (nuevo o editar) ──
+async function guardarProducto() {
+  const nombre    = document.getElementById('prod-nombre').value.trim();
+  const precio    = parseFloat(document.getElementById('prod-precio').value);
+  const categoria = document.getElementById('prod-categoria').value;
+  const stock     = parseInt(document.getElementById('prod-stock').value) || 0;
+  const desc      = document.getElementById('prod-desc').value.trim();
+  const activo    = document.getElementById('prod-activo').checked;
+  const editId    = document.getElementById('edit-id').value;
+  const msg       = document.getElementById('form-msg');
+  const btn       = document.getElementById('btn-guardar');
+
+  msg.className = 'form-msg';
+  if (!nombre || !precio || !categoria) {
+    msg.className = 'form-msg error';
+    msg.textContent = 'Nombre, precio y categoría son obligatorios.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Guardando...';
+
+  let imagen_url = null;
+
+  // Subir foto si se seleccionó una nueva
+  if (fotoFile) {
+    imagen_url = await subirFoto(fotoFile);
+    if (!imagen_url) {
+      msg.className = 'form-msg error';
+      msg.textContent = 'Error al subir la foto. Intenta de nuevo.';
+      btn.disabled = false; btn.textContent = '💾 Guardar producto';
+      return;
+    }
+  }
+
+  const datos = { nombre, precio, categoria, descripcion: desc, stock, activo };
+  if (imagen_url) datos.imagen_url = imagen_url;
+
+  let error;
+  if (editId) {
+    // Editar existente
+    ({ error } = await db.from('productos').update(datos).eq('id', editId));
+  } else {
+    // Nuevo producto
+    ({ error } = await db.from('productos').insert(datos));
+  }
+
+  if (error) {
+    msg.className = 'form-msg error';
+    msg.textContent = 'Error: ' + error.message;
+  } else {
+    msg.className = 'form-msg ok';
+    msg.textContent = editId ? '✓ Producto actualizado.' : '✓ Producto agregado a la tienda.';
+    limpiarFormulario();
+    await cargarProductos();
+  }
+
+  btn.disabled = false;
+  btn.textContent = '💾 Guardar producto';
+}
+
+// ── CARGAR LISTA DE PRODUCTOS ──
+async function cargarProductos() {
+  const { data, error } = await db.from('productos').select('*').order('creado_en', { ascending: false });
+  const lista = document.getElementById('prod-lista');
+
+  if (!data || data.length === 0) {
+    lista.innerHTML = '<div class="empty-lista">No hay productos aún. ¡Agrega el primero!</div>';
+    return;
+  }
+
+  lista.innerHTML = data.map(p => `
+    <div class="prod-item">
+      <img src="${p.imagen_url || ''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8';this.src=''">
+      <div class="prod-item-info">
+        <div class="nombre">${p.nombre}</div>
+        <div class="meta">${p.categoria} • Stock: ${p.stock} • ${p.activo ? '✅ Visible' : '⛔ Oculto'}</div>
+        <div class="precio">$${parseFloat(p.precio).toFixed(2)}</div>
+      </div>
+      <div class="prod-acciones">
+        <button class="btn-editar" onclick="editarProducto('${p.id}')">✏️ Editar</button>
+        <button class="btn-eliminar-p" onclick="eliminarProducto('${p.id}', '${p.nombre}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── EDITAR PRODUCTO ──
+async function editarProducto(id) {
+  const { data } = await db.from('productos').select('*').eq('id', id).single();
+  if (!data) return;
+
+  document.getElementById('edit-id').value        = data.id;
+  document.getElementById('prod-nombre').value    = data.nombre;
+  document.getElementById('prod-precio').value    = data.precio;
+  document.getElementById('prod-categoria').value = data.categoria;
+  document.getElementById('prod-stock').value     = data.stock;
+  document.getElementById('prod-desc').value      = data.descripcion || '';
+  document.getElementById('prod-activo').checked  = data.activo;
+  document.getElementById('form-titulo').textContent = '✏️ Editando producto';
+  document.getElementById('btn-cancelar').style.display = 'block';
+
+  if (data.imagen_url) {
+    const img = document.getElementById('preview-img');
+    img.src = data.imagen_url;
+    img.style.display = 'block';
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cancelarEdicion() {
+  limpiarFormulario();
+}
+
+function limpiarFormulario() {
+  document.getElementById('edit-id').value = '';
+  document.getElementById('prod-nombre').value = '';
+  document.getElementById('prod-precio').value = '';
+  document.getElementById('prod-categoria').value = '';
+  document.getElementById('prod-stock').value = '';
+  document.getElementById('prod-desc').value = '';
+  document.getElementById('prod-activo').checked = true;
+  document.getElementById('preview-img').style.display = 'none';
+  document.getElementById('foto-input').value = '';
+  document.getElementById('form-titulo').textContent = '➕ Nuevo Producto';
+  document.getElementById('btn-cancelar').style.display = 'none';
+  document.getElementById('form-msg').className = 'form-msg';
+  fotoFile = null;
+}
+
+// ── ELIMINAR PRODUCTO ──
+async function eliminarProducto(id, nombre) {
+  if (!confirm(`¿Eliminar "${nombre}"? Esta acción no se puede deshacer.`)) return;
+  await db.from('productos').delete().eq('id', id);
+  await cargarProductos();
+}
+
+// ── VERIFICAR SESIÓN AL CARGAR ──
+document.addEventListener('DOMContentLoaded', async () => {
+  const { data } = await db.auth.getSession();
+  const user = data?.session?.user;
+  if (user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    adminActual = user;
+    mostrarPanel();
+  }
+});
+</script>
+</body>
+</html>
