@@ -62,20 +62,17 @@ document.querySelector('.search-close').addEventListener('click', function () {
 
 
 /* ═══════════════════════════════════════════
-   MIEL ORO — JavaScript con Supabase
-   Archivo: script.js
-   
-   ⚠️  Reemplaza SUPABASE_URL y SUPABASE_ANON
-       con tus datos reales (Settings → API)
+   Cana'an Xu'x — script.js
 ═══════════════════════════════════════════ */
 
-/* ── SUPABASE CONFIG ─────────────────────── */
-const SUPABASE_URL  = 'https://biiefknpnkynfobbetav.supabase.co';  // ← CAMBIA
-const SUPABASE_ANON = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';                 // ← CAMBIA
-
+const SUPABASE_URL  = 'https://biiefknpnkynfobbetav.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
+// ─── PÁGINAS QUE REQUIEREN SESIÓN ───
+// Si el usuario no ha iniciado sesión en estas páginas, lo manda a login
+const PAGINAS_PROTEGIDAS = ['carrito.html'];
 
 // ─── HERO SLIDER ───
 let slide = 0;
@@ -90,93 +87,148 @@ function goSlide(n) {
   slides[slide].classList.add('active');
   dots[slide].classList.add('active');
 }
-
 function changeSlide(d) { goSlide(slide + d); }
 if (slides.length) setInterval(() => changeSlide(1), 5000);
 
+// ─── BUSCADOR ───
+function toggleSearch() {
+  document.querySelector('.search-overlay')?.classList.toggle('open');
+}
+document.querySelector('.search-overlay')?.addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
+document.querySelector('.search-close')?.addEventListener('click', function() {
+  document.querySelector('.search-overlay')?.classList.remove('open');
+});
 
-// ─── SESIÓN Y CARRITO ───
+// ─── SESIÓN ───
 let usuarioActual = null;
-
-// Carrito local (antes de iniciar sesión)
-let carritoLocal = JSON.parse(localStorage.getItem('carrito_canaan') || '[]');
 
 async function inicializarSesion() {
   const { data } = await db.auth.getSession();
   usuarioActual = data?.session?.user || null;
+
+  // Verificar si esta página requiere sesión
+  const paginaActual = window.location.pathname.split('/').pop();
+  if (PAGINAS_PROTEGIDAS.includes(paginaActual) && !usuarioActual) {
+    sessionStorage.setItem('redirigir_tras_login', paginaActual);
+    window.location.href = 'login.html';
+    return;
+  }
+
   actualizarHeaderUsuario();
   await actualizarBadgeCarrito();
 }
 
 function actualizarHeaderUsuario() {
-  const btnIngresa = document.getElementById('btn-ingresar');
-  const btnCarrito = document.getElementById('cart-btn');
-  if (!btnIngresa) return;
+  const btnIngresar = document.getElementById('btn-ingresar');
+  const txtSesion   = document.getElementById('txt-sesion');
+  if (!btnIngresar) return;
 
   if (usuarioActual) {
-    btnIngresa.innerHTML = `
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      Mi cuenta
-    `;
-    btnIngresa.href = 'mi-cuenta.html';
+    // Mostrar nombre del usuario
+    const nombre = usuarioActual.user_metadata?.nombre_completo || usuarioActual.email.split('@')[0];
+    const nombreCorto = nombre.split(' ')[0]; // Solo el primer nombre
+    if (txtSesion) txtSesion.textContent = '👤 ' + nombreCorto;
+    btnIngresar.href = '#';
+    btnIngresar.onclick = menuUsuario;
   } else {
-    btnIngresa.innerHTML = `
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      Ingresar
-    `;
-    btnIngresa.href = 'login.html';
+    if (txtSesion) txtSesion.textContent = 'Ingresar';
+    btnIngresar.href = 'login.html';
+    btnIngresar.onclick = null;
   }
 }
 
+// Mini menú al hacer clic en el nombre
+function menuUsuario(e) {
+  e.preventDefault();
+  // Si ya existe el menú, lo quita
+  const existente = document.getElementById('menu-usuario');
+  if (existente) { existente.remove(); return; }
+
+  const menu = document.createElement('div');
+  menu.id = 'menu-usuario';
+  menu.style.cssText = `
+    position:absolute; top:68px; right:24px; background:#fff;
+    border:1px solid #e0e0e0; border-radius:10px;
+    box-shadow:0 4px 20px rgba(0,0,0,.12); z-index:999;
+    min-width:180px; overflow:hidden;
+  `;
+  const nombre = usuarioActual.user_metadata?.nombre_completo || usuarioActual.email;
+  menu.innerHTML = `
+    <div style="padding:14px 16px; border-bottom:1px solid #f0f0f0;">
+      <div style="font-weight:700; font-size:14px; color:#3d3b1f;">${nombre.split(' ')[0]}</div>
+      <div style="font-size:12px; color:#666;">${usuarioActual.email}</div>
+    </div>
+    <a href="carrito.html" style="display:block;padding:12px 16px;font-size:14px;color:#3d3b1f;border-bottom:1px solid #f0f0f0;">🛒 Mi carrito</a>
+    <a href="#" onclick="cerrarSesion()" style="display:block;padding:12px 16px;font-size:14px;color:#c0392b;">↩ Cerrar sesión</a>
+  `;
+  document.querySelector('header').style.position = 'relative';
+  document.querySelector('header').appendChild(menu);
+
+  // Cerrar al hacer clic fuera
+  setTimeout(() => {
+    document.addEventListener('click', function cerrar(ev) {
+      if (!menu.contains(ev.target)) { menu.remove(); document.removeEventListener('click', cerrar); }
+    });
+  }, 100);
+}
+
+async function cerrarSesion() {
+  await db.auth.signOut();
+  usuarioActual = null;
+  localStorage.removeItem('carrito_canaan');
+  window.location.href = 'index.html';
+}
+
+// ─── CARRITO ───
 async function actualizarBadgeCarrito() {
   let count = 0;
   if (usuarioActual) {
-    const { data } = await db
-      .from('carrito')
-      .select('cantidad')
-      .eq('usuario_id', usuarioActual.id);
+    const { data } = await db.from('carrito').select('cantidad').eq('usuario_id', usuarioActual.id);
     count = data?.reduce((s, r) => s + r.cantidad, 0) || 0;
   } else {
-    count = carritoLocal.reduce((s, i) => s + i.cantidad, 0);
+    const local = JSON.parse(localStorage.getItem('carrito_canaan') || '[]');
+    count = local.reduce((s, i) => s + i.cantidad, 0);
   }
   const badge = document.getElementById('cart-count');
   if (badge) badge.textContent = count;
 }
 
-
-// ─── AGREGAR AL CARRITO ───
 async function addToCart(card) {
   const btn = card.querySelector('.btn-add');
-  if (btn.disabled) return;
+  if (!btn || btn.disabled) return;
 
-  // Obtener ID del producto desde el atributo data del card
+  // Si no hay sesión → mandar a registrarse
+  if (!usuarioActual) {
+    sessionStorage.setItem('redirigir_tras_login', 'carrito.html');
+    window.location.href = 'registro.html';
+    return;
+  }
+
   const productoId = card.dataset.productoId;
   const nombre     = card.querySelector('.prod-name')?.textContent || '';
-  const precio     = parseFloat(card.querySelector('.prod-price')?.textContent.replace(/[^0-9.]/g,'')) || 0;
+  const precio     = parseFloat(card.querySelector('.prod-price')?.textContent.replace(/[^0-9.]/g, '')) || 0;
 
-  if (usuarioActual) {
-    // Usuario con sesión → guardar en Supabase
-    if (productoId) {
-      const { error } = await db.from('carrito').upsert({
-        usuario_id: usuarioActual.id,
-        producto_id: productoId,
-        cantidad: 1
-      }, { onConflict: 'usuario_id,producto_id' });
+  if (productoId) {
+    // Guardar en Supabase
+    const { error } = await db.from('carrito').upsert({
+      usuario_id:  usuarioActual.id,
+      producto_id: productoId,
+      cantidad:    1
+    }, { onConflict: 'usuario_id,producto_id' });
 
-      if (!error) {
-        mostrarConfirmacion(btn);
-        await actualizarBadgeCarrito();
-      }
+    if (!error) {
+      mostrarConfirmacion(btn);
+      await actualizarBadgeCarrito();
     }
   } else {
-    // Sin sesión → guardar en localStorage
-    const existe = carritoLocal.find(i => i.id === productoId);
-    if (existe) {
-      existe.cantidad++;
-    } else {
-      carritoLocal.push({ id: productoId, nombre, precio, cantidad: 1 });
-    }
-    localStorage.setItem('carrito_canaan', JSON.stringify(carritoLocal));
+    // Producto sin ID de BD → guardar en localStorage con nombre/precio
+    const local = JSON.parse(localStorage.getItem('carrito_canaan') || '[]');
+    const existe = local.find(i => i.nombre === nombre);
+    if (existe) existe.cantidad++;
+    else local.push({ nombre, precio, cantidad: 1 });
+    localStorage.setItem('carrito_canaan', JSON.stringify(local));
     mostrarConfirmacion(btn);
     await actualizarBadgeCarrito();
   }
@@ -186,18 +238,13 @@ function mostrarConfirmacion(btn) {
   const orig = btn.textContent;
   btn.textContent = '✓ Agregado';
   btn.style.background = '#4caf50';
-  setTimeout(() => {
-    btn.textContent = orig;
-    btn.style.background = '';
-  }, 1600);
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1600);
 }
 
-
-// ─── BOTÓN CARRITO → redirige a login si no hay sesión ───
+// Botón carrito en header → requiere sesión
 document.getElementById('cart-btn')?.addEventListener('click', function(e) {
   e.preventDefault();
   if (!usuarioActual) {
-    // Guarda a dónde volver tras login
     sessionStorage.setItem('redirigir_tras_login', 'carrito.html');
     window.location.href = 'login.html';
   } else {
@@ -205,38 +252,13 @@ document.getElementById('cart-btn')?.addEventListener('click', function(e) {
   }
 });
 
-
-// ─── CERRAR SESIÓN ───
-async function cerrarSesion() {
-  await db.auth.signOut();
-  usuarioActual = null;
-  localStorage.removeItem('carrito_canaan');
-  window.location.href = 'index.html';
-}
-
-
-// ─── BUSCADOR ───
-function toggleSearch() {
-  document.querySelector('.search-overlay')?.classList.toggle('open');
-}
-
-document.querySelector('.search-overlay')?.addEventListener('click', function(e) {
-  if (e.target === this) this.classList.remove('open');
-});
-
-document.querySelector('.search-close')?.addEventListener('click', function() {
-  document.querySelector('.search-overlay')?.classList.remove('open');
-});
-
-
-// ─── INICIALIZAR AL CARGAR ───
+// ─── INICIALIZAR ───
 document.addEventListener('DOMContentLoaded', inicializarSesion);
 
-// Escuchar cambios de sesión en tiempo real
 db.auth.onAuthStateChange((event, session) => {
   usuarioActual = session?.user || null;
   actualizarHeaderUsuario();
   actualizarBadgeCarrito();
 });
-
+  
 });
