@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mi Carrito — Cana'an Xu'x</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<style>
+  .carrito-wrap { max-width: 900px; margin: 40px auto; padding: 0 24px; }
+  .carrito-titulo { font-family:'Playfair Display',serif; font-size:28px; color:var(--cafe); margin-bottom:28px; }
+  .carrito-vacio { text-align:center; padding:60px 20px; color:var(--gris); }
+  .carrito-vacio .icon { font-size:56px; margin-bottom:16px; }
+  .carrito-vacio p { font-size:16px; margin-bottom:20px; }
+  .carrito-tabla { width:100%; border-collapse:collapse; }
+  .carrito-tabla th { text-align:left; padding:10px 14px; font-size:12px; font-weight:700; color:var(--gris); border-bottom:2px solid var(--borde); text-transform:uppercase; letter-spacing:.05em; }
+  .carrito-tabla td { padding:16px 14px; border-bottom:1px solid var(--borde); vertical-align:middle; }
+  .prod-thumb { width:64px; height:64px; object-fit:cover; border-radius:8px; background:var(--gris-claro); }
+  .prod-nombre { font-weight:600; font-size:14px; color:var(--cafe); }
+  .qty-ctrl { display:flex; align-items:center; gap:8px; }
+  .qty-btn { width:28px; height:28px; border:1.5px solid var(--borde); border-radius:6px; background:#fff; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; color:var(--cafe); }
+  .qty-btn:hover { border-color:var(--naranja); color:var(--naranja); }
+  .qty-num { font-weight:700; font-size:15px; min-width:20px; text-align:center; }
+  .btn-eliminar { background:none; border:none; cursor:pointer; color:#ccc; font-size:18px; }
+  .btn-eliminar:hover { color:#e74c3c; }
+  .carrito-resumen { margin-top:32px; display:flex; justify-content:flex-end; }
+  .resumen-card { background:var(--gris-claro); border-radius:12px; padding:28px; min-width:280px; }
+  .resumen-row { display:flex; justify-content:space-between; font-size:14px; margin-bottom:10px; color:var(--gris); }
+  .resumen-total { display:flex; justify-content:space-between; font-size:18px; font-weight:700; color:var(--cafe); margin-top:14px; padding-top:14px; border-top:2px solid var(--borde); }
+  .btn-pagar { width:100%; background:var(--naranja); color:#fff; border:none; border-radius:8px; padding:14px; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; margin-top:16px; transition:background .2s; }
+  .btn-pagar:hover { background:var(--naranja-oscuro); }
+  .loading { text-align:center; padding:40px; color:var(--gris); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="logo-wrap">
+      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
+      <div class="logo-name">Cana´an Xu´x <span>Apicultoras Tenosiquenses</span></div>
+    </a>
+    <div class="header-icons">
+      <a href="#" onclick="toggleSearch(); return false">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        Buscar
+      </a>
+      <a href="login.html" id="btn-ingresar">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="txt-sesion">Ingresar</span>
+      </a>
+      <a href="carrito.html" id="cart-btn">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Carrito <span class="cart-count-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="carrito-wrap">
+  <h2 class="carrito-titulo">Mi Carrito</h2>
+  <div id="carrito-contenido"><div class="loading">Cargando tu carrito...</div></div>
+</div>
+
+<div class="search-overlay">
+  <div class="search-box">
+    <button class="search-close">✕</button>
+    <input type="text" placeholder="Buscar productos...">
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+<script>
+// Cargar items del carrito desde Supabase
+async function cargarCarrito() {
+  const { data: session } = await db.auth.getSession();
+  const usuario = session?.session?.user;
+  if (!usuario) { window.location.href = 'login.html'; return; }
+
+  const { data: items, error } = await db
+    .from('carrito')
+    .select(`cantidad, productos(id, nombre, precio, imagen_url)`)
+    .eq('usuario_id', usuario.id);
+
+  const contenedor = document.getElementById('carrito-contenido');
+
+  if (!items || items.length === 0) {
+    contenedor.innerHTML = `
+      <div class="carrito-vacio">
+        <div class="icon">🛒</div>
+        <p>Tu carrito está vacío</p>
+        <a href="index.html" class="btn-link" style="background:var(--naranja);color:#fff;padding:12px 28px;border-radius:8px;font-weight:700;">Ver productos</a>
+      </div>`;
+    return;
+  }
+
+  let total = 0;
+  let filas = items.map(item => {
+    const p = item.productos;
+    const subtotal = p.precio * item.cantidad;
+    total += subtotal;
+    return `
+      <tr id="fila-${p.id}">
+        <td><img class="prod-thumb" src="${p.imagen_url || ''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'"></td>
+        <td><div class="prod-nombre">${p.nombre}</div></td>
+        <td>$${parseFloat(p.precio).toFixed(2)}</td>
+        <td>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="cambiarCantidad('${p.id}', -1)">−</button>
+            <span class="qty-num" id="qty-${p.id}">${item.cantidad}</span>
+            <button class="qty-btn" onclick="cambiarCantidad('${p.id}', 1)">+</button>
+          </div>
+        </td>
+        <td>$${subtotal.toFixed(2)}</td>
+        <td><button class="btn-eliminar" onclick="eliminarItem('${p.id}')" title="Eliminar">🗑</button></td>
+      </tr>`;
+  }).join('');
+
+  contenedor.innerHTML = `
+    <table class="carrito-tabla">
+      <thead><tr>
+        <th></th><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th></th>
+      </tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+    <div class="carrito-resumen">
+      <div class="resumen-card">
+        <div class="resumen-row"><span>Subtotal</span><span id="txt-total">$${total.toFixed(2)}</span></div>
+        <div class="resumen-row"><span>Envío</span><span>Por calcular</span></div>
+        <div class="resumen-total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
+        <button class="btn-pagar">Proceder al pago</button>
+      </div>
+    </div>`;
+}
+
+async function cambiarCantidad(productoId, delta) {
+  const { data: s } = await db.auth.getSession();
+  const uid = s?.session?.user?.id;
+  const qtyEl = document.getElementById('qty-' + productoId);
+  const nuevaCantidad = parseInt(qtyEl.textContent) + delta;
+
+  if (nuevaCantidad <= 0) { eliminarItem(productoId); return; }
+
+  await db.from('carrito')
+    .update({ cantidad: nuevaCantidad })
+    .eq('usuario_id', uid)
+    .eq('producto_id', productoId);
+
+  cargarCarrito();
+}
+
+async function eliminarItem(productoId) {
+  const { data: s } = await db.auth.getSession();
+  const uid = s?.session?.user?.id;
+  await db.from('carrito').delete().eq('usuario_id', uid).eq('producto_id', productoId);
+  cargarCarrito();
+  actualizarBadgeCarrito();
+}
+
+document.addEventListener('DOMContentLoaded', cargarCarrito);
+</script>
+</body>
+</html>
