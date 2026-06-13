@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crear Cuenta — Cana'an Xu'x</title>
+<link rel="stylesheet" href="estilos.css">
+<style>
+  .auth-wrap {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gris-claro);
+    padding: 40px 16px;
+  }
+  .auth-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.08);
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 420px;
+  }
+  .auth-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--cafe);
+    margin-bottom: 6px;
+  }
+  .auth-card p.sub { font-size: 14px; color: var(--gris); margin-bottom: 28px; }
+  .auth-field { margin-bottom: 18px; }
+  .auth-field label { display: block; font-size: 13px; font-weight: 600; color: var(--cafe); margin-bottom: 6px; }
+  .auth-field input {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--borde); border-radius: 8px;
+    font-size: 15px; font-family: inherit; color: var(--cafe);
+    outline: none; transition: border-color .2s;
+  }
+  .auth-field input:focus { border-color: var(--naranja); }
+  .btn-auth {
+    width: 100%; background: var(--naranja); color: #fff;
+    border: none; border-radius: 8px; padding: 13px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    font-family: inherit; transition: background .2s; margin-top: 6px;
+  }
+  .btn-auth:hover { background: var(--naranja-oscuro); }
+  .btn-auth:disabled { background: #ccc; cursor: not-allowed; }
+  .auth-msg { margin-top: 14px; padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; }
+  .auth-msg.error { background: #fdecea; color: #c0392b; display: block; }
+  .auth-msg.ok    { background: #eafaf1; color: #1e8449; display: block; }
+  .auth-switch { text-align: center; margin-top: 20px; font-size: 13px; color: var(--gris); }
+  .auth-switch a { color: var(--naranja); font-weight: 600; }
+
+  /* Tarjeta de éxito */
+  .success-card { text-align: center; }
+  .success-icon { font-size: 56px; margin-bottom: 16px; }
+  .success-card h2 { margin-bottom: 10px; }
+  .success-card p { font-size: 14px; color: var(--gris); line-height: 1.7; margin-bottom: 8px; }
+  .success-card strong { color: var(--naranja); }
+  .success-card .nota {
+    background: #fff8f0;
+    border-left: 3px solid var(--naranja);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: var(--cafe);
+    margin-top: 20px;
+    text-align: left;
+  }
+
+  #step-confirmacion { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="logo-wrap">
+      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
+      <div class="logo-name">Cana´an Xu´x <span>Apicultoras Tenosiquenses</span></div>
+    </a>
+  </div>
+</header>
+
+<div class="auth-wrap">
+
+  <!-- PASO 1: Formulario de registro -->
+  <div class="auth-card" id="step-registro">
+    <h2>Crear cuenta</h2>
+    <p class="sub">Ingresa tus datos y te enviaremos un correo para confirmar tu cuenta.</p>
+
+    <div class="auth-field">
+      <label>Nombre completo</label>
+      <input type="text" id="reg-nombre" placeholder="Tu nombre">
+    </div>
+    <div class="auth-field">
+      <label>Correo electrónico</label>
+      <input type="email" id="reg-email" placeholder="tu@correo.com">
+    </div>
+    <div class="auth-field">
+      <label>Contraseña</label>
+      <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres">
+    </div>
+    <div class="auth-field">
+      <label>Confirmar contraseña</label>
+      <input type="password" id="reg-pass2" placeholder="Repite tu contraseña">
+    </div>
+
+    <button class="btn-auth" id="btn-registrar" onclick="registrar()">Crear cuenta</button>
+    <div class="auth-msg" id="reg-msg"></div>
+    <div class="auth-switch">¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></div>
+  </div>
+
+  <!-- PASO 2: Confirmación — revisa tu correo -->
+  <div class="auth-card success-card" id="step-confirmacion">
+    <div class="success-icon">📬</div>
+    <h2>¡Revisa tu correo!</h2>
+    <p>Te enviamos un enlace de confirmación a:</p>
+    <p><strong id="correo-enviado"></strong></p>
+    <p>Haz clic en el enlace del correo para activar tu cuenta y poder realizar compras.</p>
+    <div class="nota">
+      💡 Si no ves el correo, revisa tu carpeta de <strong>Spam</strong> o correo no deseado.
+    </div>
+    <div class="auth-switch" style="margin-top:24px">
+      ¿Ya confirmaste? <a href="login.html">Inicia sesión aquí</a>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL  = 'https://biiefknpnkynfobbetav.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+async function registrar() {
+  const nombre = document.getElementById('reg-nombre').value.trim();
+  const email  = document.getElementById('reg-email').value.trim();
+  const pass   = document.getElementById('reg-pass').value;
+  const pass2  = document.getElementById('reg-pass2').value;
+  const msg    = document.getElementById('reg-msg');
+  const btn    = document.getElementById('btn-registrar');
+
+  msg.className = 'auth-msg';
+  msg.textContent = '';
+
+  if (!nombre || !email || !pass) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'Por favor llena todos los campos.';
+    return;
+  }
+  if (pass.length < 8) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'La contraseña debe tener al menos 8 caracteres.';
+    return;
+  }
+  if (pass !== pass2) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'Las contraseñas no coinciden.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Creando cuenta...';
+
+  const { data, error } = await db.auth.signUp({
+    email,
+    password: pass,
+    options: {
+      data: { nombre_completo: nombre },
+      emailRedirectTo: 'https://canaan-xux.vercel.app/login.html'
+    }
+  });
+
+  if (error) {
+    msg.className = 'auth-msg error';
+    msg.textContent = error.message.includes('already registered')
+      ? 'Este correo ya tiene cuenta. Inicia sesión.'
+      : 'Error: ' + error.message;
+    btn.disabled = false;
+    btn.textContent = 'Crear cuenta';
+    return;
+  }
+
+  // Mostrar pantalla de "revisa tu correo"
+  document.getElementById('correo-enviado').textContent = email;
+  document.getElementById('step-registro').style.display = 'none';
+  document.getElementById('step-confirmacion').style.display = 'block';
+}
+</script>
+</body>
+</html>
