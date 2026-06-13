@@ -30,9 +30,9 @@
         <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
         Buscar
       </a>
-      <a href="login.html" id="btn-ingresar">
+      <a href="#">
         <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span id="txt-sesion">Ingresar</span>
+        Ingresar
       </a>
       <a href="#" id="cart-btn">
         <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -98,42 +98,8 @@
       <img src="imagen/logo.png" alt="Abeja" style="height:56px;object-fit:contain">
     </div>
     <h2 class="section-title">¡LO MAS VENDIDO!</h2>
-    <div class="prod-grid">
-
-      <div class="prod-card" onclick="addToCart(this)">
-        <div class="prod-img-wrap">
-          <img src="" alt="Miel Mantequilla Cruda">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Miel Mantequilla Cruda</div>
-          <div class="prod-price">$ 40.00</div>
-          <button class="btn-add">Agregar al carrito</button>
-        </div>
-      </div>
-
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <span class="prod-badge agotado">Agotado</span>
-          <img src="" alt="Acondicionador sólido con miel">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Acondicionador sólido con miel</div>
-          <div class="prod-price sold">Agotado</div>
-          <button class="btn-add disabled" disabled>Agotado</button>
-        </div>
-      </div>
-
-      <div class="prod-card" onclick="addToCart(this)">
-        <div class="prod-img-wrap">
-          <img src="productos/Pvelas/imagenesV/vela_hexagonoVioleta.png" alt="Miel con Jengibre">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Vela hexagono violeta</div>
-          <div class="prod-price">$ 60.00</div>
-          <button class="btn-add">Agregar al carrito</button>
-        </div>
-      </div>
-
+    <div class="prod-grid" id="grid-vendidos">
+      <div style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Cargando productos...</div>
     </div>
     <div class="ver-todos-wrap"><a href="#" class="ver-todos">Ver todos los productos</a></div>
   </div>
@@ -166,55 +132,8 @@
 <section class="section" style="background:#fff">
   <div class="container">
     <h2 class="section-title left">Otros Productos</h2>
-    <div class="prod-grid">
-
-      <div class="prod-card" onclick="addToCart(this)">
-        <div class="prod-img-wrap">
-          <img src="https://mieloro.com.mx/cdn/shop/files/FotosproductosyKITS_3_320281c4-1b7c-4175-90a4-7e477226485e_300x300.png?v=1718147166" alt="Cacaos con Miel">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Cacaos con Miel</div>
-          <div class="prod-price">$ 40.00</div>
-          <button class="btn-add">Agregar al carrito</button>
-        </div>
-      </div>
-
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <span class="prod-badge agotado">Agotado</span>
-          <img src="https://mieloro.com.mx/cdn/shop/products/IR008_300x300.jpg?v=1627663834" alt="Crema Ligera">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Crema Ligera</div>
-          <div class="prod-price sold">Agotado</div>
-          <button class="btn-add disabled" disabled>Agotado</button>
-        </div>
-      </div>
-
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <span class="prod-badge agotado">Agotado</span>
-          <img src="https://mieloro.com.mx/cdn/shop/files/FotosproductosyKITS_b0ca2e70-6845-42a1-bada-4fef58267197_300x300.png?v=1714851289" alt="Galletas con Polen">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Galletas con Polen</div>
-          <div class="prod-price sold">Agotado</div>
-          <button class="btn-add disabled" disabled>Agotado</button>
-        </div>
-      </div>
-
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <span class="prod-badge agotado">Agotado</span>
-          <img src="https://mieloro.com.mx/cdn/shop/products/IR005_300x300.jpg?v=1542476627" alt="Contorno de Ojos">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Contorno de Ojos</div>
-          <div class="prod-price sold">Agotado</div>
-          <button class="btn-add disabled" disabled>Agotado</button>
-        </div>
-      </div>
-
+    <div class="prod-grid" id="grid-otros">
+      <div style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Cargando productos...</div>
     </div>
     <div class="ver-todos-wrap"><a href="#" class="ver-todos">Ver todos los productos</a></div>
   </div>
@@ -378,7 +297,52 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
+
+<script>
+async function cargarProductosIndex() {
+  const { data } = await db.from('productos')
+    .select('*')
+    .eq('activo', true)
+    .order('creado_en', { ascending: false });
+
+  if (!data || data.length === 0) {
+    document.getElementById('grid-vendidos').innerHTML = '<p style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Pronto tendremos productos disponibles.</p>';
+    document.getElementById('grid-otros').innerHTML = '';
+    return;
+  }
+
+  function tarjeta(p) {
+    const agotado = p.stock <= 0;
+    return `
+      <div class="prod-card" data-producto-id="${p.id}" ${!agotado ? 'onclick="addToCart(this)"' : ''}>
+        <div class="prod-img-wrap">
+          ${agotado ? '<span class="prod-badge agotado">Agotado</span>' : ''}
+          <img src="${p.imagen_url || ''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">${p.nombre}</div>
+          <div class="prod-price ${agotado ? 'sold' : ''}">
+            ${agotado ? 'Agotado' : '$ ' + parseFloat(p.precio).toFixed(2)}
+          </div>
+          <button class="btn-add" ${agotado ? 'disabled' : ''}>
+            ${agotado ? 'Agotado' : 'Agregar al carrito'}
+          </button>
+        </div>
+      </div>`;
+  }
+
+  // Primeros 3 → "Lo más vendido"
+  const vendidos = data.slice(0, 3);
+  // El resto → "Otros productos"
+  const otros    = data.slice(3);
+
+  document.getElementById('grid-vendidos').innerHTML = vendidos.map(tarjeta).join('') || '<p style="grid-column:1/-1;text-align:center;color:#7a7a6a;padding:20px">Agrega productos desde el panel admin.</p>';
+  document.getElementById('grid-otros').innerHTML    = otros.map(tarjeta).join('')    || '';
+}
+
+document.addEventListener('DOMContentLoaded', cargarProductosIndex);
+</script>
+
 </body>
 </html>
