@@ -42,11 +42,9 @@ function actualizarHeaderUsuario() {
   const btnIngresar = document.getElementById('btn-ingresar');
   const txtSesion   = document.getElementById('txt-sesion');
   if (!btnIngresar) return;
-
   if (usuarioActual) {
     const nombre = usuarioActual.user_metadata?.nombre_completo || usuarioActual.email.split('@')[0];
-    const nombreCorto = nombre.split(' ')[0];
-    if (txtSesion) txtSesion.textContent = '👤 ' + nombreCorto;
+    if (txtSesion) txtSesion.textContent = '👤 ' + nombre.split(' ')[0];
     btnIngresar.href = '#';
     btnIngresar.onclick = toggleMenuUsuario;
   } else {
@@ -62,7 +60,6 @@ function toggleMenuUsuario(e) {
   e.stopPropagation();
   const existente = document.getElementById('menu-usuario');
   if (existente) { existente.remove(); return; }
-
   const menu = document.createElement('div');
   menu.id = 'menu-usuario';
   menu.style.cssText = `
@@ -81,12 +78,10 @@ function toggleMenuUsuario(e) {
     <a href="#" id="btn-cerrar-sesion" style="display:block;padding:12px 16px;font-size:14px;color:#c0392b;text-decoration:none;">↩ Cerrar sesión</a>
   `;
   document.body.appendChild(menu);
-
   document.getElementById('btn-cerrar-sesion').addEventListener('click', function(e) {
     e.preventDefault();
     cerrarSesion();
   });
-
   setTimeout(() => {
     document.addEventListener('click', function cerrarFuera(ev) {
       const m = document.getElementById('menu-usuario');
@@ -107,36 +102,6 @@ async function cerrarSesion() {
   window.location.href = 'index.html';
 }
 
-// ─── INICIALIZAR — todo dentro de DOMContentLoaded ───
-document.addEventListener('DOMContentLoaded', async () => {
-
-  // 1. Obtener sesión actual
-  const { data } = await db.auth.getSession();
-  usuarioActual = data?.session?.user || null;
-
-  // 2. Proteger páginas
-  const paginaActual = window.location.pathname.split('/').pop();
-  if (PAGINAS_PROTEGIDAS.includes(paginaActual) && !usuarioActual) {
-    sessionStorage.setItem('redirigir_tras_login', paginaActual);
-    window.location.href = 'login.html';
-    return;
-  }
-
-  // 3. Actualizar header y carrito
-  actualizarHeaderUsuario();
-  await actualizarBadgeCarrito();
-
-  // 4. Cargar productos en index si aplica
-  if (typeof cargarProductosIndex === 'function') await cargarProductosIndex();
-
-  // 4. Escuchar cambios de sesión (login/logout en tiempo real)
-  db.auth.onAuthStateChange(async (event, session) => {
-    usuarioActual = session?.user || null;
-    actualizarHeaderUsuario();
-    await actualizarBadgeCarrito();
-  });
-});
-
 // ─── CARRITO ───
 async function actualizarBadgeCarrito() {
   let count = 0;
@@ -154,17 +119,14 @@ async function actualizarBadgeCarrito() {
 async function addToCart(card) {
   const btn = card.querySelector('.btn-add');
   if (!btn || btn.disabled) return;
-
   if (!usuarioActual) {
     sessionStorage.setItem('redirigir_tras_login', 'carrito.html');
     window.location.href = 'registro.html';
     return;
   }
-
   const productoId = card.dataset.productoId;
   const nombre     = card.querySelector('.prod-name')?.textContent || '';
   const precio     = parseFloat(card.querySelector('.prod-price')?.textContent.replace(/[^0-9.]/g, '')) || 0;
-
   if (productoId) {
     const { error } = await db.from('carrito').upsert({
       usuario_id: usuarioActual.id,
@@ -200,54 +162,7 @@ document.getElementById('cart-btn')?.addEventListener('click', function(e) {
   }
 });
 
-
-// ─── CARGAR PRODUCTOS EN INDEX DESDE SUPABASE ───
-async function cargarProductosIndex() {
-  const gridVendidos = document.getElementById('grid-vendidos');
-  const gridOtros    = document.getElementById('grid-otros');
-  if (!gridVendidos) return; // Solo corre en index.html
-
-  const { data } = await db.from('productos')
-    .select('*')
-    .eq('activo', true)
-    .order('creado_en', { ascending: false });
-
-  if (!data || data.length === 0) {
-    gridVendidos.innerHTML = '<p style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Pronto tendremos productos disponibles.</p>';
-    if (gridOtros) gridOtros.innerHTML = '';
-    return;
-  }
-
-  function tarjeta(p) {
-    const agotado = p.stock <= 0;
-    return `
-      <div class="prod-card" data-producto-id="${p.id}" ${!agotado ? 'onclick="addToCart(this)"' : ''}>
-        <div class="prod-img-wrap">
-          ${agotado ? '<span class="prod-badge agotado">Agotado</span>' : ''}
-          <img src="${p.imagen_url || ''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">${p.nombre}</div>
-          <div class="prod-price ${agotado ? 'sold' : ''}">
-            ${agotado ? 'Agotado' : '$ ' + parseFloat(p.precio).toFixed(2)}
-          </div>
-          <button class="btn-add" ${agotado ? 'disabled' : ''}>
-            ${agotado ? 'Agotado' : 'Agregar al carrito'}
-          </button>
-        </div>
-      </div>`;
-  }
-
-  const vendidos = data.slice(0, 3);
-  const otros    = data.slice(3);
-
-  gridVendidos.innerHTML = vendidos.map(tarjeta).join('') ||
-    '<p style="grid-column:1/-1;text-align:center;color:#7a7a6a;padding:20px">Agrega productos desde el panel admin.</p>';
-  if (gridOtros) gridOtros.innerHTML = otros.map(tarjeta).join('') || '';
-}
-
-
-// ─── TARJETA DE PRODUCTO (reutilizable) ───
+// ─── TARJETA PRODUCTO ───
 function tarjetaProducto(p) {
   const agotado = p.stock <= 0;
   return `
@@ -269,16 +184,33 @@ function tarjetaProducto(p) {
     </div>`;
 }
 
-// ─── CARGAR PRODUCTOS EN PÁGINAS DE CATEGORÍA (miel, velas, melipona) ───
+// ─── CARGAR PRODUCTOS INDEX ───
+async function cargarProductosIndex() {
+  const gridVendidos = document.getElementById('grid-vendidos');
+  const gridOtros    = document.getElementById('grid-otros');
+  if (!gridVendidos) return;
+
+  const { data } = await db.from('productos')
+    .select('*').eq('activo', true).eq('categoria', 'otros')
+    .order('creado_en', { ascending: false });
+
+  const destacados = (data || []).filter(p => p.subcategoria === 'destacado');
+  const otros      = (data || []).filter(p => p.subcategoria !== 'destacado');
+
+  gridVendidos.innerHTML = destacados.length
+    ? destacados.map(tarjetaProducto).join('')
+    : '<p style="grid-column:1/-1;text-align:center;color:#7a7a6a;padding:20px">Agrega productos destacados desde el panel admin.</p>';
+
+  if (gridOtros) gridOtros.innerHTML = otros.map(tarjetaProducto).join('') || '';
+}
+
+// ─── CARGAR PRODUCTOS EN PÁGINAS DE CATEGORÍA ───
 async function cargarProductosCategoria(categoria) {
-  // miel.html y velas.html usan id="products-grid"
   const grid = document.getElementById('products-grid');
   if (!grid) return;
 
   const { data } = await db.from('productos')
-    .select('*')
-    .eq('activo', true)
-    .eq('categoria', categoria)
+    .select('*').eq('activo', true).eq('categoria', categoria)
     .order('creado_en', { ascending: false });
 
   if (!data || data.length === 0) {
@@ -287,36 +219,33 @@ async function cargarProductosCategoria(categoria) {
   }
 
   grid.innerHTML = data.map(tarjetaProducto).join('');
-
-  // Reactivar filtros si la página los tiene
-  if (typeof filterProducts === 'function') filterProducts('all', document.querySelector('.filter-tag'));
 }
 
-// ─── CARGAR PRODUCTOS EN INDEX ───
-async function cargarProductosIndex() {
-  const gridVendidos = document.getElementById('grid-vendidos');
-  const gridOtros    = document.getElementById('grid-otros');
-  if (!gridVendidos) return;
+// ─── INICIALIZAR ───
+document.addEventListener('DOMContentLoaded', async () => {
+  const { data } = await db.auth.getSession();
+  usuarioActual = data?.session?.user || null;
 
-  const { data } = await db.from('productos')
-    .select('*')
-    .eq('activo', true)
-    .eq('categoria', 'otros')
-    .order('creado_en', { ascending: false });
+  const pagina = window.location.pathname.split('/').pop();
 
-  if (!data || data.length === 0) {
-    gridVendidos.innerHTML = '<p style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Pronto tendremos productos disponibles.</p>';
-    if (gridOtros) gridOtros.innerHTML = '';
+  if (PAGINAS_PROTEGIDAS.includes(pagina) && !usuarioActual) {
+    sessionStorage.setItem('redirigir_tras_login', pagina);
+    window.location.href = 'login.html';
     return;
   }
 
-  // Destacados = subcategoria 'destacado', Otros = el resto
-  const destacados = data.filter(p => p.subcategoria === 'destacado');
-  const otros      = data.filter(p => p.subcategoria !== 'destacado');
+  actualizarHeaderUsuario();
+  await actualizarBadgeCarrito();
 
-  gridVendidos.innerHTML = destacados.length
-    ? destacados.map(tarjetaProducto).join('')
-    : '<p style="grid-column:1/-1;text-align:center;color:#7a7a6a;padding:20px">Agrega productos destacados desde el panel admin.</p>';
+  // Cargar productos según la página actual
+  if (pagina === 'index.html' || pagina === '')  await cargarProductosIndex();
+  if (pagina === 'miel.html')                    await cargarProductosCategoria('miel');
+  if (pagina === 'velas.html')                   await cargarProductosCategoria('velas');
+  if (pagina === 'melipona.html')                await cargarProductosCategoria('melipona');
 
-  if (gridOtros) gridOtros.innerHTML = otros.map(tarjetaProducto).join('');
-}
+  db.auth.onAuthStateChange(async (event, session) => {
+    usuarioActual = session?.user || null;
+    actualizarHeaderUsuario();
+    await actualizarBadgeCarrito();
+  });
+});
