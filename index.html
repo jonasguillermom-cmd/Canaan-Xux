@@ -40,8 +40,6 @@
       </a>
     </div>
   </div>
-  <!-- botón hamburguesa solo visible en móvil -->
-  <button class="hamburger" id="hamburger" aria-label="Menú">☰</button>
 </header>
 
 <!-- NAV -->
@@ -100,8 +98,31 @@
       <img src="imagen/logo.png" alt="Abeja" style="height:56px;object-fit:contain">
     </div>
     <h2 class="section-title">¡LO MAS VENDIDO!</h2>
-    <div class="prod-grid" id="grid-vendidos">
-      <div style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Cargando productos...</div>
+    <div class="prod-grid" id="grid-vendidos"><div style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Cargando...</div></div>
+
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <span class="prod-badge agotado">Agotado</span>
+          <img src="" alt="Acondicionador sólido con miel">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Acondicionador sólido con miel</div>
+          <div class="prod-price sold">Agotado</div>
+          <button class="btn-add disabled" disabled>Agotado</button>
+        </div>
+      </div>
+
+      <div class="prod-card" onclick="addToCart(this)">
+        <div class="prod-img-wrap">
+          <img src="productos/Pvelas/imagenesV/vela_hexagonoVioleta.png" alt="Miel con Jengibre">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Vela hexagono violeta</div>
+          <div class="prod-price">$ 60.00</div>
+          <button class="btn-add">Agregar al carrito</button>
+        </div>
+      </div>
+
     </div>
     <div class="ver-todos-wrap"><a href="#" class="ver-todos">Ver todos los productos</a></div>
   </div>
@@ -134,8 +155,44 @@
 <section class="section" style="background:#fff">
   <div class="container">
     <h2 class="section-title left">Otros Productos</h2>
-    <div class="prod-grid" id="grid-otros">
-      <div style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Cargando productos...</div>
+    <div class="prod-grid" id="grid-otros"></div>
+
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <span class="prod-badge agotado">Agotado</span>
+          <img src="https://mieloro.com.mx/cdn/shop/products/IR008_300x300.jpg?v=1627663834" alt="Crema Ligera">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Crema Ligera</div>
+          <div class="prod-price sold">Agotado</div>
+          <button class="btn-add disabled" disabled>Agotado</button>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <span class="prod-badge agotado">Agotado</span>
+          <img src="https://mieloro.com.mx/cdn/shop/files/FotosproductosyKITS_b0ca2e70-6845-42a1-bada-4fef58267197_300x300.png?v=1714851289" alt="Galletas con Polen">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Galletas con Polen</div>
+          <div class="prod-price sold">Agotado</div>
+          <button class="btn-add disabled" disabled>Agotado</button>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <span class="prod-badge agotado">Agotado</span>
+          <img src="https://mieloro.com.mx/cdn/shop/products/IR005_300x300.jpg?v=1542476627" alt="Contorno de Ojos">
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">Contorno de Ojos</div>
+          <div class="prod-price sold">Agotado</div>
+          <button class="btn-add disabled" disabled>Agotado</button>
+        </div>
+      </div>
+
     </div>
     <div class="ver-todos-wrap"><a href="#" class="ver-todos">Ver todos los productos</a></div>
   </div>
@@ -301,48 +358,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
-
-<script>
-(function() {
-  var btn = document.getElementById('hamburger');
-  var nav = document.querySelector('nav');
-  if (btn && nav) {
-    btn.addEventListener('click', function() {
-      nav.classList.toggle('open');
-      btn.classList.toggle('open');
-    });
-    document.querySelectorAll('.nav-item a').forEach(function(a) {
-      a.addEventListener('click', function() {
-        nav.classList.remove('open');
-        btn.classList.remove('open');
-      });
-    });
-  }
-})();
-</script>
-<script>
-var _hbg = document.getElementById('hamburger');
-var _nav = document.querySelector('nav');
-if (_hbg && _nav) {
-  _hbg.addEventListener('click', function(e) {
-    e.stopPropagation();
-    var isOpen = _nav.classList.contains('nav-open');
-    _nav.classList.toggle('nav-open', !isOpen);
-    _hbg.textContent = isOpen ? '☰' : '✕';
-  });
-  document.querySelectorAll('nav a').forEach(function(a) {
-    a.addEventListener('click', function() {
-      _nav.classList.remove('nav-open');
-      _hbg.textContent = '☰';
-    });
-  });
-  document.addEventListener('click', function(e) {
-    if (!_nav.contains(e.target) && e.target !== _hbg) {
-      _nav.classList.remove('nav-open');
-      _hbg.textContent = '☰';
-    }
-  });
-}
-</script>
+<!-- WhatsApp flotante -->
+<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank" title="Escríbenos por WhatsApp">💬</a>
 </body>
 </html>
