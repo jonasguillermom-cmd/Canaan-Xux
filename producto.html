@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Producto — Cana'an Xu'x</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="estilos.css"/>
+<style>
+/* ── LAYOUT ── */
+.product-wrap{max-width:1200px;margin:0 auto;padding:28px 24px 64px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+/* ── GALERÍA ── */
+.gallery{position:sticky;top:140px;display:flex;flex-direction:column;gap:12px}
+.gallery-main{background:#f5f0e8;border-radius:8px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.gallery-main img{width:100%;height:100%;object-fit:contain;padding:24px;transition:transform .3s}
+.gallery-main:hover img{transform:scale(1.05)}
+.gallery-thumbs{display:flex;gap:10px;flex-wrap:wrap}
+.thumb{width:68px;height:68px;border-radius:6px;overflow:hidden;border:2px solid #e0d8cc;cursor:pointer;background:#f5f0e8;transition:border-color .2s;flex-shrink:0}
+.thumb.active,.thumb:hover{border-color:#eb904d}
+.thumb img{width:100%;height:100%;object-fit:contain;padding:6px}
+/* ── INFO ── */
+.product-info{display:flex;flex-direction:column;gap:0}
+.prod-brand{font-size:11px;font-weight:800;color:#eb904d;letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px}
+.prod-title{font-family:'Playfair Display',serif;font-size:30px;color:#3d3b1f;line-height:1.2;margin-bottom:16px}
+.prod-price-wrap{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #e0d8cc}
+.price-main{font-size:28px;font-weight:800;color:#c96a2a}
+.prod-desc{font-size:14px;color:#666;line-height:1.8;margin-bottom:24px}
+/* ── VARIANTES ── */
+.var-label{font-size:11px;font-weight:800;color:#3d3b1f;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.var-label span{font-weight:500;color:#eb904d;text-transform:none;letter-spacing:0}
+/* Colores */
+.color-options{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.color-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 12px;border:2px solid #e0d8cc;border-radius:6px;background:#fff;font-size:11px;font-weight:700;color:#3d3b1f;cursor:pointer;transition:all .2s;min-width:56px;font-family:inherit}
+.color-btn:hover,.color-btn.active{border-color:#eb904d;background:#fef8f2}
+.color-swatch{width:28px;height:28px;border-radius:50%;border:2px solid rgba(0,0,0,.1)}
+/* Tamaños */
+.size-options{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.size-btn{padding:9px 18px;border:2px solid #e0d8cc;border-radius:4px;background:#fff;font-size:13px;font-weight:600;color:#3d3b1f;cursor:pointer;transition:all .2s;font-family:inherit}
+.size-btn:hover,.size-btn.active{border-color:#eb904d;background:#eb904d;color:#fff}
+/* ── CANTIDAD ── */
+.qty-wrap{display:flex;align-items:center;margin-bottom:20px;width:fit-content;border:2px solid #e0d8cc;border-radius:4px;overflow:hidden}
+.qty-btn{width:42px;height:42px;background:#f5f0e8;border:none;font-size:20px;font-weight:700;color:#3d3b1f;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qty-btn:hover{background:#ebe6de}
+.qty-input{width:52px;height:42px;border:none;border-left:2px solid #e0d8cc;border-right:2px solid #e0d8cc;text-align:center;font-family:inherit;font-size:15px;font-weight:700;color:#3d3b1f;outline:none}
+/* ── CTA ── */
+.cta-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.btn-carrito{width:100%;padding:15px;background:#eb904d;color:#fff;border:none;font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-carrito:hover{background:#c96a2a}
+/* ── ACORDEÓN ── */
+.accordion{border-top:1px solid #e0d8cc;margin-top:8px}
+.accordion-item{border-bottom:1px solid #e0d8cc}
+.accordion-header{width:100%;background:none;border:none;padding:15px 0;display:flex;align-items:center;justify-content:space-between;font-family:inherit;font-size:12px;font-weight:800;color:#3d3b1f;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.accordion-icon{font-size:20px;color:#eb904d;transition:transform .25s}
+.accordion-item.open .accordion-icon{transform:rotate(45deg)}
+.accordion-body{display:none;font-size:13px;color:#666;line-height:1.8;padding-bottom:14px}
+.accordion-item.open .accordion-body{display:block}
+/* ── CARGA ── */
+.loading-prod{text-align:center;padding:80px 20px;color:#7a7a6a;font-size:15px;grid-column:1/-1}
+/* ── BREADCRUMB ── */
+.breadcrumb{max-width:1200px;margin:0 auto;padding:16px 24px 0;display:flex;align-items:center;gap:6px;font-size:12px;color:#7a7a6a}
+.breadcrumb a{color:#7a7a6a;transition:color .2s}
+.breadcrumb a:hover{color:#eb904d}
+.breadcrumb .sep{color:#e0d8cc}
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .product-wrap{grid-template-columns:1fr;gap:24px}
+  .gallery{position:static}
+  .prod-title{font-size:24px}
+  .price-main{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="logo-wrap">
+      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
+      <div class="logo-name">Cana´an Xu´x <span>Apicultoras Tenosiquenses</span></div>
+    </a>
+    <div class="header-icons">
+      <a href="#" onclick="toggleSearch();return false">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        <span>Buscar</span>
+      </a>
+      <a href="login.html" id="btn-ingresar">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="txt-sesion">Ingresar</span>
+      </a>
+      <a href="carrito.html" id="cart-btn">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>Carrito</span> <span class="cart-count-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-item"><a href="index.html">Inicio</a></div>
+    <div class="nav-item"><a href="nosotros.html">Nosotros</a></div>
+    <div class="nav-item">
+      <span>Productos <span class="chevron">▾</span></span>
+      <div class="dropdown">
+        <div class="dropdown-group">
+          <div class="dropdown-title">Productos de la Colmena</div>
+          <a href="miel.html">Miel</a>
+          <a href="#">Miel en panal</a>
+          <a href="#">Jabones</a>
+        </div>
+        <div class="dropdown-group">
+          <div class="dropdown-title">Otros Productos</div>
+          <a href="#">Gotas</a>
+          <a href="#">Dulces</a>
+          <a href="velas.html">Velas</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item"><a href="abejas.html">Abejas</a></div>
+    <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
+    <div class="nav-item"><a href="#">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="#">Contacto</a></div>
+  </div>
+</nav>
+
+<div class="breadcrumb" id="breadcrumb">
+  <a href="index.html">Inicio</a>
+  <span class="sep">›</span>
+  <span id="bread-cat"><a href="#">Productos</a></span>
+  <span class="sep">›</span>
+  <span class="current" id="bread-nombre">Cargando...</span>
+</div>
+
+<div class="product-wrap" id="product-wrap">
+  <div class="loading-prod">Cargando producto...</div>
+</div>
+
+<div class="search-overlay">
+  <div class="search-box">
+    <button class="search-close">✕</button>
+    <input type="text" placeholder="Buscar productos..."/>
+  </div>
+</div>
+
+<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank">💬</a>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+<script>
+// ── COLORES PREDEFINIDOS para swatches ──
+const COLORES_HEX = {
+  violeta:'#ad6799', morado:'#7b2d8b', azul:'#4a90d9', 'azul claro':'#a0c8e8',
+  verde:'#5a8a3c', amarillo:'#f5d438', naranja:'#eb904d', rojo:'#c0392b',
+  rosa:'#e91e8c', rosado:'#a13052', cafe:'#7b4f2e', marrón:'#7b4f2e',
+  blanco:'#ffffff', negro:'#222', gris:'#999', crema:'#f0e6c8',
+  cremoso:'#f0e6c8', dorado:'#d4af37', miel:'#c8861a',
+};
+
+let productoActual = null;
+let varianteSeleccionada = null;
+let imagenActual = 0;
+
+async function cargarProducto() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  if (!id) { document.getElementById('product-wrap').innerHTML = '<div class="loading-prod">Producto no encontrado.</div>'; return; }
+
+  const { data: p } = await db.from('productos').select('*').eq('id', id).single();
+  if (!p) { document.getElementById('product-wrap').innerHTML = '<div class="loading-prod">Producto no encontrado.</div>'; return; }
+
+  productoActual = p;
+
+  // Breadcrumb
+  document.getElementById('bread-nombre').textContent = p.nombre;
+  document.title = p.nombre + ' — Cana\'an Xu\'x';
+  const catLink = { miel:'miel.html', velas:'velas.html', melipona:'melipona.html', otros:'index.html' };
+  document.getElementById('bread-cat').innerHTML = `<a href="${catLink[p.categoria]||'#'}">${p.categoria.charAt(0).toUpperCase()+p.categoria.slice(1)}</a>`;
+
+  // Imágenes — puede ser array en imagenes o solo imagen_url
+  let fotos = [];
+  if (p.imagenes && Array.isArray(p.imagenes) && p.imagenes.length) fotos = p.imagenes;
+  else if (p.imagen_url) fotos = [p.imagen_url];
+  else fotos = [];
+
+  // Variantes
+  const variantes = (p.variantes && Array.isArray(p.variantes)) ? p.variantes : [];
+  const tieneVariantes = variantes.length > 0;
+
+  // Detectar tipo de variante
+  const tipoVar = variantes.length && variantes[0].tipo ? variantes[0].tipo : 'color';
+
+  // Galería HTML
+  const galeriaHTML = `
+    <div class="gallery">
+      <div class="gallery-main">
+        <img id="mainImg" src="${fotos[0]||''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
+      </div>
+      ${fotos.length > 1 ? `
+      <div class="gallery-thumbs" id="thumbsContainer">
+        ${fotos.map((f,i)=>`
+          <div class="thumb ${i===0?'active':''}" onclick="switchImg(this,'${f}')">
+            <img src="${f}" alt="Vista ${i+1}">
+          </div>`).join('')}
+      </div>` : ''}
+    </div>`;
+
+  // Variantes HTML
+  let variantesHTML = '';
+  if (tieneVariantes) {
+    if (tipoVar === 'color') {
+      variantesHTML = `
+        <p class="var-label">Color: <span id="var-selected">${variantes[0].nombre}</span></p>
+        <div class="color-options">
+          ${variantes.map((v,i)=>{
+            const hex = COLORES_HEX[v.nombre.toLowerCase()] || '#ccc';
+            return `<button class="color-btn ${i===0?'active':''}" onclick="seleccionarVariante(this,${i})">
+              <span class="color-swatch" style="background:${hex}"></span>
+              ${v.nombre}
+            </button>`;
+          }).join('')}
+        </div>`;
+    } else {
+      variantesHTML = `
+        <p class="var-label">Tamaño: <span id="var-selected">${variantes[0].nombre}</span></p>
+        <div class="size-options">
+          ${variantes.map((v,i)=>`
+            <button class="size-btn ${i===0?'active':''}" onclick="seleccionarVariante(this,${i})">
+              ${v.nombre}${v.precio ? ' — $'+parseFloat(v.precio).toFixed(2) : ''}
+            </button>`).join('')}
+        </div>`;
+    }
+    varianteSeleccionada = 0;
+  }
+
+  // Precio inicial
+  let precioInicial = parseFloat(p.precio).toFixed(2);
+  if (tieneVariantes && variantes[0].precio) precioInicial = parseFloat(variantes[0].precio).toFixed(2);
+
+  // Info HTML
+  const infoHTML = `
+    <div class="product-info">
+      <p class="prod-brand">Cana´an Xu´x</p>
+      <h1 class="prod-title">${p.nombre}</h1>
+      <div class="prod-price-wrap">
+        <span class="price-main" id="price-main">$${precioInicial}</span>
+      </div>
+      ${p.descripcion ? `<p class="prod-desc">${p.descripcion}</p>` : ''}
+      ${variantesHTML}
+      <p class="var-label">Cantidad</p>
+      <div class="qty-wrap">
+        <button class="qty-btn" onclick="cambiarQty(-1)">−</button>
+        <input class="qty-input" id="qty" type="number" value="1" min="1" max="99" readonly>
+        <button class="qty-btn" onclick="cambiarQty(1)">+</button>
+      </div>
+      <div class="cta-wrap">
+        <button class="btn-carrito" id="btn-agregar" onclick="agregarAlCarrito()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          Agregar al carrito
+        </button>
+      </div>
+      <div class="accordion">
+        ${p.descripcion ? `
+        <div class="accordion-item open">
+          <button class="accordion-header" onclick="this.closest('.accordion-item').classList.toggle('open')">
+            Descripción <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body"><p>${p.descripcion}</p></div>
+        </div>` : ''}
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="this.closest('.accordion-item').classList.toggle('open')">
+            Modo de uso <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body"><p>Producto artesanal elaborado con ingredientes naturales. Conservar en lugar fresco y seco alejado de la luz directa.</p></div>
+        </div>
+        ${tieneVariantes ? `
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="this.closest('.accordion-item').classList.toggle('open')">
+            Variantes disponibles <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            <ul>${variantes.map(v=>`<li>${v.nombre}${v.precio?' — $'+parseFloat(v.precio).toFixed(2):''}</li>`).join('')}</ul>
+          </div>
+        </div>` : ''}
+      </div>
+    </div>`;
+
+  document.getElementById('product-wrap').innerHTML = galeriaHTML + infoHTML;
+}
+
+function switchImg(thumb, src) {
+  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
+  document.getElementById('mainImg').src = src;
+}
+
+function seleccionarVariante(btn, idx) {
+  document.querySelectorAll('.color-btn,.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  varianteSeleccionada = idx;
+  const variantes = productoActual.variantes || [];
+  const v = variantes[idx];
+  document.getElementById('var-selected').textContent = v.nombre;
+  // Actualizar precio si la variante tiene precio propio
+  if (v.precio) document.getElementById('price-main').textContent = '$' + parseFloat(v.precio).toFixed(2);
+  // Actualizar imagen si la variante tiene imagen
+  if (v.imagen) document.getElementById('mainImg').src = v.imagen;
+}
+
+function cambiarQty(delta) {
+  const input = document.getElementById('qty');
+  if (input) input.value = Math.max(1, Math.min(99, parseInt(input.value) + delta));
+}
+
+async function agregarAlCarrito() {
+  if (!usuarioActual) {
+    sessionStorage.setItem('redirigir_tras_login', window.location.href);
+    window.location.href = 'registro.html';
+    return;
+  }
+  const qty  = parseInt(document.getElementById('qty').value);
+  const btn  = document.getElementById('btn-agregar');
+  const variantes = productoActual.variantes || [];
+  const varNombre = variantes[varianteSeleccionada]?.nombre || null;
+
+  const { error } = await db.from('carrito').upsert({
+    usuario_id: usuarioActual.id,
+    producto_id: productoActual.id,
+    cantidad: qty
+  }, { onConflict: 'usuario_id,producto_id' });
+
+  if (!error) {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Agregado al carrito';
+    btn.style.background = '#4caf50';
+    await actualizarBadgeCarrito();
+    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 1800);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', cargarProducto);
+</script>
+
+<script>
+// Hamburguesa
+(function(){
+  var nav=document.querySelector('nav');
+  if(!nav)return;
+  var bar=document.createElement('div');bar.className='nav-toggle-bar';
+  var lbl=document.createElement('span');lbl.className='nav-toggle-label';lbl.textContent='Menú';
+  var btn=document.createElement('button');btn.className='nav-toggle';btn.innerHTML='<span></span><span></span><span></span>';
+  bar.appendChild(lbl);bar.appendChild(btn);nav.insertBefore(bar,nav.firstChild);
+  var inner=nav.querySelector('.nav-inner');
+  btn.addEventListener('click',function(){var o=inner.classList.toggle('open');btn.classList.toggle('open',o);lbl.style.opacity=o?'0':'';});
+  document.addEventListener('click',function(e){if(!nav.contains(e.target)){inner.classList.remove('open');btn.classList.remove('open');lbl.style.opacity='';}});
+  window.addEventListener('resize',function(){if(window.innerWidth>768){inner.classList.remove('open');btn.classList.remove('open');lbl.style.opacity='';}});
+})();
+</script>
+</body>
+</html>
