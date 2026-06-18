@@ -524,9 +524,6 @@
       </div>
     </a>
 
-    <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menú">
-        <span></span><span></span><span></span>
-      </button>
     <div class="header-icons">
       <a href="#" onclick="toggleSearch(); return false">
         <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -585,6 +582,33 @@
     <div class="nav-item"><a href="#">Contacto</a></div>
   </div>
 </nav>
+
+<!-- BARRA MENÚ MÓVIL -->
+<div class="barra-menu-movil">
+  <span class="menu-label">☰ Menú</span>
+  <button class="hamburger-btn" id="hamburger-btn" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- MENÚ DESPLEGABLE MÓVIL -->
+<div class="menu-desplegable" id="menu-desplegable">
+  <a href="index.html">Inicio</a>
+  <a href="nosotros.html">Nosotros</a>
+  <div class="menu-seccion">Productos</div>
+  <div class="submenu">
+    <a href="miel.html">Miel</a>
+    <a href="#">Miel en panal</a>
+    <a href="#">Jabones</a>
+    <a href="#">Gotas</a>
+    <a href="#">Dulces</a>
+    <a href="velas.html">Velas</a>
+  </div>
+  <a href="abejas.html">Abejas</a>
+  <a href="centro_rescate.html">Centro de Rescate</a>
+  <a href="#">Blog y Eventos</a>
+  <a href="#">Contacto</a>
+</div>
 
 <!-- BANNER COLECCIÓN -->
 <div class="coll-banner">
@@ -982,6 +1006,31 @@
     icon.textContent = isOpen ? '+' : '−';
   }
 </script>
-
+<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank" title="WhatsApp">💬</a>
+<script>
+(function(){
+  var btn  = document.getElementById('hamburger-btn');
+  var menu = document.getElementById('menu-desplegable');
+  if (!btn || !menu) return;
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var abierto = menu.classList.toggle('abierto');
+    btn.classList.toggle('activo', abierto);
+  });
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      menu.classList.remove('abierto');
+      btn.classList.remove('activo');
+    });
+  });
+  document.addEventListener('click', function(e){
+    if (!menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
+      menu.classList.remove('abierto');
+      btn.classList.remove('activo');
+    }
+  });
+})();
+</script>
+<script>document.addEventListener("DOMContentLoaded",function(){if(typeof cargarProductosCategoria==="function")cargarProductosCategoria("velas");});</script>
 </body>
 </html>
