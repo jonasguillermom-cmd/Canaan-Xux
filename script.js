@@ -223,7 +223,11 @@ async function cargarProductosIndex() {
   if (gridOtros) gridOtros.innerHTML = otros.map(tarjetaProducto).join('') || '';
 }
 
-// ─── CARGAR PRODUCTOS EN PÁGINAS DE CATEGORÍA ───
+// ─── PAGINACIÓN ───
+const PRODUCTOS_POR_PAGINA = 8;
+let paginaActualCat = 1;
+let todosLosProductos = [];
+
 async function cargarProductosCategoria(categoria) {
   const grid = document.getElementById('products-grid');
   if (!grid) return;
@@ -237,7 +241,77 @@ async function cargarProductosCategoria(categoria) {
     return;
   }
 
-  grid.innerHTML = data.map(tarjetaProducto).join('');
+  todosLosProductos = data;
+  paginaActualCat = 1;
+  renderPaginaCategoria();
+}
+
+function renderPaginaCategoria() {
+  const grid = document.getElementById('products-grid');
+  if (!grid) return;
+
+  const total    = todosLosProductos.length;
+  const totalPag = Math.ceil(total / PRODUCTOS_POR_PAGINA);
+  const inicio   = (paginaActualCat - 1) * PRODUCTOS_POR_PAGINA;
+  const fin      = inicio + PRODUCTOS_POR_PAGINA;
+  const pagina   = todosLosProductos.slice(inicio, fin);
+
+  grid.innerHTML = pagina.map(tarjetaProducto).join('');
+
+  // Quitar paginación anterior si existe
+  const paginacionAnterior = document.getElementById('paginacion-cat');
+  if (paginacionAnterior) paginacionAnterior.remove();
+
+  // Solo mostrar paginación si hay más de una página
+  if (totalPag <= 1) return;
+
+  const paginacion = document.createElement('div');
+  paginacion.id = 'paginacion-cat';
+  paginacion.style.cssText = `
+    display:flex;align-items:center;justify-content:center;
+    gap:8px;padding:32px 16px;flex-wrap:wrap;
+  `;
+
+  // Botón anterior
+  const btnPrev = document.createElement('button');
+  btnPrev.textContent = '←';
+  btnPrev.disabled = paginaActualCat === 1;
+  btnPrev.style.cssText = estilosBtnPag(paginaActualCat === 1, false);
+  btnPrev.onclick = () => irPagina(paginaActualCat - 1);
+  paginacion.appendChild(btnPrev);
+
+  // Números de página
+  for (let i = 1; i <= totalPag; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = i;
+    btn.style.cssText = estilosBtnPag(false, i === paginaActualCat);
+    btn.onclick = () => irPagina(i);
+    paginacion.appendChild(btn);
+  }
+
+  // Botón siguiente
+  const btnNext = document.createElement('button');
+  btnNext.textContent = '→';
+  btnNext.disabled = paginaActualCat === totalPag;
+  btnNext.style.cssText = estilosBtnPag(paginaActualCat === totalPag, false);
+  btnNext.onclick = () => irPagina(paginaActualCat + 1);
+  paginacion.appendChild(btnNext);
+
+  grid.parentElement.appendChild(paginacion);
+}
+
+function estilosBtnPag(disabled, activo) {
+  if (disabled) return 'width:40px;height:40px;border-radius:8px;border:1.5px solid #e0d8cc;background:#f5f0e8;color:#bbb;cursor:not-allowed;font-family:inherit;font-size:14px;font-weight:700;';
+  if (activo)   return 'width:40px;height:40px;border-radius:8px;border:none;background:#eb904d;color:#fff;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;';
+  return 'width:40px;height:40px;border-radius:8px;border:1.5px solid #e0d8cc;background:#fff;color:#3d3b1f;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;';
+}
+
+function irPagina(n) {
+  paginaActualCat = n;
+  renderPaginaCategoria();
+  // Scroll al inicio de los productos
+  const grid = document.getElementById('products-grid');
+  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ─── INICIALIZAR ───
