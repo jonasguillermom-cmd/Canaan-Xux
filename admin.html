@@ -215,6 +215,38 @@
           <label>Descripción</label>
           <textarea id="prod-desc" placeholder="Describe el producto, sus beneficios, ingredientes..."></textarea>
         </div>
+
+        <!-- VARIANTES -->
+        <div class="field-sm full">
+          <label>¿Tiene variantes? (colores o tamaños)</label>
+          <select id="prod-tipo-variante" onchange="mostrarVariantes()">
+            <option value="">Sin variantes — producto único</option>
+            <option value="color">Colores (ej: violeta, azul, café...)</option>
+            <option value="tamano">Tamaños (ej: 250ml, 500ml, 1kg...)</option>
+          </select>
+        </div>
+
+        <div class="field-sm full" id="variantes-wrap" style="display:none">
+          <label>Variantes <small style="font-weight:400;color:#999">(una por línea: Nombre | Precio opcional | URL imagen opcional)</small></label>
+          <textarea id="prod-variantes" rows="4" placeholder="Violeta | 60.00&#10;Azul claro | 60.00&#10;Café | 65.00"></textarea>
+        </div>
+
+        <!-- IMÁGENES ADICIONALES -->
+        <div class="field-sm full">
+          <label>Imágenes adicionales <small style="font-weight:400;color:#999">(hasta 4 fotos en total)</small></label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">
+            <div class="upload-mini" onclick="document.getElementById('foto2').click()">
+              <input type="file" id="foto2" accept="image/*" onchange="previsualizarMini(this,'prev2')" style="display:none">
+              <img id="prev2" style="display:none;width:100%;height:80px;object-fit:cover;border-radius:6px">
+              <div id="ph2" style="background:#f5f0e8;border:2px dashed #e0d8cc;border-radius:6px;height:80px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:#7a7a6a">📷 Foto 2</div>
+            </div>
+            <div class="upload-mini" onclick="document.getElementById('foto3').click()">
+              <input type="file" id="foto3" accept="image/*" onchange="previsualizarMini(this,'prev3')" style="display:none">
+              <img id="prev3" style="display:none;width:100%;height:80px;object-fit:cover;border-radius:6px">
+              <div id="ph3" style="background:#f5f0e8;border:2px dashed #e0d8cc;border-radius:6px;height:80px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:#7a7a6a">📷 Foto 3</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <button class="btn-guardar" id="btn-guardar" onclick="guardarProducto()">💾 Guardar producto</button>
@@ -328,6 +360,36 @@ async function logoutAdmin() {
   window.location.href = 'index.html';
 }
 
+// ── VARIANTES ──
+function mostrarVariantes() {
+  const tipo = document.getElementById('prod-tipo-variante').value;
+  document.getElementById('variantes-wrap').style.display = tipo ? 'block' : 'none';
+  if (tipo === 'color') {
+    document.getElementById('prod-variantes').placeholder = 'Violeta | 60.00\nAzul claro | 60.00\nCafé | 65.00';
+  } else if (tipo === 'tamano') {
+    document.getElementById('prod-variantes').placeholder = '250ml | 80.00\n500ml | 140.00\n1kg | 260.00';
+  }
+}
+
+// ── FOTOS ADICIONALES ──
+let fotosAdicionales = [null, null];
+
+function previsualizarMini(input, prevId) {
+  const file = input.files[0];
+  if (!file) return;
+  const idx = prevId === 'prev2' ? 0 : 1;
+  fotosAdicionales[idx] = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById(prevId);
+    const ph  = document.getElementById('ph' + prevId.replace('prev',''));
+    img.src = e.target.result;
+    img.style.display = 'block';
+    if (ph) ph.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
 // ── PREVISUALIZAR FOTO ──
 function previsualizarFoto(input) {
   fotoFile = input.files[0];
@@ -374,6 +436,17 @@ async function guardarProducto() {
   btn.disabled = true;
   btn.textContent = '⏳ Guardando...';
 
+  // Parsear variantes
+  const tipoVariante = document.getElementById('prod-tipo-variante').value;
+  let variantesArr = [];
+  if (tipoVariante) {
+    const lineas = document.getElementById('prod-variantes').value.split('\n').filter(l => l.trim());
+    variantesArr = lineas.map(l => {
+      const partes = l.split('|').map(p => p.trim());
+      return { tipo: tipoVariante, nombre: partes[0], precio: partes[1] || null, imagen: partes[2] || null };
+    });
+  }
+
   let imagen_url = null;
 
   // Subir foto si se seleccionó una nueva
@@ -389,7 +462,18 @@ async function guardarProducto() {
 
   // Si es index → guardar categoria como 'otros', subcategoria define la sección
   let categoriaReal = categoria === 'index' ? 'otros' : categoria;
-  const datos = { nombre, precio, categoria: categoriaReal, subcategoria, descripcion: desc, stock, activo };
+  // Subir fotos adicionales
+  let imagenesArr = [];
+  if (imagen_url) imagenesArr.push(imagen_url);
+  for (const fotoExtra of fotosAdicionales) {
+    if (fotoExtra) {
+      const url = await subirFoto(fotoExtra);
+      if (url) imagenesArr.push(url);
+    }
+  }
+
+  const datos = { nombre, precio, categoria: categoriaReal, subcategoria, descripcion: desc, stock, activo,
+    variantes: variantesArr, imagenes: imagenesArr };
   if (imagen_url) datos.imagen_url = imagen_url;
 
   let error;
@@ -434,6 +518,7 @@ async function cargarProductos() {
         <div class="precio">$${parseFloat(p.precio).toFixed(2)}</div>
       </div>
       <div class="prod-acciones">
+        <a href="producto.html?id=${p.id}" target="_blank" style="background:#e8f4fd;color:#2980b9;border:none;border-radius:6px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;">👁 Ver</a>
         <button class="btn-editar" onclick="editarProducto('${p.id}')">✏️ Editar</button>
         <button class="btn-eliminar-p" onclick="eliminarProducto('${p.id}', '${p.nombre}')">🗑</button>
       </div>
