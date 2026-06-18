@@ -25,9 +25,6 @@
       </div>
     </a>
 
-    <button class="hamburger" id="hamburger" aria-label="Menú">
-        <span></span><span></span><span></span>
-      </button>
     <div class="header-icons">
       <a href="#" onclick="toggleSearch(); return false">
         <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -44,6 +41,11 @@
     </div>
   </div>
 </header>
+
+<!-- HAMBURGUESA -->
+<button class="hamburger" id="hamburger" aria-label="Abrir menú">
+  <span></span><span></span><span></span>
+</button>
 
 <!-- NAV -->
 <nav>
@@ -319,6 +321,24 @@
       });
     });
   }
+})();
+</script>
+<script>
+(function(){
+  var btn = document.getElementById('hamburger');
+  var nav = document.querySelector('nav');
+  if(!btn || !nav) return;
+  btn.addEventListener('click', function(){
+    var open = nav.style.display === 'block';
+    nav.style.display = open ? 'none' : 'block';
+    btn.classList.toggle('open', !open);
+  });
+  document.querySelectorAll('nav .nav-item a').forEach(function(a){
+    a.addEventListener('click', function(){
+      nav.style.display = 'none';
+      btn.classList.remove('open');
+    });
+  });
 })();
 </script>
 </body>
