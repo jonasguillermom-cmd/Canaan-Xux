@@ -830,257 +830,77 @@ footer {
   vertical-align: middle;
 }
 
-/* ═══════════════════════════════════════════
-   MENÚ HAMBURGUESA
-═══════════════════════════════════════════ */
-.nav-toggle {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 4px;
-  flex-shrink: 0;
-}
-.nav-toggle span {
-  display: block;
-  height: 2px;
-  background: #fff;
-  border-radius: 2px;
-  transition: transform .3s, opacity .3s, width .3s;
-  transform-origin: center;
-}
-.nav-toggle span:nth-child(1) { width: 24px; }
-.nav-toggle span:nth-child(2) { width: 18px; }
-.nav-toggle span:nth-child(3) { width: 24px; }
-
-/* Animación a X cuando está abierto */
-.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); width: 24px; }
-.nav-toggle.open span:nth-child(2) { opacity: 0; width: 0; }
-.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); width: 24px; }
-
 /* ─── RESPONSIVE ─── */
-
-/* Tablet ancha (≤ 1024px) */
 @media (max-width: 1024px) {
   .prod-grid { grid-template-columns: repeat(3, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Tablet (≤ 768px) — menú hamburguesa */
 @media (max-width: 768px) {
-  /* Header: ocultar texto de iconos, mostrar hamburguesa */
-  .header-top { padding: 0 16px; height: 60px; }
-  .logo-img { width: 52px; height: 52px; }
-  .logo-name { font-size: 16px; }
-  .logo-name span { font-size: 9px; }
-  .header-icons a span,
-  .header-icons a:not(#cart-btn) > svg + * { display: none; }
-  /* Mantener solo iconos SVG en el header (sin texto) */
-  .header-icons { gap: 12px; }
-  .header-icons a { gap: 0; font-size: 0; }
-  .header-icons a .icon-svg { width: 22px; height: 22px; }
-  /* Mostrar badge del carrito */
-  .cart-count-badge { font-size: 10px; margin-left: 2px; }
-
-  /* NAV — se convierte en menú desplegable vertical */
-  nav { position: sticky; top: 60px; }
-  .nav-toggle { display: flex; }
-
-  .nav-inner {
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    padding: 0;
-    /* Cerrado por defecto */
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height .35s cubic-bezier(.4,0,.2,1);
-  }
-  .nav-inner.open { max-height: 600px; }
-
-  /* Wrapper para alinear hamburguesa */
-  nav > .nav-toggle-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    height: 48px;
-  }
-  .nav-toggle-label {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,.6);
-  }
-
-  .nav-item {
-    flex: none;
-    width: 100%;
-    justify-content: flex-start;
-    border-bottom: 1px solid rgba(255,255,255,.07);
-  }
-  .nav-item > a,
-  .nav-item > span {
-    justify-content: flex-start;
-    padding: 14px 20px;
-    font-size: 11px;
-    width: 100%;
-  }
-  /* Quitar separadores verticales */
-  .nav-item + .nav-item > a::before,
-  .nav-item + .nav-item > span::before { display: none; }
-
-  /* Dropdown en móvil: estático dentro del menú */
-  .dropdown {
-    display: none;
-    position: static;
-    transform: none;
-    min-width: 100%;
-    box-shadow: none;
-    border-radius: 0;
-    animation: none;
-    background: rgba(0,0,0,.2);
-    flex-direction: column;
-    padding: 8px 0 12px;
-  }
-  .nav-item:hover .dropdown,
-  .nav-item.open .dropdown { display: flex; }
-  .dropdown::before { display: none; }
-  .dropdown-group {
-    padding: 12px 20px 8px 32px;
-    border-right: none;
-    border-bottom: 1px solid rgba(255,255,255,.06);
-  }
-  .dropdown-group:last-child { border-bottom: none; }
-  .dropdown-title { color: rgba(235,144,77,.8); }
-  .dropdown a { color: rgba(255,255,255,.75); padding: 6px 0; font-size: 12px; }
-  .dropdown a:hover { color: var(--naranja); padding-left: 4px; }
-
-  /* Contenido */
   .prod-grid { grid-template-columns: repeat(2, 1fr); }
   .coll-grid { grid-template-columns: 1fr; }
   .exp-grid { grid-template-columns: 1fr; }
   .exp-card { grid-template-columns: 1fr; }
   .exp-card img { width: 100%; height: 200px; }
-  .about-inner, .asesoria-inner { grid-template-columns: 1fr; gap: 32px; }
+  .about-inner, .asesoria-inner { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
-  .hero-slide img { height: 280px; }
-  .hero { min-height: auto; }
+  nav { overflow-x: auto; }
+  .hero-slide img { height: 260px; }
 }
 
-/* Móvil (≤ 480px) */
 @media (max-width: 480px) {
-  .header-top { height: 56px; }
-  .logo-img { width: 44px; height: 44px; }
-  .logo-name { font-size: 14px; }
-
-  /* Sticky nav con offset correcto */
-  nav { top: 56px; }
-
-  .prod-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .prod-img-wrap img { height: 150px; }
-  .prod-name { font-size: 12px; }
-
-  .coll-grid { grid-template-columns: 1fr; }
-  .coll-card { min-height: 140px; }
-
-  .hero-slide img { height: 210px; }
-  .hero-arrow { width: 32px; height: 32px; font-size: 14px; }
-
-  .section { padding: 36px 0; }
-  .container { padding: 0 14px; }
-  .section-title { font-size: 22px; margin-bottom: 20px; }
-
-  .about-text h2 { font-size: 20px; }
-  .icon-cats { gap: 16px; }
-  .icon-cat img { width: 72px; height: 72px; }
-  .icon-cat span { font-size: 11px; }
-
-  .exp-card img { height: 170px; }
-  .exp-body { padding: 16px; }
-
-  .asesoria-imgs { grid-template-columns: 1fr 1fr; }
-  .asesoria-imgs img { height: 140px; }
-
-  .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
-  .footer-desc { max-width: 100%; }
-}
-
-/* Móvil pequeño (≤ 380px) */
-@media (max-width: 380px) {
+  .prod-grid { grid-template-columns: 1fr 1fr; }
+  .prod-img-wrap img { height: 160px; }
   .footer-grid { grid-template-columns: 1fr; }
-  .prod-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .logo-name .logo-name-sub { display: none; }
 }
-/* ═══════════════════════════════════════════
-   BOTÓN FLOTANTE WHATSAPP
-═══════════════════════════════════════════ */
-.whatsapp-float {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  z-index: 9999;
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  background: #25d366;
-  box-shadow: 0 4px 16px rgba(37,211,102,.45), 0 2px 6px rgba(0,0,0,.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform .22s ease, box-shadow .22s ease;
-  overflow: hidden;
-  text-decoration: none;
+/* ─── MENÚ HAMBURGUESA MÓVIL ─── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  background: none;
+  border: none;
 }
-
-.whatsapp-float:hover {
-  transform: scale(1.10);
-  box-shadow: 0 8px 24px rgba(37,211,102,.55), 0 3px 10px rgba(0,0,0,.22);
-}
-
-/* Imagen del logo personalizado */
-.whatsapp-float .whatsapp-logo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+.hamburger span {
   display: block;
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: all .3s;
 }
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
-/* SVG de respaldo (se muestra si no encuentra la imagen) */
-.whatsapp-float .whatsapp-svg {
-  width: 36px;
-  height: 36px;
-  fill: #fff;
-  flex-shrink: 0;
-}
-
-/* Pulso de atención */
-@keyframes wa-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(37,211,102,.55); }
-  70%  { box-shadow: 0 0 0 14px rgba(37,211,102,0); }
-  100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
-}
-.whatsapp-float {
-  animation: wa-pulse 2.4s ease-out infinite;
-}
-
-/* En móvil: un poco más pequeño y más cerca del borde */
-@media (max-width: 600px) {
-  .whatsapp-float {
-    width: 54px;
-    height: 54px;
-    bottom: 20px;
-    right: 18px;
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  nav {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .35s ease;
+    background: var(--cafe);
   }
-  .whatsapp-float .whatsapp-svg {
-    width: 30px;
-    height: 30px;
+  nav.open { max-height: 400px; }
+  .nav-inner {
+    flex-direction: column;
+    padding: 8px 0 16px;
+    gap: 0;
   }
+  .nav-item { width: 100%; }
+  .nav-item > a {
+    display: block;
+    padding: 12px 24px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .nav-dropdown {
+    position: static;
+    box-shadow: none;
+    background: rgba(0,0,0,.2);
+    border-radius: 0;
+    padding: 0;
+  }
+  .header-icons .icon-label { display: none; }
 }
