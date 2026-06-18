@@ -836,93 +836,82 @@ footer {
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 
-
-
-/* ════════════════════════════════
-   RESPONSIVE MÓVIL
-════════════════════════════════ */
-
-/* Botón hamburguesa — oculto en desktop */
-.hamburger {
-  display: none;
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--naranja);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-  cursor: pointer;
-  z-index: 300;
-  line-height: 1;
+@media (max-width: 768px) {
+  .prod-grid { grid-template-columns: repeat(2, 1fr); }
+  .coll-grid { grid-template-columns: 1fr; }
+  .exp-grid { grid-template-columns: 1fr; }
+  .exp-card { grid-template-columns: 1fr; }
+  .exp-card img { width: 100%; height: 200px; }
+  .about-inner, .asesoria-inner { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  nav { overflow-x: auto; }
+  .hero-slide img { height: 260px; }
 }
 
+@media (max-width: 480px) {
+  .prod-grid { grid-template-columns: 1fr 1fr; }
+  .prod-img-wrap img { height: 160px; }
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+/* ════════════════════════════════════════
+   MENÚ MÓVIL — Scroll horizontal simple
+   (igual que desktop, pero deslizable)
+════════════════════════════════════════ */
+
+/* Botón WhatsApp flotante */
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  background: #25d366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  z-index: 999;
+  text-decoration: none;
+  font-size: 28px;
+  transition: transform .2s;
+}
+.whatsapp-float:hover { transform: scale(1.1); }
+
+/* Hamburguesa — oculta en desktop */
+.hamburger { display: none !important; }
+
 @media (max-width: 768px) {
-
-  /* Mostrar hamburguesa */
-  .hamburger { display: flex; align-items: center; justify-content: center; }
-
-  /* Header relativo para posicionar el nav debajo */
-  header { position: relative !important; z-index: 300 !important; }
-  .header-top { padding-right: 64px; }
-
-  /* Íconos del header más pequeños */
-  .header-icons { gap: 10px; }
-  .header-icons a { font-size: 11px; }
-
-  /* NAV oculto por defecto */
+  /* El nav se muestra como scroll horizontal en móvil */
   nav {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 250;
-    box-shadow: 0 8px 24px rgba(0,0,0,.3);
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    top: 0;
   }
+  nav::-webkit-scrollbar { height: 3px; }
+  nav::-webkit-scrollbar-track { background: transparent; }
+  nav::-webkit-scrollbar-thumb { background: var(--naranja); border-radius: 3px; }
 
-  /* NAV visible cuando tiene clase nav-open */
-  nav.nav-open { display: block; }
-
-  /* Links en columna */
   .nav-inner {
-    flex-direction: column;
-    padding: 0;
-    gap: 0;
-    align-items: stretch;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    padding: 0 12px;
+    min-width: max-content;
+    justify-content: flex-start;
   }
-  .nav-item { width: 100%; border-bottom: 1px solid rgba(255,255,255,.1); }
   .nav-item > a,
   .nav-item > span {
-    display: block;
-    padding: 14px 20px;
-    font-size: 14px;
+    white-space: nowrap;
+    padding: 0 14px;
+    font-size: 12px;
   }
-  .nav-item > a::before,
-  .nav-item > span::before,
-  .nav-item > a::after,
-  .nav-item > span::after { display: none; }
+  /* Dropdown desactivado en móvil para no bloquear scroll */
+  .nav-item .dropdown { display: none !important; }
 
-  /* Dropdown en móvil */
-  .dropdown {
-    position: static;
-    display: block;
-    box-shadow: none;
-    background: rgba(0,0,0,.2);
-    border-radius: 0;
-    padding: 0;
-    columns: 1;
-    flex-direction: column;
-  }
-  .dropdown a { padding: 11px 36px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,.06); }
-  .dropdown-group { padding: 0; }
-  .dropdown-title { padding: 8px 36px 4px; font-size: 11px; opacity: .7; }
-
-  /* Grids */
+  /* Otros ajustes */
   .prod-grid { grid-template-columns: repeat(2, 1fr); }
   .coll-grid { grid-template-columns: 1fr; }
   .exp-grid { grid-template-columns: 1fr; }
@@ -931,12 +920,14 @@ footer {
   .about-inner, .asesoria-inner { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .hero-slide img { height: 260px; }
+  .logo-name { font-size: 15px; }
+  .logo-img { width: 68px; height: 68px; }
+  .header-icons { gap: 10px; }
+  .header-icons a { font-size: 11px; }
 }
 
 @media (max-width: 480px) {
   .prod-grid { grid-template-columns: 1fr 1fr; }
   .prod-img-wrap img { height: 160px; }
   .footer-grid { grid-template-columns: 1fr; }
-  .logo-name { font-size: 15px; }
-  .logo-img { width: 64px; height: 64px; }
 }
