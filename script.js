@@ -165,23 +165,42 @@ document.getElementById('cart-btn')?.addEventListener('click', function(e) {
 // ─── TARJETA PRODUCTO ───
 function tarjetaProducto(p) {
   const agotado = p.stock <= 0;
+  const img = (p.imagenes && p.imagenes[0]) ? p.imagenes[0] : (p.imagen_url || '');
   return `
-    <div class="prod-card" data-category="${p.subcategoria || ''}" data-producto-id="${p.id}" data-price="${p.precio}" ${!agotado ? 'onclick="addToCart(this)"' : ''}>
-      <div class="prod-img-wrap">
-        ${agotado ? '<span class="prod-badge agotado">Agotado</span>' : ''}
-        <img src="${p.imagen_url || ''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
-      </div>
-      <div class="prod-info">
-        <div class="prod-name">${p.nombre}</div>
-        ${p.descripcion ? `<div style="font-size:12px;color:#7a7a6a;margin:4px 0;">${p.descripcion}</div>` : ''}
-        <div class="prod-price ${agotado ? 'sold' : ''}">
-          ${agotado ? 'Agotado' : '$ ' + parseFloat(p.precio).toFixed(2)}
+    <div class="prod-card" data-category="${p.subcategoria || ''}" data-producto-id="${p.id}" data-price="${p.precio}">
+      <a href="producto.html?id=${p.id}" style="text-decoration:none;color:inherit;display:block">
+        <div class="prod-img-wrap">
+          ${agotado ? '<span class="prod-badge agotado">Agotado</span>' : ''}
+          <img src="${img}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
         </div>
-        <button class="btn-add" ${agotado ? 'disabled' : ''}>
+        <div class="prod-info">
+          <div class="prod-name">${p.nombre}</div>
+          <div class="prod-price ${agotado ? 'sold' : ''}">
+            ${agotado ? 'Agotado' : '$ ' + parseFloat(p.precio).toFixed(2)}
+          </div>
+        </div>
+      </a>
+      <div style="padding:0 16px 16px">
+        <button class="btn-add" ${agotado ? 'disabled' : ''} onclick="event.stopPropagation();addToCartById('${p.id}',this)">
           ${agotado ? 'Agotado' : 'Agregar al carrito'}
         </button>
       </div>
     </div>`;
+}
+
+// Agregar al carrito directo desde la tarjeta (sin entrar al detalle)
+async function addToCartById(productoId, btn) {
+  if (!usuarioActual) {
+    sessionStorage.setItem('redirigir_tras_login', 'carrito.html');
+    window.location.href = 'registro.html';
+    return;
+  }
+  const { error } = await db.from('carrito').upsert({
+    usuario_id: usuarioActual.id,
+    producto_id: productoId,
+    cantidad: 1
+  }, { onConflict: 'usuario_id,producto_id' });
+  if (!error) { mostrarConfirmacion(btn); await actualizarBadgeCarrito(); }
 }
 
 // ─── CARGAR PRODUCTOS INDEX ───
