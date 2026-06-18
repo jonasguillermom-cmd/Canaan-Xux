@@ -855,7 +855,7 @@ footer {
 }
 
 /* ════════════════════════════════════════════
-   BOTÓN WHATSAPP FLOTANTE
+   WHATSAPP FLOTANTE
 ════════════════════════════════════════════ */
 .whatsapp-float {
   position: fixed;
@@ -877,122 +877,128 @@ footer {
 .whatsapp-float:hover { transform: scale(1.1); }
 
 /* ════════════════════════════════════════════
-   MENÚ HAMBURGUESA — Solo móvil
+   BARRA DE MENÚ MÓVIL — oculta en desktop
 ════════════════════════════════════════════ */
-
-/* Oculto en desktop */
-.hamburger-btn {
+.barra-menu-movil {
   display: none;
 }
 
 @media (max-width: 768px) {
 
-  /* ── HEADER ── */
-  .header-top {
-    padding: 0 16px;
-    height: 60px;
-    position: relative;
+  /* ── HERO — sin distorsión ── */
+  .hero { min-height: unset; }
+  .hero-slide img {
+    height: 220px;
+    object-fit: cover;
+    object-position: center;
   }
-  .logo-img { width: 52px; height: 52px; }
+
+  /* ── HEADER — igual que desktop, solo más compacto ── */
+  .header-top {
+    padding: 0 12px;
+    height: 60px;
+  }
+  .logo-img { width: 50px; height: 50px; }
   .logo-name { font-size: 13px; }
   .logo-name span { font-size: 9px; }
-  .header-icons { gap: 8px; }
+  .header-icons { gap: 10px; }
   .header-icons a { font-size: 10px; gap: 3px; }
-  .icon-svg { width: 16px; height: 16px; }
+  .icon-svg { width: 15px; height: 15px; }
 
-  /* ── BOTÓN HAMBURGUESA ── */
-  .hamburger-btn {
+  /* ── NAV DESKTOP — ocultarlo ── */
+  nav { display: none !important; }
+
+  /* ── BARRA DE MENÚ MÓVIL — igual estilo que el nav ── */
+  .barra-menu-movil {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #2a2510 0%, #3d3520 40%, #2e2a10 100%);
+    border-bottom: 3px solid var(--naranja);
+    padding: 0 16px;
+    height: 46px;
+    position: sticky;
+    top: 60px;
+    z-index: 190;
+    box-shadow: 0 4px 24px rgba(0,0,0,.35);
+  }
+  .barra-menu-movil .menu-label {
+    color: rgba(255,255,255,.88);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .barra-menu-movil .hamburger-btn {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 5px;
-    width: 44px;
-    height: 44px;
-    background: var(--naranja);
-    border: none;
-    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 6px;
     cursor: pointer;
-    padding: 8px;
-    flex-shrink: 0;
+    padding: 6px;
   }
-  .hamburger-btn span {
+  .barra-menu-movil .hamburger-btn span {
     display: block;
-    width: 22px;
+    width: 18px;
     height: 2px;
     background: #fff;
     border-radius: 2px;
     transition: all .3s;
   }
-  .hamburger-btn.activo span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-  .hamburger-btn.activo span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-  .hamburger-btn.activo span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+  .barra-menu-movil .hamburger-btn.activo span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+  .barra-menu-movil .hamburger-btn.activo span:nth-child(2) { opacity: 0; }
+  .barra-menu-movil .hamburger-btn.activo span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
 
-  /* ── NAV OCULTO POR DEFECTO EN MÓVIL ── */
-  nav {
-    position: fixed !important;
-    top: 60px;
+  /* ── MENÚ DESPLEGABLE ── */
+  .menu-desplegable {
+    display: none;
+    position: fixed;
+    top: 106px; /* 60px header + 46px barra */
     left: 0;
     right: 0;
+    background: linear-gradient(135deg, #2a2510 0%, #3d3520 100%);
     z-index: 999;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height .4s ease;
-    box-shadow: none;
-    border-bottom: none;
-  }
-  nav.menu-abierto {
-    max-height: 90vh;
+    max-height: calc(100vh - 106px);
     overflow-y: auto;
-    box-shadow: 0 8px 32px rgba(0,0,0,.4);
     border-bottom: 3px solid var(--naranja);
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
   }
-
-  /* ── LINKS EN COLUMNA ── */
-  .nav-inner {
-    flex-direction: column;
-    padding: 8px 0 16px;
-    gap: 0;
-    align-items: stretch;
-    min-width: unset;
-    display: flex;
-    white-space: normal;
-    justify-content: flex-start;
-  }
-  .nav-item {
-    flex: none;
-    width: 100%;
-    justify-content: flex-start;
-    border-bottom: 1px solid rgba(255,255,255,.08);
-  }
-  .nav-item > a,
-  .nav-item > span {
-    justify-content: flex-start;
+  .menu-desplegable.abierto { display: block; }
+  .menu-desplegable a {
+    display: block;
     padding: 14px 20px;
+    color: rgba(255,255,255,.88);
     font-size: 13px;
-    width: 100%;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    text-decoration: none;
   }
-  .nav-item > a::before,
-  .nav-item > span::before { display: none; }
-  .nav-item > a::after,
-  .nav-item > span::after { display: none; }
-
-  /* ── DROPDOWN EN MÓVIL ── */
-  .nav-item:hover .dropdown,
-  .nav-item.activo .dropdown {
-    display: flex;
-    position: static;
-    transform: none;
-    min-width: 100%;
-    border-radius: 0;
-    box-shadow: none;
-    background: rgba(0,0,0,.25);
-    animation: none;
-    flex-direction: column;
+  .menu-desplegable a:hover { background: rgba(235,144,77,.15); color: #fff; }
+  .menu-desplegable .menu-seccion {
+    padding: 8px 20px 4px;
+    font-size: 10px;
+    color: var(--naranja);
+    font-weight: 800;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    opacity: .8;
   }
-  .dropdown-group { padding: 4px 0; }
-  .dropdown-title { padding: 8px 36px 4px; font-size: 11px; color: rgba(255,255,255,.5); }
-  .dropdown a { padding: 10px 36px; font-size: 12px; color: rgba(255,255,255,.85); border-bottom: 1px solid rgba(255,255,255,.06); }
+  .menu-desplegable .submenu a {
+    padding-left: 36px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: .03em;
+    opacity: .85;
+  }
 
   /* ── GRIDS ── */
   .prod-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -1002,10 +1008,6 @@ footer {
   .exp-card img { width: 100%; height: 200px; }
   .about-inner, .asesoria-inner { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
-  .hero-slide img { height: 240px; }
-
-  /* WhatsApp más arriba para no tapar nav */
-  .whatsapp-float { bottom: 20px; right: 16px; width: 50px; height: 50px; font-size: 22px; }
 }
 
 @media (max-width: 480px) {
