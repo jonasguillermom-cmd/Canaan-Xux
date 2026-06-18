@@ -326,11 +326,19 @@
   margin-bottom: 14px;
 }
 .nos-mv-text-slot {
-  font-size: 15px;
-  color: var(--gris);
-  line-height: 1.85;
-  text-align: left;
-  padding: 0;
+  min-height: 80px;
+  background: #fdf8f2;
+  border: 1.5px dashed #d4c4a8;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 18px;
+  font-size: 13px;
+  color: #b09070;
+  font-style: italic;
+  line-height: 1.7;
+  text-align: center;
 }
 
 /* ════════════════════════════════
@@ -347,20 +355,6 @@
   .nos-intro h2 { font-size: 26px; }
   .nos-hex-group { gap: 16px; }
   .nos-hexagon { width: 110px; height: 127px; }
-  /* Página con menos padding lateral */
-  .nos-page { padding: 0 16px 60px; }
-  /* Hero más compacto */
-  .nos-hero { height: 260px; }
-  .nos-hero-content { padding: 0 16px 36px; }
-  /* Misión/visión */
-  .nos-mv-card { padding: 24px 20px; }
-  .nos-intro { padding: 40px 0 32px; }
-}
-@media(max-width: 400px) {
-  .nos-hexagon { width: 88px; height: 101px; }
-  .nos-hex-name { font-size: 11px; }
-  .nos-hex-group { gap: 10px; }
-  .nos-hero-content h1 { font-size: 22px; }
 }
 </style>
 </head>
@@ -378,14 +372,17 @@
         <span>Apicultoras Tenosiquenses</span>
       </div>
     </a>
+    <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
     <div class="header-icons">
       <a href="#" onclick="toggleSearch(); return false">
         <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
         Buscar
       </a>
-      <a href="#">
+      <a href="login.html" id="btn-ingresar">
         <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Ingresar
+        <span id="txt-sesion">Ingresar</span>
       </a>
       <a href="#" id="cart-btn">
         <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -405,7 +402,7 @@
       <div class="dropdown">
         <div class="dropdown-group">
           <div class="dropdown-title">Productos de la Colmena</div>
-          <a href="#">Miel</a>
+          <a href="miel.html">Miel</a>
           <a href="#">Miel en panal</a>
           <a href="#">Jabones</a>
         </div>
@@ -419,8 +416,8 @@
     </div>
     <div class="nav-item"><a href="abejas.html">Abejas</a></div>
     <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
-    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
-    <div class="nav-item"><a href="contacto.html">Contacto</a></div>
+    <div class="nav-item"><a href="#">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="#">Contacto</a></div>
   </div>
 </nav>
 
@@ -431,7 +428,7 @@
     <div class="nos-breadcrumb">
       <a href="index.html">Inicio</a> / Nosotros
     </div>
-
+    <span class="nos-hero-tag">Quiénes somos · Productoras · Valores</span>
     <h1>Nosotros</h1>
     <p>Apicultoras tenosiquenses comprometidas con la tierra, las abejas y las comunidades que las cuidan.</p>
   </div>
@@ -445,7 +442,7 @@
     <h2>Conoce a los productores</h2>
     <!-- ESPACIO DE TEXTO — reemplaza este párrafo con tu contenido -->
     <p class="nos-intro-text">
-     En Cana'an Xu'x creemos que la miel es mucho más que un alimento: es el resultado del trabajo conjunto entre la naturaleza, las abejas y las personas que las cuidan. Nuestra historia comenzó con el deseo de proteger a los polinizadores y compartir los beneficios de una miel auténtica, producida de manera responsable.
+      Escribe aquí el texto introductorio que quieras mostrar en esta sección. Puedes contar la historia de tu organización, sus valores, su origen o cualquier mensaje que quieras transmitir a quienes visitan esta página.
     </p>
     <p class="nos-intro-sub">¿Quieres saber quién cosechó tu miel?</p>
   </div>
@@ -507,15 +504,17 @@
 
     <div class="nos-mv-card">
       <h3>Nuestra misión</h3>
+      <!-- ESPACIO MISIÓN — reemplaza el texto del div por tu misión -->
       <div class="nos-mv-text-slot">
-        Transformamos con respeto la riqueza de nuestras colmenas en productos de miel artesanales, conservando la esencia del Área de Protección de Flora y Fauna Cañón del Usumacinta y fortaleciendo, con cada producto, el bienestar de nuestras comunidades.
+        Escribe aquí tu misión
       </div>
     </div>
 
     <div class="nos-mv-card vision">
       <h3>Nuestra visión</h3>
+      <!-- ESPACIO VISIÓN — reemplaza el texto del div por tu visión -->
       <div class="nos-mv-text-slot">
-        Ser el referente de la apicultura artesanal en el sureste mexicano, destacando por la pureza de nuestros productos y nuestra labor inquebrantable en la preservación del ecosistema del Cañón del Usumacinta, impulsando el liderazgo y la prosperidad de las mujeres de nuestra tierra.
+        Escribe aquí tu visión
       </div>
     </div>
 
@@ -531,9 +530,9 @@
         <div class="footer-logo">Cana´an <span>Xu´x</span></div>
         <p class="footer-desc">Somos apicultores mexicanos. Ofrecemos miel de abeja pura y todos los productos derivados de la colmena.</p>
         <div class="footer-social">
-          <a href="" target="_blank" title="Instagram">📷</a>
-          <a href="" target="_blank" title="Facebook">f</a>
-          <a href="" target="_blank" title="Pinterest">P</a>
+          <a href="https://www.instagram.com/mielorogdl/" target="_blank" title="Instagram">📷</a>
+          <a href="https://www.facebook.com/mielorogdl" target="_blank" title="Facebook">f</a>
+          <a href="https://www.pinterest.es/mielorogdl/" target="_blank" title="Pinterest">P</a>
         </div>
       </div>
       <div class="footer-col">
@@ -572,23 +571,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
-
-<!-- BOTÓN FLOTANTE WHATSAPP -->
-<a href="https://wa.me/521XXXXXXXXXX" 
-   class="whatsapp-float" 
-   target="_blank" 
-   rel="noopener noreferrer" 
-   title="Contáctanos por WhatsApp">
-  <!-- REEMPLAZA src CON LA RUTA A TU LOGO PERSONALIZADO DE WHATSAPP -->
-  <img src="imagen/whatsapp-logo.png" 
-       alt="WhatsApp" 
-       class="whatsapp-logo"
-       onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-  <!-- Ícono SVG de respaldo si no encuentra tu imagen -->
-  <svg class="whatsapp-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:none">
-    <path d="M16 0C7.163 0 0 7.163 0 16c0 2.822.736 5.469 2.027 7.769L0 32l8.469-2.002A15.929 15.929 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.771-1.853l-.485-.288-5.027 1.188 1.216-4.895-.317-.502A13.248 13.248 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.271-9.959c-.398-.199-2.352-1.161-2.716-1.293-.364-.132-.629-.199-.894.199-.265.398-1.028 1.293-1.26 1.559-.232.265-.464.299-.862.1-.398-.199-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.132-.265.066-.497-.033-.696-.1-.199-.894-2.155-1.226-2.95-.322-.773-.649-.668-.894-.68-.232-.012-.497-.014-.762-.014a1.46 1.46 0 00-1.06.497c-.364.398-1.393 1.361-1.393 3.317s1.426 3.846 1.625 4.111c.199.265 2.806 4.285 6.797 5.988.951.41 1.693.655 2.271.839.954.303 1.823.26 2.509.158.765-.114 2.352-.961 2.684-1.89.332-.928.332-1.724.232-1.89-.099-.165-.364-.265-.762-.464z"/>
-  </svg>
-</a>
 </body>
 </html>
