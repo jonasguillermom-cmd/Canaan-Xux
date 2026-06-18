@@ -184,12 +184,11 @@
         <div class="field-sm">
           <label>Página donde aparece *</label>
           <select id="prod-categoria" onchange="actualizarSubcategoria()">
-            <option value="">Selecciona dónde aparece...</option>
-            <option value="miel">🍯 Miel → miel.html</option>
-            <option value="velas">🕯️ Velas → velas.html</option>
-            <option value="melipona">🐝 Melipona → melipona.html</option>
-            <option value="index-destacado">⭐ Index — Lo más vendido (primeros 3)</option>
-            <option value="index-otros">📦 Index — Otros productos</option>
+            <option value="">1. Selecciona la página...</option>
+            <option value="miel">🍯 Página de Miel</option>
+            <option value="velas">🕯️ Página de Velas</option>
+            <option value="melipona">🐝 Página de Melipona</option>
+            <option value="index">🏠 Página de Inicio (Index)</option>
           </select>
         </div>
 
@@ -251,26 +250,24 @@ let fotoFile    = null;
 // ── SUBCATEGORÍAS POR PÁGINA ──
 const SUBCATEGORIAS = {
   miel: [
-    { value: 'pura',      label: 'Miel Pura' },
-    { value: 'cruda',     label: 'Miel Cruda' },
-    { value: 'mezcla',    label: 'Con Mezcla (Canela, Jengibre...)' },
-    { value: 'granelito', label: 'Tamaño Familiar / Granelito' },
+    { value: 'pura',      label: '🍯 Miel Pura' },
+    { value: 'cruda',     label: '🍯 Miel Cruda' },
+    { value: 'mezcla',    label: '🍯 Miel con Mezcla (Canela, Jengibre...)' },
+    { value: 'granelito', label: '🍯 Tamaño Familiar / Granelito' },
   ],
   velas: [
-    { value: 'hexagonal', label: 'Hexagonal' },
-    { value: 'oso',       label: 'Figura de Oso' },
-    { value: 'color',     label: 'De Colores' },
+    { value: 'hexagonal', label: '🕯️ Hexagonal' },
+    { value: 'oso',       label: '🕯️ Figura de Oso' },
+    { value: 'color',     label: '🕯️ De Colores' },
   ],
   melipona: [
-    { value: 'pura',      label: 'Miel Pura Melipona' },
-    { value: 'medicinal', label: 'Uso Medicinal' },
-    { value: 'kit',       label: 'Kit / Set' },
+    { value: 'pura',      label: '🐝 Miel Pura Melipona' },
+    { value: 'medicinal', label: '🐝 Uso Medicinal' },
+    { value: 'kit',       label: '🐝 Kit / Set' },
   ],
-  'index-destacado': [
-    { value: 'destacado', label: 'Aparece en "Lo más vendido"' },
-  ],
-  'index-otros': [
-    { value: 'otros', label: 'Aparece en "Otros Productos"' },
+  index: [
+    { value: 'destacado', label: '⭐ Sección "Lo más vendido" (parte de arriba)' },
+    { value: 'otros',     label: '📦 Sección "Otros Productos" (parte de abajo)' },
   ],
 };
 
@@ -328,9 +325,7 @@ function mostrarPanel() {
 
 async function logoutAdmin() {
   await db.auth.signOut();
-  adminActual = null;
-  document.getElementById('login-wrap').style.display = 'flex';
-  document.getElementById('panel-wrap').style.display = 'none';
+  window.location.href = 'index.html';
 }
 
 // ── PREVISUALIZAR FOTO ──
@@ -392,12 +387,9 @@ async function guardarProducto() {
     }
   }
 
-  // Mapear categorías del index a 'otros' con flag de sección
-  let categoriaReal = categoria;
-  let seccion = subcategoria;
-  if (categoria === 'index-destacado') { categoriaReal = 'otros'; seccion = 'destacado'; }
-  if (categoria === 'index-otros')     { categoriaReal = 'otros'; seccion = 'otros'; }
-  const datos = { nombre, precio, categoria: categoriaReal, subcategoria: seccion, descripcion: desc, stock, activo };
+  // Si es index → guardar categoria como 'otros', subcategoria define la sección
+  let categoriaReal = categoria === 'index' ? 'otros' : categoria;
+  const datos = { nombre, precio, categoria: categoriaReal, subcategoria, descripcion: desc, stock, activo };
   if (imagen_url) datos.imagen_url = imagen_url;
 
   let error;
