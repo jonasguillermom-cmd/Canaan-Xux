@@ -39,10 +39,7 @@
         Carrito <span class="cart-count-badge" id="cart-count">0</span>
       </a>
     </div>
-  <!-- Menú móvil -->
-  <button class="hamburger-btn" id="hamburger-btn" aria-label="Menú">
-    <span></span><span></span><span></span>
-  </button>
+  </div>
 </header>
 
 <!-- NAV -->
@@ -76,6 +73,33 @@
     <div class="nav-item"><a href="#">Contacto</a></div>
   </div>
 </nav>
+
+<!-- BARRA MENÚ MÓVIL -->
+<div class="barra-menu-movil">
+  <span class="menu-label">☰ Menú</span>
+  <button class="hamburger-btn" id="hamburger-btn" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- MENÚ DESPLEGABLE MÓVIL -->
+<div class="menu-desplegable" id="menu-desplegable">
+  <a href="index.html">Inicio</a>
+  <a href="nosotros.html">Nosotros</a>
+  <div class="menu-seccion">Productos</div>
+  <div class="submenu">
+    <a href="miel.html">Miel</a>
+    <a href="#">Miel en panal</a>
+    <a href="#">Jabones</a>
+    <a href="#">Gotas</a>
+    <a href="#">Dulces</a>
+    <a href="velas.html">Velas</a>
+  </div>
+  <a href="abejas.html">Abejas</a>
+  <a href="centro_rescate.html">Centro de Rescate</a>
+  <a href="#">Blog y Eventos</a>
+  <a href="#">Contacto</a>
+</div>
 
 <!-- HERO SLIDER -->
 <div class="hero">
@@ -364,25 +388,23 @@
 <a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank" title="WhatsApp">💬</a>
 <script>
 (function(){
-  var btn = document.getElementById('hamburger-btn');
-  var nav = document.querySelector('nav');
-  if (!btn || !nav) return;
+  var btn  = document.getElementById('hamburger-btn');
+  var menu = document.getElementById('menu-desplegable');
+  if (!btn || !menu) return;
   btn.addEventListener('click', function(e){
     e.stopPropagation();
-    var abierto = nav.classList.toggle('menu-abierto');
+    var abierto = menu.classList.toggle('abierto');
     btn.classList.toggle('activo', abierto);
   });
-  // Cerrar al tocar un enlace
-  document.querySelectorAll('nav a').forEach(function(a){
+  menu.querySelectorAll('a').forEach(function(a){
     a.addEventListener('click', function(){
-      nav.classList.remove('menu-abierto');
+      menu.classList.remove('abierto');
       btn.classList.remove('activo');
     });
   });
-  // Cerrar al tocar fuera
   document.addEventListener('click', function(e){
-    if (!nav.contains(e.target) && e.target !== btn) {
-      nav.classList.remove('menu-abierto');
+    if (!menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
+      menu.classList.remove('abierto');
       btn.classList.remove('activo');
     }
   });
