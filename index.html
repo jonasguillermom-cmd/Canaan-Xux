@@ -25,7 +25,7 @@
       </div>
     </a>
 
-    <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menú">
+    <button class="hamburger" id="hamburger" aria-label="Menú">
         <span></span><span></span><span></span>
       </button>
     <div class="header-icons">
@@ -303,5 +303,23 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 
+<script>
+(function() {
+  var btn = document.getElementById('hamburger');
+  var nav = document.querySelector('nav');
+  if (btn && nav) {
+    btn.addEventListener('click', function() {
+      nav.classList.toggle('open');
+      btn.classList.toggle('open');
+    });
+    document.querySelectorAll('.nav-item a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        nav.classList.remove('open');
+        btn.classList.remove('open');
+      });
+    });
+  }
+})();
+</script>
 </body>
 </html>
