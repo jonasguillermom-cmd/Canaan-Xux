@@ -39,7 +39,10 @@
         Carrito <span class="cart-count-badge" id="cart-count">0</span>
       </a>
     </div>
-  </div>
+  <!-- Menú móvil -->
+  <button class="hamburger-btn" id="hamburger-btn" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
 <!-- NAV -->
@@ -358,7 +361,32 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
-<!-- WhatsApp flotante -->
-<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank" title="Escríbenos por WhatsApp">💬</a>
+<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank" title="WhatsApp">💬</a>
+<script>
+(function(){
+  var btn = document.getElementById('hamburger-btn');
+  var nav = document.querySelector('nav');
+  if (!btn || !nav) return;
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var abierto = nav.classList.toggle('menu-abierto');
+    btn.classList.toggle('activo', abierto);
+  });
+  // Cerrar al tocar un enlace
+  document.querySelectorAll('nav a').forEach(function(a){
+    a.addEventListener('click', function(){
+      nav.classList.remove('menu-abierto');
+      btn.classList.remove('activo');
+    });
+  });
+  // Cerrar al tocar fuera
+  document.addEventListener('click', function(e){
+    if (!nav.contains(e.target) && e.target !== btn) {
+      nav.classList.remove('menu-abierto');
+      btn.classList.remove('activo');
+    }
+  });
+})();
+</script>
 </body>
 </html>
