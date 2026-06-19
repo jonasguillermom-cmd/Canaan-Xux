@@ -883,6 +883,18 @@ footer {
   display: none;
 }
 
+/* ════════════════════════════════════════════
+   FIX: forzar ocultamiento del menú hamburguesa
+   y el menú desplegable en escritorio, sin
+   importar conflictos de especificidad o JS
+════════════════════════════════════════════ */
+@media (min-width: 769px) {
+  .barra-menu-movil,
+  .menu-desplegable {
+    display: none !important;
+  }
+}
+
 @media (max-width: 768px) {
 
   /* ── HERO — sin distorsión ── */
