@@ -190,19 +190,25 @@ async function cargarProducto() {
   // Detectar tipo de variante
   const tipoVar = variantes.length && variantes[0].tipo ? variantes[0].tipo : 'color';
 
-  // Galería HTML
+  // Determinar fotos iniciales
+  // Si hay variantes con fotos, usar las fotos de la primera variante
+  let fotosIniciales = fotos;
+  if (tieneVariantes && variantes[0].fotos && variantes[0].fotos.filter(Boolean).length) {
+    fotosIniciales = variantes[0].fotos.filter(Boolean);
+  }
+
+  // Galería HTML — siempre muestra 3 slots de fotos
   const galeriaHTML = `
     <div class="gallery">
       <div class="gallery-main">
-        <img id="mainImg" src="${fotos[0]||''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
+        <img id="mainImg" src="${fotosIniciales[0]||''}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
       </div>
-      ${fotos.length > 1 ? `
       <div class="gallery-thumbs" id="thumbsContainer">
-        ${fotos.map((f,i)=>`
-          <div class="thumb ${i===0?'active':''}" onclick="switchImg(this,'${f}')">
-            <img src="${f}" alt="Vista ${i+1}">
-          </div>`).join('')}
-      </div>` : ''}
+        ${[0,1,2].map(i => fotosIniciales[i] ? `
+          <div class="thumb ${i===0?'active':''}" onclick="switchImg(this,'${fotosIniciales[i]}')">
+            <img src="${fotosIniciales[i]}" alt="Vista ${i+1}">
+          </div>` : '').join('')}
+      </div>
     </div>`;
 
   // Variantes HTML
@@ -213,7 +219,7 @@ async function cargarProducto() {
         <p class="var-label">Color: <span id="var-selected">${variantes[0].nombre}</span></p>
         <div class="color-options">
           ${variantes.map((v,i)=>{
-            const hex = COLORES_HEX[v.nombre.toLowerCase()] || '#ccc';
+            const hex = v.colorHex || COLORES_HEX[v.nombre.toLowerCase()] || '#ccc';
             return `<button class="color-btn ${i===0?'active':''}" onclick="seleccionarVariante(this,${i})">
               <span class="color-swatch" style="background:${hex}"></span>
               ${v.nombre}
@@ -305,10 +311,23 @@ function seleccionarVariante(btn, idx) {
   const variantes = productoActual.variantes || [];
   const v = variantes[idx];
   document.getElementById('var-selected').textContent = v.nombre;
+
   // Actualizar precio si la variante tiene precio propio
   if (v.precio) document.getElementById('price-main').textContent = '$' + parseFloat(v.precio).toFixed(2);
-  // Actualizar imagen si la variante tiene imagen
-  if (v.imagen) document.getElementById('mainImg').src = v.imagen;
+
+  // Actualizar las 3 fotos de la variante
+  const fotos = (v.fotos || []).filter(Boolean);
+  if (fotos.length) {
+    // Cambiar imagen principal
+    document.getElementById('mainImg').src = fotos[0];
+
+    // Regenerar thumbs con las fotos de esta variante
+    const thumbsContainer = document.getElementById('thumbsContainer');
+    thumbsContainer.innerHTML = fotos.map((f, i) => `
+      <div class="thumb ${i===0?'active':''}" onclick="switchImg(this,'${f}')">
+        <img src="${f}" alt="Vista ${i+1}">
+      </div>`).join('');
+  }
 }
 
 function cambiarQty(delta) {
