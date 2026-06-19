@@ -143,6 +143,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
     <button class="tab on" id="tab-btn-nuevo" onclick="showTab('nuevo',this)">➕ Nuevo</button>
     <button class="tab" id="tab-btn-lista" onclick="showTab('lista',this);loadProductos()">📦 Productos</button>
     <button class="tab" id="tab-btn-diseno" onclick="showTab('diseno',this);loadDiseno()">🎨 Diseño</button>
+    <button class="tab" id="tab-btn-blog" onclick="showTab('blogadmin',this);loadBlogEntradas()">📰 Blog</button>
   </div>
 
   <!-- NUEVO PRODUCTO -->
@@ -247,6 +248,72 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
     <div id="ds-campos"></div>
 
     <div class="msg" id="ds-msg"></div>
+  </div>
+
+  <!-- BLOG Y EVENTOS -->
+  <div class="tab-pane" id="pane-blogadmin">
+
+    <div class="card">
+      <div class="card-title" id="blog-form-title">📰 Nueva entrada de Blog/Evento</div>
+      <input type="hidden" id="be-id">
+
+      <div class="campo">
+        <label>Foto principal *</label>
+        <div class="foto-drop" onclick="document.getElementById('be-foto-principal').click()">
+          <input type="file" id="be-foto-principal" accept="image/*" style="display:none" onchange="onBlogFotoPrincipal(this)">
+          <div class="ico">📷</div>
+          <p>Toca para subir la foto principal</p>
+        </div>
+        <img id="be-preview-principal" src="" alt="" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:10px;display:none">
+      </div>
+
+      <div class="campo">
+        <label>Título *</label>
+        <input type="text" id="be-titulo" placeholder="Ej: Taller de velas en la comunidad">
+      </div>
+
+      <div class="row2">
+        <div class="campo"><label>Fecha</label><input type="text" id="be-fecha" placeholder="Ej: 12 julio 2025"></div>
+        <div class="campo">
+          <label>Categoría</label>
+          <select id="be-categoria">
+            <option value="evento">Evento</option>
+            <option value="apicultura">Apicultura</option>
+            <option value="comunidad">Comunidad</option>
+            <option value="galeria">Galería de fotos</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Resumen corto (aparece en la tarjeta)</label>
+        <textarea id="be-resumen" placeholder="1 o 2 líneas que resuman la entrada"></textarea>
+      </div>
+
+      <div class="campo">
+        <label>Texto completo (aparece al abrir la entrada)</label>
+        <textarea id="be-contenido" style="min-height:140px" placeholder="Escribe aquí toda la historia, separando párrafos con un salto de línea"></textarea>
+      </div>
+
+      <div class="campo">
+        <label>Fotos adicionales (galería, opcional, puedes elegir varias)</label>
+        <div class="foto-drop" onclick="document.getElementById('be-galeria-input').click()">
+          <input type="file" id="be-galeria-input" accept="image/*" multiple style="display:none" onchange="onBlogGaleria(this)">
+          <div class="ico">🖼️</div>
+          <p>Toca para subir fotos de la galería</p>
+        </div>
+        <div id="be-galeria-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
+      </div>
+    </div>
+
+    <button class="btn-g" id="be-btn-guardar" onclick="guardarBlogEntrada()">💾 Publicar entrada</button>
+    <button class="btn-c" id="be-btn-cancelar" onclick="cancelarBlogEdit()">✕ Cancelar edición</button>
+    <div class="msg" id="be-msg"></div>
+
+    <div class="card" style="margin-top:20px">
+      <div class="card-title">📋 Entradas publicadas</div>
+      <div id="be-lista"><div class="empty-msg">Cargando...</div></div>
+    </div>
   </div>
 
 </div>
@@ -704,6 +771,170 @@ async function guardarDiseno() {
   loadDiseno();
 }
 
+// ════════════════════════════════════════
+// ── BLOG Y EVENTOS (NUEVO) ──
+// ════════════════════════════════════════
+
+let beFotoPrincipal = null;       // File
+let beGaleriaArchivos = [];       // File[]
+let beGaleriaUrlsExistentes = []; // urls ya guardadas (al editar)
+
+function onBlogFotoPrincipal(input) {
+  beFotoPrincipal = input.files[0];
+  if (!beFotoPrincipal) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('be-preview-principal');
+    img.src = e.target.result; img.style.display = 'block';
+  };
+  reader.readAsDataURL(beFotoPrincipal);
+}
+
+function onBlogGaleria(input) {
+  beGaleriaArchivos = beGaleriaArchivos.concat(Array.from(input.files));
+  renderBlogGaleriaPreview();
+}
+
+function renderBlogGaleriaPreview() {
+  const wrap = document.getElementById('be-galeria-preview');
+  wrap.innerHTML = '';
+
+  beGaleriaUrlsExistentes.forEach((url, i) => {
+    const div = document.createElement('div');
+    div.style = 'position:relative;width:70px;height:70px';
+    div.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:6px">
+      <button onclick="beGaleriaUrlsExistentes.splice(${i},1);renderBlogGaleriaPreview()" style="position:absolute;top:-6px;right:-6px;background:#c0392b;color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer">✕</button>`;
+    wrap.appendChild(div);
+  });
+
+  beGaleriaArchivos.forEach((file, i) => {
+    const div = document.createElement('div');
+    div.style = 'position:relative;width:70px;height:70px';
+    const img = document.createElement('img');
+    img.style = 'width:100%;height:100%;object-fit:cover;border-radius:6px';
+    const reader = new FileReader();
+    reader.onload = e => img.src = e.target.result;
+    reader.readAsDataURL(file);
+    const btn = document.createElement('button');
+    btn.textContent = '✕';
+    btn.style = 'position:absolute;top:-6px;right:-6px;background:#c0392b;color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer';
+    btn.onclick = () => { beGaleriaArchivos.splice(i,1); renderBlogGaleriaPreview(); };
+    div.appendChild(img); div.appendChild(btn);
+    wrap.appendChild(div);
+  });
+}
+
+async function guardarBlogEntrada() {
+  const titulo     = document.getElementById('be-titulo').value.trim();
+  const fecha      = document.getElementById('be-fecha').value.trim();
+  const categoria  = document.getElementById('be-categoria').value;
+  const resumen    = document.getElementById('be-resumen').value.trim();
+  const contenido  = document.getElementById('be-contenido').value.trim();
+  const editId     = document.getElementById('be-id').value;
+  const msg        = document.getElementById('be-msg');
+  const btn        = document.getElementById('be-btn-guardar');
+
+  msg.className = 'msg';
+  if (!titulo) { msg.className='msg er'; msg.textContent='El título es obligatorio.'; return; }
+  if (!editId && !beFotoPrincipal) { msg.className='msg er'; msg.textContent='La foto principal es obligatoria.'; return; }
+
+  btn.disabled = true; btn.textContent = '⏳ Guardando...';
+
+  let imagen_principal = null;
+  if (beFotoPrincipal) {
+    imagen_principal = await subirFoto(beFotoPrincipal, `blog_${titulo.slice(0,15)}`);
+  }
+
+  let galeriaUrls = [...beGaleriaUrlsExistentes];
+  for (const file of beGaleriaArchivos) {
+    const url = await subirFoto(file, `blog_${titulo.slice(0,15)}_g`);
+    if (url) galeriaUrls.push(url);
+  }
+
+  const datos = { titulo, fecha, categoria, resumen, contenido, galeria: galeriaUrls };
+  if (imagen_principal) datos.imagen_principal = imagen_principal;
+
+  let error;
+  if (editId) ({ error } = await db.from('blog_entradas').update(datos).eq('id', editId));
+  else        ({ error } = await db.from('blog_entradas').insert(datos));
+
+  btn.disabled = false; btn.textContent = '💾 Publicar entrada';
+  if (error) { msg.className='msg er'; msg.textContent='Error: '+error.message; return; }
+
+  msg.className='msg ok';
+  msg.textContent = editId ? '✓ Entrada actualizada.' : '✓ Entrada publicada. Ya aparece en blog.html';
+  resetBlogForm();
+  loadBlogEntradas();
+}
+
+async function loadBlogEntradas() {
+  const lista = document.getElementById('be-lista');
+  lista.innerHTML = '<div class="empty-msg">Cargando...</div>';
+  const { data } = await db.from('blog_entradas').select('*').order('creado_en', { ascending: false });
+  if (!data || !data.length) { lista.innerHTML = '<div class="empty-msg">Aún no hay entradas publicadas.</div>'; return; }
+
+  lista.innerHTML = data.map(e => `
+    <div class="prod-item">
+      <img class="pi-img" src="${e.imagen_principal||''}" alt="${e.titulo}" onerror="this.style.background='#f5f0e8'">
+      <div class="pi-info">
+        <div class="pi-nombre">${e.titulo}</div>
+        <div class="pi-meta">${e.categoria} · ${e.fecha||''} · ${(e.galeria||[]).length} fotos extra</div>
+      </div>
+      <div class="pi-btns">
+        <button class="b-e" onclick="editarBlogEntrada('${e.id}')">✏️ Editar</button>
+        <button class="b-d" onclick="eliminarBlogEntrada('${e.id}','${(e.titulo||'').replace(/'/g,'')}')">🗑 Borrar</button>
+      </div>
+    </div>`).join('');
+}
+
+async function editarBlogEntrada(id) {
+  const { data: e } = await db.from('blog_entradas').select('*').eq('id', id).single();
+  if (!e) return;
+
+  document.getElementById('be-id').value        = e.id;
+  document.getElementById('be-titulo').value     = e.titulo || '';
+  document.getElementById('be-fecha').value      = e.fecha || '';
+  document.getElementById('be-categoria').value  = e.categoria || 'evento';
+  document.getElementById('be-resumen').value    = e.resumen || '';
+  document.getElementById('be-contenido').value  = e.contenido || '';
+  document.getElementById('blog-form-title').textContent = '✏️ Editando: ' + e.titulo;
+  document.getElementById('be-btn-cancelar').style.display = 'block';
+
+  if (e.imagen_principal) {
+    const img = document.getElementById('be-preview-principal');
+    img.src = e.imagen_principal; img.style.display = 'block';
+  }
+
+  beGaleriaUrlsExistentes = e.galeria ? [...e.galeria] : [];
+  beGaleriaArchivos = [];
+  renderBlogGaleriaPreview();
+
+  showTab('blogadmin', document.getElementById('tab-btn-blog'));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+async function eliminarBlogEntrada(id, titulo) {
+  if (!confirm(`¿Eliminar la entrada "${titulo}"? Esta acción no se puede deshacer.`)) return;
+  await db.from('blog_entradas').delete().eq('id', id);
+  loadBlogEntradas();
+}
+
+function resetBlogForm() {
+  document.getElementById('be-id').value = '';
+  ['be-titulo','be-fecha','be-resumen','be-contenido'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('be-categoria').value = 'evento';
+  document.getElementById('be-preview-principal').style.display = 'none';
+  document.getElementById('be-foto-principal').value = '';
+  document.getElementById('be-galeria-input').value = '';
+  document.getElementById('be-galeria-preview').innerHTML = '';
+  document.getElementById('blog-form-title').textContent = '📰 Nueva entrada de Blog/Evento';
+  document.getElementById('be-btn-cancelar').style.display = 'none';
+  document.getElementById('be-msg').className = 'msg';
+  beFotoPrincipal = null; beGaleriaArchivos = []; beGaleriaUrlsExistentes = [];
+}
+
+function cancelarBlogEdit() { resetBlogForm(); }
+
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', async () => {
   const { data } = await db.auth.getSession();
@@ -716,6 +947,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('a-nombre').textContent = '👤 ' + nombre.split(' ')[0];
   }
 });
+
 </script>
 </body>
 </html>
