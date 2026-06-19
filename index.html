@@ -104,11 +104,11 @@
 <!-- HERO SLIDER -->
 <div class="hero">
   <div class="hero-slide active">
-    <img src="imagen/inicio/inicio-1.png" alt="Experiencias">
+    <img id="cms-hero-img1" src="imagen/inicio/inicio-1.png" alt="Experiencias">
   </div>
   
   <div class="hero-slide">
-    <img src="imagen/inicio/inicio-2.png" alt="Paquetes">
+    <img id="cms-hero-img2" src="imagen/inicio/inicio-2.png" alt="Paquetes">
   </div>
   <button class="hero-arrow prev" onclick="changeSlide(-1)">&#8592;</button>
   <button class="hero-arrow next" onclick="changeSlide(1)">&#8594;</button>
@@ -124,7 +124,7 @@
     <div style="text-align:center;margin-bottom:12px">
       <img src="imagen/logo.png" alt="Abeja" style="height:56px;object-fit:contain">
     </div>
-    <h2 class="section-title">¡LO MAS VENDIDO!</h2>
+    <h2 class="section-title" id="cms-titulo-vendidos">¡LO MAS VENDIDO!</h2>
     <div class="prod-grid" id="grid-vendidos"><div style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Cargando...</div></div>
 
       <div class="prod-card">
@@ -232,8 +232,8 @@
       <div style="text-align:center;margin-bottom:16px">
         <img src="https://cdn.shopify.com/s/files/1/0010/0660/0310/files/exagono.png?4715548033019962595" alt="" style="height:60px;object-fit:contain">
       </div>
-      <h2>La miel pura de Miel Oro es extraída de colmenas en Jalisco y otras partes de México.</h2>
-      <p>Somos distribuidores de material apícola, equipo de protección para el apicultor, insumos para producción de miel, así como medicamentos para las abejas y productos para el bienestar de las colmenas.</p>
+      <h2 id="cms-about-titulo">La miel pura de Miel Oro es extraída de colmenas en Jalisco y otras partes de México.</h2>
+      <p id="cms-about-texto">Somos distribuidores de material apícola, equipo de protección para el apicultor, insumos para producción de miel, así como medicamentos para las abejas y productos para el bienestar de las colmenas.</p>
       <p>Brindamos pláticas, cursos de apicultura y asesorías a apicultores para el manejo adecuado de sus apiarios.</p>
       <a href="#" class="btn-link">¡Conoce más sobre nosotros!</a>
     </div>
@@ -408,6 +408,27 @@
       btn.classList.remove('activo');
     }
   });
+})();
+</script>
+
+<!-- CMS: carga textos/imagenes editables desde el panel de Diseño -->
+<script>
+(async function cargarContenidoCMS(){
+  try {
+    const SURL = 'https://biiefknpnkynfobbetav.supabase.co';
+    const SKEY = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
+    const cdb = supabase.createClient(SURL, SKEY);
+
+    const { data, error } = await cdb.from('contenido').select('*').eq('pagina', 'index');
+    if (error || !data) return;
+
+    data.forEach(row => {
+      const el = document.getElementById('cms-' + row.clave);
+      if (!el) return;
+      if (row.tipo === 'imagen') el.src = row.valor;
+      else el.textContent = row.valor;
+    });
+  } catch(e) { console.warn('CMS:', e); }
 })();
 </script>
 </body>
