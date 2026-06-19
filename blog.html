@@ -705,15 +705,15 @@
 </nav>
 
 <!-- HERO -->
-<div class="blog-hero">
+<div class="blog-hero" id="cms-blog-hero">
   <div class="blog-hero-overlay"></div>
   <div class="blog-hero-content">
     <div class="blog-breadcrumb">
       <a href="index.html">Inicio</a> / Blog y Eventos
     </div>
     <span class="blog-hero-tag">Noticias · Eventos · Galería · Comunidad</span>
-    <h1>Blog y Eventos</h1>
-    <p>Documentamos nuestra historia, nuestros eventos y la vida de las abejas en el Cañón del Usumacinta.</p>
+    <h1 id="cms-blog-titulo">Blog y Eventos</h1>
+    <p id="cms-blog-subtitulo">Documentamos nuestra historia, nuestros eventos y la vida de las abejas en el Cañón del Usumacinta.</p>
   </div>
 </div>
 
@@ -1106,6 +1106,7 @@
   </svg>
 </a>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 <script>
 
@@ -1205,6 +1206,30 @@ document.querySelectorAll('.blog-read-more').forEach(link => {
   link.addEventListener('click', e => e.stopPropagation());
 });
 
+</script>
+
+<!-- CMS: carga textos/imagen de banner editables desde el panel de Diseño -->
+<script>
+(async function cargarContenidoCMS(){
+  try {
+    const SURL = 'https://biiefknpnkynfobbetav.supabase.co';
+    const SKEY = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
+    const cdb = supabase.createClient(SURL, SKEY);
+
+    const { data, error } = await cdb.from('contenido').select('*').eq('pagina', 'blog');
+    if (error || !data) return;
+
+    data.forEach(row => {
+      if (row.clave === 'blog-hero') {
+        document.getElementById('cms-blog-hero').style.backgroundImage = `url('${row.valor}')`;
+        return;
+      }
+      const el = document.getElementById('cms-' + row.clave);
+      if (!el) return;
+      el.textContent = row.valor;
+    });
+  } catch(e) { console.warn('CMS:', e); }
+})();
 </script>
 </body>
 </html>
