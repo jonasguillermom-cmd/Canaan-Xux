@@ -6,6 +6,33 @@
 <title>Cana´an  Xu´x</title>
 <link href="imagen/logo.jpg" rel="stylesheet">
 <link rel="stylesheet" href="estilos.css">
+<style>
+/* ── Sección de Novedades (bloques dinámicos desde el admin) ── */
+.novedades-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;
+  margin-top:24px;
+}
+.novedad-card{
+  background:#fff;
+  border:1px solid #e0d8cc;
+  border-radius:10px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+.novedad-card img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+}
+.novedad-body{padding:18px 20px;display:flex;flex-direction:column;flex:1}
+.novedad-body h3{font-size:17px;color:#3d3b1f;margin-bottom:8px}
+.novedad-body p{font-size:13px;color:#7a7a6a;line-height:1.6;flex:1;margin-bottom:12px}
+.novedad-body a.btn-link{font-size:13px}
+</style>
 </head>
 <body>
 
@@ -325,6 +352,14 @@
   </div>
 </section>
 
+<!-- NOVEDADES (bloques dinámicos creados desde el panel de admin → pestaña Inicio) -->
+<section class="section" style="background:var(--gris-claro)" id="cms-novedades-section">
+  <div class="container">
+    <h2 class="section-title" id="cms-novedades-titulo">Novedades</h2>
+    <div class="novedades-grid" id="cms-novedades-grid"></div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
@@ -428,7 +463,37 @@
       if (row.tipo === 'imagen') el.src = row.valor;
       else el.textContent = row.valor;
     });
-  } catch(e) { console.warn('CMS:', e); }
+  } catch(e) { console.warn('CMS textos:', e); }
+})();
+
+/* ── Cargar bloques de "Novedades" creados desde el admin (tabla index_bloques) ── */
+(async function cargarBloquesIndex(){
+  try {
+    const SURL = 'https://biiefknpnkynfobbetav.supabase.co';
+    const SKEY = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
+    const cdb = supabase.createClient(SURL, SKEY);
+
+    const { data, error } = await cdb.from('index_bloques').select('*').order('creado_en', { ascending: false });
+    const grid = document.getElementById('cms-novedades-grid');
+    const section = document.getElementById('cms-novedades-section');
+
+    if (error || !data || !data.length) {
+      // Si no hay bloques publicados, ocultamos la sección entera para no dejar un hueco vacío
+      if (section) section.style.display = 'none';
+      return;
+    }
+
+    grid.innerHTML = data.map(b => `
+      <div class="novedad-card">
+        <img src="${b.imagen || ''}" alt="${b.titulo || ''}" onerror="this.style.display='none'">
+        <div class="novedad-body">
+          <h3>${b.titulo || ''}</h3>
+          <p>${b.texto || ''}</p>
+          ${b.enlace ? `<a class="btn-link" href="${b.enlace}">Ver más →</a>` : ''}
+        </div>
+      </div>`).join('');
+
+  } catch(e) { console.warn('CMS bloques inicio:', e); }
 })();
 </script>
 </body>
