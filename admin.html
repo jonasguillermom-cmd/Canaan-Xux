@@ -142,6 +142,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
   <div class="tabs">
     <button class="tab on" id="tab-btn-nuevo" onclick="showTab('nuevo',this)">➕ Nuevo</button>
     <button class="tab" id="tab-btn-lista" onclick="showTab('lista',this);loadProductos()">📦 Productos</button>
+    <button class="tab" id="tab-btn-diseno" onclick="showTab('diseno',this);loadDiseno()">🎨 Diseño</button>
   </div>
 
   <!-- NUEVO PRODUCTO -->
@@ -226,6 +227,28 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
   <div class="tab-pane" id="pane-lista">
     <div id="prod-lista"><div class="empty-msg">Toca "Productos" para cargar la lista.</div></div>
   </div>
+
+  <!-- DISEÑO Y TEXTOS -->
+  <div class="tab-pane" id="pane-diseno">
+
+    <div class="card">
+      <div class="card-title">🎨 Editor de Textos e Imágenes del Sitio</div>
+      <p style="font-size:12px;color:var(--gris);margin-bottom:14px">Aquí puedes cambiar los textos y banners de las páginas, sin tocar código. Elige la página, edita y guarda.</p>
+      <div class="campo">
+        <label>¿Qué página quieres editar?</label>
+        <select id="ds-pagina" onchange="renderCamposDiseno()">
+          <option value="index">⭐ Inicio</option>
+          <option value="blog">📰 Blog y Eventos</option>
+          <option value="centro_rescate">🐝 Centro de Rescate</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="ds-campos"></div>
+
+    <div class="msg" id="ds-msg"></div>
+  </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -571,6 +594,115 @@ function resetForm() {
 }
 
 function cancelEdit() { resetForm(); }
+
+// ════════════════════════════════════════
+// ── DISEÑO Y TEXTOS (NUEVO) ──
+// ════════════════════════════════════════
+
+// Define aquí los campos editables de cada página.
+// clave = identificador único en la tabla "contenido"
+// label = lo que ve el usuario en el panel
+// tipo  = 'imagen' | 'texto' | 'texto-largo'
+const CAMPOS_DISENO = {
+  index: [
+    { clave:'hero-img1', label:'Foto del banner principal 1 (Inicio)', tipo:'imagen' },
+    { clave:'hero-img2', label:'Foto del banner principal 2 (Inicio)', tipo:'imagen' },
+    { clave:'titulo-vendidos', label:'Título de la sección "Lo más vendido"', tipo:'texto' },
+    { clave:'about-titulo', label:'Título de la sección "Acerca de"', tipo:'texto' },
+    { clave:'about-texto', label:'Texto de la sección "Acerca de"', tipo:'texto-largo' },
+  ],
+  blog: [
+    { clave:'blog-hero', label:'Foto de fondo del banner de Blog y Eventos', tipo:'imagen' },
+    { clave:'blog-titulo', label:'Título principal del banner', tipo:'texto' },
+    { clave:'blog-subtitulo', label:'Texto debajo del título', tipo:'texto-largo' },
+  ],
+  centro_rescate: [
+    { clave:'cr-hero', label:'Foto de fondo del banner', tipo:'imagen' },
+    { clave:'cr-titulo', label:'Título principal', tipo:'texto' },
+    { clave:'cr-texto', label:'Texto descriptivo', tipo:'texto-largo' },
+  ],
+};
+
+let disenoValores  = {}; // 'pagina__clave' -> valor actual cargado de Supabase
+let disenoArchivos = {}; // clave -> File nuevo (si el usuario sube una imagen distinta)
+
+async function loadDiseno() {
+  const { data, error } = await db.from('contenido').select('*');
+  if (error) { console.error(error); }
+  disenoValores = {};
+  (data || []).forEach(r => disenoValores[r.pagina + '__' + r.clave] = r.valor);
+  renderCamposDiseno();
+}
+
+function renderCamposDiseno() {
+  const pagina = document.getElementById('ds-pagina').value;
+  const campos = CAMPOS_DISENO[pagina] || [];
+  const wrap   = document.getElementById('ds-campos');
+  disenoArchivos = {};
+
+  wrap.innerHTML = campos.map(c => {
+    const valorActual = disenoValores[pagina + '__' + c.clave] || '';
+
+    if (c.tipo === 'imagen') {
+      return `
+        <div class="card">
+          <div class="card-title">🖼️ ${c.label}</div>
+          ${valorActual ? `<img src="${valorActual}" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-bottom:10px">` : ''}
+          <div class="foto-drop" onclick="document.getElementById('ds-file-${c.clave}').click()">
+            <input type="file" id="ds-file-${c.clave}" accept="image/*" style="display:none"
+              onchange="disenoArchivos['${c.clave}']=this.files[0]; document.getElementById('ds-nombre-${c.clave}').textContent=this.files[0]?this.files[0].name:''">
+            <div class="ico">📷</div>
+            <p>Toca para subir nueva foto</p>
+          </div>
+          <p id="ds-nombre-${c.clave}" style="font-size:11px;color:var(--gris);margin-top:6px"></p>
+        </div>`;
+    }
+    if (c.tipo === 'texto-largo') {
+      return `
+        <div class="card">
+          <div class="card-title">✏️ ${c.label}</div>
+          <div class="campo"><textarea id="ds-${c.clave}">${valorActual}</textarea></div>
+        </div>`;
+    }
+    return `
+      <div class="card">
+        <div class="card-title">✏️ ${c.label}</div>
+        <div class="campo"><input type="text" id="ds-${c.clave}" value="${valorActual}"></div>
+      </div>`;
+  }).join('') + `<button class="btn-g" onclick="guardarDiseno()">💾 Guardar cambios de esta página</button>`;
+}
+
+async function guardarDiseno() {
+  const pagina = document.getElementById('ds-pagina').value;
+  const campos = CAMPOS_DISENO[pagina] || [];
+  const msg    = document.getElementById('ds-msg');
+  msg.className = 'msg'; msg.textContent = '';
+
+  for (const c of campos) {
+    let valor;
+    if (c.tipo === 'imagen') {
+      if (disenoArchivos[c.clave]) {
+        valor = await subirFoto(disenoArchivos[c.clave], `cms_${pagina}_${c.clave}`);
+      } else {
+        valor = disenoValores[pagina + '__' + c.clave] || null;
+      }
+      if (valor == null) continue; // no se subió nada nuevo y no había nada antes
+    } else {
+      const el = document.getElementById('ds-' + c.clave);
+      valor = el ? el.value : '';
+    }
+
+    const { error } = await db.from('contenido').upsert({
+      clave: c.clave, pagina, valor, tipo: c.tipo === 'imagen' ? 'imagen' : 'texto'
+    }, { onConflict: 'clave' });
+
+    if (error) { msg.className='msg er'; msg.textContent='Error guardando "'+c.label+'": '+error.message; return; }
+  }
+
+  msg.className = 'msg ok';
+  msg.textContent = '✓ Cambios guardados. Refresca la página pública para verlos.';
+  loadDiseno();
+}
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', async () => {
