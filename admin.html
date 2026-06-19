@@ -144,6 +144,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
     <button class="tab" id="tab-btn-lista" onclick="showTab('lista',this);loadProductos()">📦 Productos</button>
     <button class="tab" id="tab-btn-diseno" onclick="showTab('diseno',this);loadDiseno()">🎨 Diseño</button>
     <button class="tab" id="tab-btn-blog" onclick="showTab('blogadmin',this);loadBlogEntradas()">📰 Blog</button>
+    <button class="tab" id="tab-btn-inicio" onclick="showTab('inicioadmin',this);loadIndexBloques()">🏠 Inicio</button>
   </div>
 
   <!-- NUEVO PRODUCTO -->
@@ -313,6 +314,50 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
     <div class="card" style="margin-top:20px">
       <div class="card-title">📋 Entradas publicadas</div>
       <div id="be-lista"><div class="empty-msg">Cargando...</div></div>
+    </div>
+  </div>
+
+  <!-- BLOQUES DE INICIO -->
+  <div class="tab-pane" id="pane-inicioadmin">
+
+    <div class="card">
+      <div class="card-title" id="ib-form-title">🏠 Nuevo bloque para Inicio</div>
+      <p style="font-size:12px;color:var(--gris);margin-bottom:14px">Estos bloques aparecen en una nueva sección "Novedades" en tu página de Inicio, debajo de lo que ya tienes. Úsalo para anuncios, promociones, nuevas fotos, etc.</p>
+      <input type="hidden" id="ib-id">
+
+      <div class="campo">
+        <label>Foto *</label>
+        <div class="foto-drop" onclick="document.getElementById('ib-foto').click()">
+          <input type="file" id="ib-foto" accept="image/*" style="display:none" onchange="onIndexBloqueFoto(this)">
+          <div class="ico">📷</div>
+          <p>Toca para subir la foto</p>
+        </div>
+        <img id="ib-preview" src="" alt="" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:10px;display:none">
+      </div>
+
+      <div class="campo">
+        <label>Título *</label>
+        <input type="text" id="ib-titulo" placeholder="Ej: ¡Nueva colección de velas!">
+      </div>
+
+      <div class="campo">
+        <label>Texto</label>
+        <textarea id="ib-texto" placeholder="Describe la novedad, promoción o anuncio"></textarea>
+      </div>
+
+      <div class="campo">
+        <label>Enlace (opcional — a dónde lleva el botón "Ver más")</label>
+        <input type="text" id="ib-enlace" placeholder="Ej: velas.html">
+      </div>
+    </div>
+
+    <button class="btn-g" id="ib-btn-guardar" onclick="guardarIndexBloque()">💾 Publicar en Inicio</button>
+    <button class="btn-c" id="ib-btn-cancelar" onclick="cancelarIndexBloqueEdit()">✕ Cancelar edición</button>
+    <div class="msg" id="ib-msg"></div>
+
+    <div class="card" style="margin-top:20px">
+      <div class="card-title">📋 Bloques publicados en Inicio</div>
+      <div id="ib-lista"><div class="empty-msg">Cargando...</div></div>
     </div>
   </div>
 
@@ -934,6 +979,115 @@ function resetBlogForm() {
 }
 
 function cancelarBlogEdit() { resetBlogForm(); }
+
+// ════════════════════════════════════════
+// ── BLOQUES DE INICIO (NUEVO) ──
+// ════════════════════════════════════════
+
+let ibFoto = null; // File
+
+function onIndexBloqueFoto(input) {
+  ibFoto = input.files[0];
+  if (!ibFoto) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('ib-preview');
+    img.src = e.target.result; img.style.display = 'block';
+  };
+  reader.readAsDataURL(ibFoto);
+}
+
+async function guardarIndexBloque() {
+  const titulo = document.getElementById('ib-titulo').value.trim();
+  const texto  = document.getElementById('ib-texto').value.trim();
+  const enlace = document.getElementById('ib-enlace').value.trim();
+  const editId = document.getElementById('ib-id').value;
+  const msg    = document.getElementById('ib-msg');
+  const btn    = document.getElementById('ib-btn-guardar');
+
+  msg.className = 'msg';
+  if (!titulo) { msg.className='msg er'; msg.textContent='El título es obligatorio.'; return; }
+  if (!editId && !ibFoto) { msg.className='msg er'; msg.textContent='La foto es obligatoria.'; return; }
+
+  btn.disabled = true; btn.textContent = '⏳ Guardando...';
+
+  let imagen = null;
+  if (ibFoto) imagen = await subirFoto(ibFoto, `inicio_${titulo.slice(0,15)}`);
+
+  const datos = { titulo, texto, enlace };
+  if (imagen) datos.imagen = imagen;
+
+  let error;
+  if (editId) ({ error } = await db.from('index_bloques').update(datos).eq('id', editId));
+  else        ({ error } = await db.from('index_bloques').insert(datos));
+
+  btn.disabled = false; btn.textContent = '💾 Publicar en Inicio';
+  if (error) { msg.className='msg er'; msg.textContent='Error: '+error.message; return; }
+
+  msg.className='msg ok';
+  msg.textContent = editId ? '✓ Bloque actualizado.' : '✓ Bloque publicado. Ya aparece en Inicio.';
+  resetIndexBloqueForm();
+  loadIndexBloques();
+}
+
+async function loadIndexBloques() {
+  const lista = document.getElementById('ib-lista');
+  lista.innerHTML = '<div class="empty-msg">Cargando...</div>';
+  const { data } = await db.from('index_bloques').select('*').order('creado_en', { ascending: false });
+  if (!data || !data.length) { lista.innerHTML = '<div class="empty-msg">Aún no hay bloques publicados.</div>'; return; }
+
+  lista.innerHTML = data.map(b => `
+    <div class="prod-item">
+      <img class="pi-img" src="${b.imagen||''}" alt="${b.titulo}" onerror="this.style.background='#f5f0e8'">
+      <div class="pi-info">
+        <div class="pi-nombre">${b.titulo}</div>
+        <div class="pi-meta">${b.enlace ? 'Enlace: '+b.enlace : 'Sin enlace'}</div>
+      </div>
+      <div class="pi-btns">
+        <button class="b-e" onclick="editarIndexBloque('${b.id}')">✏️ Editar</button>
+        <button class="b-d" onclick="eliminarIndexBloque('${b.id}','${(b.titulo||'').replace(/'/g,'')}')">🗑 Borrar</button>
+      </div>
+    </div>`).join('');
+}
+
+async function editarIndexBloque(id) {
+  const { data: b } = await db.from('index_bloques').select('*').eq('id', id).single();
+  if (!b) return;
+
+  document.getElementById('ib-id').value     = b.id;
+  document.getElementById('ib-titulo').value = b.titulo || '';
+  document.getElementById('ib-texto').value  = b.texto || '';
+  document.getElementById('ib-enlace').value = b.enlace || '';
+  document.getElementById('ib-form-title').textContent = '✏️ Editando: ' + b.titulo;
+  document.getElementById('ib-btn-cancelar').style.display = 'block';
+
+  if (b.imagen) {
+    const img = document.getElementById('ib-preview');
+    img.src = b.imagen; img.style.display = 'block';
+  }
+
+  showTab('inicioadmin', document.getElementById('tab-btn-inicio'));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+async function eliminarIndexBloque(id, titulo) {
+  if (!confirm(`¿Eliminar el bloque "${titulo}"? Esta acción no se puede deshacer.`)) return;
+  await db.from('index_bloques').delete().eq('id', id);
+  loadIndexBloques();
+}
+
+function resetIndexBloqueForm() {
+  document.getElementById('ib-id').value = '';
+  ['ib-titulo','ib-texto','ib-enlace'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('ib-preview').style.display = 'none';
+  document.getElementById('ib-foto').value = '';
+  document.getElementById('ib-form-title').textContent = '🏠 Nuevo bloque para Inicio';
+  document.getElementById('ib-btn-cancelar').style.display = 'none';
+  document.getElementById('ib-msg').className = 'msg';
+  ibFoto = null;
+}
+
+function cancelarIndexBloqueEdit() { resetIndexBloqueForm(); }
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', async () => {
