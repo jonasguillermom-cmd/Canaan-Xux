@@ -496,5 +496,37 @@
   } catch(e) { console.warn('CMS bloques inicio:', e); }
 })();
 </script>
+
+<!-- ════════════════════════════════════════════
+   FIX: forzar que la barra/menú móvil se oculten
+   en computadora, sin depender solo del CSS
+   (por si el navegador tiene zoom o ventana chica)
+════════════════════════════════════════════ -->
+<script>
+(function () {
+  var barraMovil = document.querySelector('.barra-menu-movil');
+  var menu       = document.getElementById('menu-desplegable');
+  var navDesktop = document.querySelector('nav');
+
+  function sincronizarMenu() {
+    var esEscritorio = window.innerWidth > 768;
+
+    if (barraMovil) {
+      barraMovil.style.display = esEscritorio ? 'none' : '';
+    }
+    if (navDesktop) {
+      navDesktop.style.display = esEscritorio ? '' : 'none';
+    }
+    if (esEscritorio && menu) {
+      menu.classList.remove('abierto');
+      var btn = document.getElementById('hamburger-btn');
+      if (btn) btn.classList.remove('activo');
+    }
+  }
+
+  sincronizarMenu();
+  window.addEventListener('resize', sincronizarMenu);
+})();
+</script>
 </body>
 </html>
