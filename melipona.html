@@ -712,37 +712,10 @@
     </div>
     <div class="nav-item"><a href="abejas.html">Abejas</a></div>
     <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
-    <div class="nav-item"><a href="#">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
     <div class="nav-item"><a href="#">Contacto</a></div>
   </div>
 </nav>
-
-<!-- BARRA MENÚ MÓVIL -->
-<div class="barra-menu-movil">
-  <span class="menu-label">☰ Menú</span>
-  <button class="hamburger-btn" id="hamburger-btn" aria-label="Menú">
-    <span></span><span></span><span></span>
-  </button>
-</div>
-
-<!-- MENÚ DESPLEGABLE MÓVIL -->
-<div class="menu-desplegable" id="menu-desplegable">
-  <a href="index.html">Inicio</a>
-  <a href="nosotros.html">Nosotros</a>
-  <div class="menu-seccion">Productos</div>
-  <div class="submenu">
-    <a href="miel.html">Miel</a>
-    <a href="#">Miel en panal</a>
-    <a href="#">Jabones</a>
-    <a href="#">Gotas</a>
-    <a href="#">Dulces</a>
-    <a href="velas.html">Velas</a>
-  </div>
-  <a href="abejas.html">Abejas</a>
-  <a href="centro_rescate.html">Centro de Rescate</a>
-  <a href="#">Blog y Eventos</a>
-  <a href="#">Contacto</a>
-</div>
 
 <!-- ══ HERO ══ -->
 <div class="mel-hero">
@@ -763,8 +736,8 @@
       <a href="index.html">Inicio</a> / <a href="abejas.html">Abejas</a> / Melipona
     </div>
     <span class="mel-hero-tag">Sin aguijón · Nativa</span>
-    <h1>La abeja <em>Melipona</em></h1>
-    <p>Una de las especies nativas más valiosas del sureste mexicano. Sin aguijón, miel medicinal y guardianas de nuestros bosques tropicales.</p>
+    <h1 data-editable="hero_titulo">La abeja <em>Melipona</em></h1>
+    <p data-editable="hero_descripcion">Una de las especies nativas más valiosas del sureste mexicano. Sin aguijón, miel medicinal y guardianas de nuestros bosques tropicales.</p>
   </div>
 </div>
 
@@ -1077,7 +1050,7 @@
         </div>
       </div>
       <div class="footer-col"><h4>Tienda</h4><ul><li><a href="#">Todo para el Apicultor</a></li><li><a href="#">Productos de la Colmena</a></li><li><a href="#">Miel y Salud</a></li><li><a href="velas.html">Velas</a></li></ul></div>
-      <div class="footer-col"><h4>Aprende</h4><ul><li><a href="abejas.html">Tipos de abejas</a></li><li><a href="centro-rescate.html">Centro de Rescate</a></li><li><a href="#">Blog y Eventos</a></li></ul></div>
+      <div class="footer-col"><h4>Aprende</h4><ul><li><a href="abejas.html">Tipos de abejas</a></li><li><a href="centro-rescate.html">Centro de Rescate</a></li><li><a href="blog.html">Blog y Eventos</a></li></ul></div>
       <div class="footer-col"><h4>Empresa</h4><ul><li><a href="#">Nosotros</a></li><li><a href="contacto.html">Contacto</a></li><li><a href="#">Puntos de Venta</a></li></ul></div>
     </div>
     <div class="footer-bottom">© 2025 · Todos los derechos reservados · Hecho en México</div>
@@ -1158,30 +1131,6 @@
   resetAuto();
 })();
 </script>
-<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank" title="WhatsApp">💬</a>
-<script>
-(function(){
-  var btn  = document.getElementById('hamburger-btn');
-  var menu = document.getElementById('menu-desplegable');
-  if (!btn || !menu) return;
-  btn.addEventListener('click', function(e){
-    e.stopPropagation();
-    var abierto = menu.classList.toggle('abierto');
-    btn.classList.toggle('activo', abierto);
-  });
-  menu.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){
-      menu.classList.remove('abierto');
-      btn.classList.remove('activo');
-    });
-  });
-  document.addEventListener('click', function(e){
-    if (!menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
-      menu.classList.remove('abierto');
-      btn.classList.remove('activo');
-    }
-  });
-})();
-</script>
+<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank">💬</a>
 </body>
 </html>
