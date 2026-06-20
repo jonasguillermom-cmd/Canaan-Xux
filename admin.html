@@ -407,7 +407,7 @@ async function doLogin() {
   document.getElementById('login-wrap').style.display = 'none';
   document.getElementById('panel').style.display = 'block';
   const nombre = adminUser.user_metadata?.nombre_completo || adminUser.email.split('@')[0];
-  document.getElementById('a-nombre').textContent = '👤 ' + nombre.split(' ')[0];
+  document.getElementById('a-nombre').textContent = '' + nombre.split(' ')[0];
 }
 
 async function doLogout() {
