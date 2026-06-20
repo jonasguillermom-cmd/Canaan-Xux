@@ -413,37 +413,10 @@
     </div>
     <div class="nav-item"><a href="abejas.html">Abejas</a></div>
     <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
-    <div class="nav-item"><a href="#">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
     <div class="nav-item"><a href="#">Contacto</a></div>
   </div>
 </nav>
-
-<!-- BARRA MENÚ MÓVIL -->
-<div class="barra-menu-movil">
-  <span class="menu-label">☰ Menú</span>
-  <button class="hamburger-btn" id="hamburger-btn" aria-label="Menú">
-    <span></span><span></span><span></span>
-  </button>
-</div>
-
-<!-- MENÚ DESPLEGABLE MÓVIL -->
-<div class="menu-desplegable" id="menu-desplegable">
-  <a href="index.html">Inicio</a>
-  <a href="nosotros.html">Nosotros</a>
-  <div class="menu-seccion">Productos</div>
-  <div class="submenu">
-    <a href="miel.html">Miel</a>
-    <a href="#">Miel en panal</a>
-    <a href="#">Jabones</a>
-    <a href="#">Gotas</a>
-    <a href="#">Dulces</a>
-    <a href="velas.html">Velas</a>
-  </div>
-  <a href="abejas.html">Abejas</a>
-  <a href="centro_rescate.html">Centro de Rescate</a>
-  <a href="#">Blog y Eventos</a>
-  <a href="#">Contacto</a>
-</div>
 
 <!-- HERO -->
 <div class="nos-hero">
@@ -453,8 +426,8 @@
       <a href="index.html">Inicio</a> / Nosotros
     </div>
     <span class="nos-hero-tag">Quiénes somos · Productoras · Valores</span>
-    <h1>Nosotros</h1>
-    <p>Apicultoras tenosiquenses comprometidas con la tierra, las abejas y las comunidades que las cuidan.</p>
+    <h1 data-editable="hero_titulo">Nosotros</h1>
+    <p data-editable="hero_descripcion">Apicultoras tenosiquenses comprometidas con la tierra, las abejas y las comunidades que las cuidan.</p>
   </div>
 </div>
 
@@ -463,9 +436,9 @@
   <!-- INTRO TEXTO -->
   <div class="nos-intro">
     <span class="nos-label">Nuestra historia</span>
-    <h2>Conoce a los productores</h2>
+    <h2 data-editable="intro_titulo">Conoce a los productores</h2>
     <!-- ESPACIO DE TEXTO — reemplaza este párrafo con tu contenido -->
-    <p class="nos-intro-text">
+    <p class="nos-intro-text" data-editable="intro_texto">
       Escribe aquí el texto introductorio que quieras mostrar en esta sección. Puedes contar la historia de tu organización, sus valores, su origen o cualquier mensaje que quieras transmitir a quienes visitan esta página.
     </p>
     <p class="nos-intro-sub">¿Quieres saber quién cosechó tu miel?</p>
@@ -521,7 +494,7 @@
   <!-- MISIÓN Y VISIÓN -->
   <div class="nos-mv-title">
     <span class="nos-label">Nuestra razón de ser</span>
-    <h2>Misión y Visión</h2>
+    <h2 data-editable="mision_titulo">Misión y Visión</h2>
   </div>
 
   <div class="nos-mv-grid">
@@ -572,7 +545,7 @@
         <ul>
           <li><a href="abejas.html">Tipos de abejas</a></li>
           <li><a href="centro_rescate.html">Centro de Rescate</a></li>
-          <li><a href="#">Blog y Eventos</a></li>
+          <li><a href="blog.html">Blog y Eventos</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -597,30 +570,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
-<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank" title="WhatsApp">💬</a>
-<script>
-(function(){
-  var btn  = document.getElementById('hamburger-btn');
-  var menu = document.getElementById('menu-desplegable');
-  if (!btn || !menu) return;
-  btn.addEventListener('click', function(e){
-    e.stopPropagation();
-    var abierto = menu.classList.toggle('abierto');
-    btn.classList.toggle('activo', abierto);
-  });
-  menu.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){
-      menu.classList.remove('abierto');
-      btn.classList.remove('activo');
-    });
-  });
-  document.addEventListener('click', function(e){
-    if (!menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
-      menu.classList.remove('abierto');
-      btn.classList.remove('activo');
-    }
-  });
-})();
-</script>
+<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank">💬</a>
 </body>
 </html>
