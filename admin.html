@@ -1098,7 +1098,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('login-wrap').style.display = 'none';
     document.getElementById('panel').style.display = 'block';
     const nombre = user.user_metadata?.nombre_completo || user.email.split('@')[0];
-    document.getElementById('a-nombre').textContent = '👤 ' + nombre.split(' ')[0];
+    document.getElementById('a-nombre').textContent = ' ' + nombre.split(' ')[0];
   }
 });
 
