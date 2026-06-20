@@ -487,8 +487,8 @@
       <a href="#" onclick="toggleSearch();return false">
         <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>Buscar
       </a>
-      <a href="#">
-        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Ingresar
+      <a href="login.html" id="btn-ingresar">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="txt-sesion">Ingresar</span>
       </a>
       <a href="#" id="cart-btn">
         <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -518,43 +518,16 @@
     </div>
     <div class="nav-item"><a href="abejas.html">Abejas</a></div>
     <div class="nav-item"><a href="centro-rescate.html">Centro de Rescate</a></div>
-    <div class="nav-item"><a href="#">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
     <div class="nav-item"><a href="#">Contacto</a></div>
   </div>
 </nav>
-
-<!-- BARRA MENÚ MÓVIL -->
-<div class="barra-menu-movil">
-  <span class="menu-label">☰ Menú</span>
-  <button class="hamburger-btn" id="hamburger-btn" aria-label="Menú">
-    <span></span><span></span><span></span>
-  </button>
-</div>
-
-<!-- MENÚ DESPLEGABLE MÓVIL -->
-<div class="menu-desplegable" id="menu-desplegable">
-  <a href="index.html">Inicio</a>
-  <a href="nosotros.html">Nosotros</a>
-  <div class="menu-seccion">Productos</div>
-  <div class="submenu">
-    <a href="miel.html">Miel</a>
-    <a href="#">Miel en panal</a>
-    <a href="#">Jabones</a>
-    <a href="#">Gotas</a>
-    <a href="#">Dulces</a>
-    <a href="velas.html">Velas</a>
-  </div>
-  <a href="abejas.html">Abejas</a>
-  <a href="centro_rescate.html">Centro de Rescate</a>
-  <a href="#">Blog y Eventos</a>
-  <a href="#">Contacto</a>
-</div>
 
 <!-- ══ HERO ══ -->
 <div class="resc-hero">
   <div class="resc-hero-bg-placeholder"></div>
   <!-- SLOT 1: Foto de fondo — enjambre, rescate o apicultor trabajando -->
-  <img class="resc-hero-img" src="imagen/centro_rescate/banner_rescate.png" alt="Centro de Rescate"
+  <img class="resc-hero-img" src="imagen/centro_rescate/banner_rescate.png" alt="Centro de Rescate" data-editable="hero_banner"
        onerror="this.style.display='none'">
   <div class="resc-hero-overlay"></div>
   <div class="resc-hero-content">
@@ -562,8 +535,8 @@
       <a href="index.html">Inicio</a> / Centro de Rescate
     </div>
     <span class="resc-hero-tag">Rescate · Reubicación · Conservación</span>
-    <h1>Centro de Rescate de Abejas</h1>
-    <p>Si encontraste un panal o enjambre, no lo elimines. Las abejas son esenciales para nuestro ecosistema. Nosotros las reubicamos de forma segura y gratuita.</p>
+    <h1 data-editable="hero_titulo">Centro de Rescate de Abejas</h1>
+    <p data-editable="hero_descripcion">Si encontraste un panal o enjambre, no lo elimines. Las abejas son esenciales para nuestro ecosistema. Nosotros las reubicamos de forma segura y gratuita.</p>
   </div>
 </div>
 
@@ -573,8 +546,8 @@
   <div class="resc-found-band">
     <div class="resc-found-text">
       <span class="resc-label">Antes de actuar</span>
-      <h2>¿Encontraste un panal o enjambre?</h2>
-      <p>Es normal sentir miedo o querer eliminarlos, pero eliminar una colonia de abejas es ilegal en varios estados y tiene consecuencias graves para el ecosistema. Sigue estos pasos mientras esperas nuestra ayuda.</p>
+      <h2 data-editable="panal_titulo">¿Encontraste un panal o enjambre?</h2>
+      <p data-editable="panal_descripcion">Es normal sentir miedo o querer eliminarlos, pero eliminar una colonia de abejas es ilegal en varios estados y tiene consecuencias graves para el ecosistema. Sigue estos pasos mientras esperas nuestra ayuda.</p>
     </div>
     <ul class="resc-do-list">
       <li></span><span><strong>Mantén la calma.</strong> Las abejas generalmente no atacan si no se sienten amenazadas.</span></li>
@@ -592,7 +565,7 @@
 
       <!-- SLOT 2: Foto de enjambre en árbol, pared o espacio urbano -->
       <div class="resc-dont-img">
-        <img src="imagen/centro_rescate/noDebeshacer.png" alt="Enjambre de abejas"
+        <img src="imagen/centro_rescate/noDebeshacer.png" alt="Enjambre de abejas" data-editable="img_no_debes_hacer"
              onerror="this.style.display='none'">
         <div class="resc-dont-img-caption">Un enjambre es temporal — las abejas buscan nuevo hogar. Con ayuda profesional, las reubicamos sin lastimarlas.</div>
       </div>
@@ -616,8 +589,8 @@
   <!-- ══ 3. PROCESO DE RESCATE ══ -->
   <div class="resc-section">
     <span class="resc-label">¿Cómo trabajamos?</span>
-    <h2 class="resc-section-title">Nuestro proceso de rescate</h2>
-    <p class="resc-section-sub">Cuando nos contactas, un equipo especializado va a tu ubicación, evalúa la colonia y la reubica en nuestro meliponario o en un entorno natural adecuado.</p>
+    <h2 class="resc-section-title" data-editable="proceso_titulo">Nuestro proceso de rescate</h2>
+    <p class="resc-section-sub" data-editable="proceso_descripcion">Cuando nos contactas, un equipo especializado va a tu ubicación, evalúa la colonia y la reubica en nuestro meliponario o en un entorno natural adecuado.</p>
 
     <div class="resc-steps-wrap">
       <div class="resc-steps">
@@ -656,19 +629,19 @@
     <div class="resc-gallery">
       <!-- SLOT 3: Foto de apicultor en equipo durante rescate -->
       <div class="resc-gallery-slot">
-        <img src="imagen/centro_rescate/centro_rescate1.jpeg" alt="Rescate de enjambre"
+        <img src="imagen/centro_rescate/centro_rescate1.jpeg" alt="Rescate de enjambre" data-editable="galeria_foto_1"
              onerror="this.style.display='none'">
         <span class="slot-label">Enjambre en árbol</span>
       </div>
       <!-- SLOT 4: Panal rescatado o caja de traslado -->
       <div class="resc-gallery-slot">
-        <img src="imagen/centro_rescate/centro_rescate2.jpeg" alt="Traslado de colonia"
+        <img src="imagen/centro_rescate/centro_rescate2.jpeg" alt="Traslado de colonia" data-editable="galeria_foto_2"
              onerror="this.style.display='none'">
         <span class="slot-label">Traslado seguro</span>
       </div>
       <!-- SLOT 5: Meliponario / colmenas instaladas -->
       <div class="resc-gallery-slot">
-        <img src="imagen/centro_rescate/centro_rescate3.jpeg" alt="Meliponario"
+        <img src="imagen/centro_rescate/centro_rescate3.jpeg" alt="Meliponario" data-editable="galeria_foto_3"
              onerror="this.style.display='none'">
         <span class="slot-label">Nueva colmena</span>
       </div>
@@ -678,8 +651,8 @@
   <!-- ══ CTA — REPORTAR PANAL ══ -->
   <div class="resc-cta">
     <div class="resc-cta-content">
-      <h2>¿Necesitas ayuda con un panal o enjambre?</h2>
-      <p>No lo elimines. Contáctanos y nuestro equipo irá a rescatar y reubicar la colonia de forma segura, gratuita y respetuosa con las abejas.</p>
+      <h2 data-editable="cta_titulo">¿Necesitas ayuda con un panal o enjambre?</h2>
+      <p data-editable="cta_descripcion">No lo elimines. Contáctanos y nuestro equipo irá a rescatar y reubicar la colonia de forma segura, gratuita y respetuosa con las abejas.</p>
       <div class="resc-cta-info">
         <div class="resc-cta-info-item"><span>-</span><span>Respuesta en menos de 24 horas</span></div>
         <div class="resc-cta-info-item"><span>-</span><span>Servicio sin costo</span></div>
@@ -708,7 +681,7 @@
         </div>
       </div>
       <div class="footer-col"><h4>Tienda</h4><ul><li><a href="#">Todo para el Apicultor</a></li><li><a href="#">Productos de la Colmena</a></li><li><a href="velas.html">Velas</a></li></ul></div>
-      <div class="footer-col"><h4>Aprende</h4><ul><li><a href="abejas.html">Tipos de abejas</a></li><li><a href="centro-rescate.html">Centro de Rescate</a></li><li><a href="#">Blog y Eventos</a></li></ul></div>
+      <div class="footer-col"><h4>Aprende</h4><ul><li><a href="abejas.html">Tipos de abejas</a></li><li><a href="centro-rescate.html">Centro de Rescate</a></li><li><a href="blog.html">Blog y Eventos</a></li></ul></div>
       <div class="footer-col"><h4>Empresa</h4><ul><li><a href="#">Nosotros</a></li><li><a href="contacto.html">Contacto</a></li><li><a href="#">Puntos de Venta</a></li></ul></div>
     </div>
     <div class="footer-bottom">© 2025 · Todos los derechos reservados · Hecho en México</div>
@@ -724,30 +697,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
-<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank" title="WhatsApp">💬</a>
-<script>
-(function(){
-  var btn  = document.getElementById('hamburger-btn');
-  var menu = document.getElementById('menu-desplegable');
-  if (!btn || !menu) return;
-  btn.addEventListener('click', function(e){
-    e.stopPropagation();
-    var abierto = menu.classList.toggle('abierto');
-    btn.classList.toggle('activo', abierto);
-  });
-  menu.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){
-      menu.classList.remove('abierto');
-      btn.classList.remove('activo');
-    });
-  });
-  document.addEventListener('click', function(e){
-    if (!menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
-      menu.classList.remove('abierto');
-      btn.classList.remove('activo');
-    }
-  });
-})();
-</script>
+<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank">💬</a>
 </body>
 </html>
