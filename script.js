@@ -314,12 +314,44 @@ function irPagina(n) {
   if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+// ─── CONTENIDO EDITABLE DEL SITIO ───
+// Carga todos los textos/imágenes marcados con data-editable de la página actual
+// y los reemplaza con lo guardado en Supabase (si existe).
+async function cargarContenidoEditable(paginaId) {
+  const elementos = document.querySelectorAll('[data-editable]');
+  if (!elementos.length) return;
+
+  const { data } = await db
+    .from('contenido_sitio')
+    .select('clave, tipo, valor')
+    .eq('pagina', paginaId);
+
+  if (!data || !data.length) return;
+
+  const mapa = {};
+  data.forEach(item => { mapa[item.clave] = item; });
+
+  elementos.forEach(el => {
+    const clave = el.getAttribute('data-editable');
+    const item = mapa[clave];
+    if (!item || !item.valor) return;
+
+    if (item.tipo === 'imagen') {
+      if (el.tagName === 'IMG') el.src = item.valor;
+      else el.style.backgroundImage = `url('${item.valor}')`;
+    } else {
+      el.innerHTML = item.valor;
+    }
+  });
+}
+
 // ─── INICIALIZAR ───
 document.addEventListener('DOMContentLoaded', async () => {
   const { data } = await db.auth.getSession();
   usuarioActual = data?.session?.user || null;
 
   const pagina = window.location.pathname.split('/').pop();
+  const paginaId = pagina === '' ? 'index.html' : pagina;
 
   if (PAGINAS_PROTEGIDAS.includes(pagina) && !usuarioActual) {
     sessionStorage.setItem('redirigir_tras_login', pagina);
@@ -335,6 +367,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (pagina === 'miel.html')                    await cargarProductosCategoria('miel');
   if (pagina === 'velas.html')                   await cargarProductosCategoria('velas');
   if (pagina === 'melipona.html')                await cargarProductosCategoria('melipona');
+
+  // Cargar contenido editable (textos/imágenes) de esta página
+  await cargarContenidoEditable(paginaId);
 
   db.auth.onAuthStateChange(async (event, session) => {
     usuarioActual = session?.user || null;
