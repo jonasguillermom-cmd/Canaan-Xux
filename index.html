@@ -4,35 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Cana´an  Xu´x</title>
-<link rel="icon" href="imagen/logo.jpg">
+<link href="imagen/logo.jpg" rel="stylesheet">
 <link rel="stylesheet" href="estilos.css">
-<style>
-/* ── Sección de Novedades (bloques dinámicos desde el admin) ── */
-.novedades-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:24px;
-  margin-top:24px;
-}
-.novedad-card{
-  background:#fff;
-  border:1px solid #e0d8cc;
-  border-radius:10px;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  box-shadow:0 2px 10px rgba(0,0,0,.05);
-}
-.novedad-card img{
-  width:100%;
-  height:200px;
-  object-fit:cover;
-}
-.novedad-body{padding:18px 20px;display:flex;flex-direction:column;flex:1}
-.novedad-body h3{font-size:17px;color:#3d3b1f;margin-bottom:8px}
-.novedad-body p{font-size:13px;color:#7a7a6a;line-height:1.6;flex:1;margin-bottom:12px}
-.novedad-body a.btn-link{font-size:13px}
-</style>
 </head>
 <body>
 
@@ -73,7 +46,7 @@
 <nav>
   <div class="nav-inner">
 
-    <div class="nav-item"><a href="index.html">Inicio</a></div>
+    <div class="nav-item"><a href="#">Inicio</a></div>
     <div class="nav-item"><a href="nosotros.html">Nosotros</a></div>
         <!-- Tienda -->
     <div class="nav-item">
@@ -97,7 +70,7 @@
     <div class="nav-item"><a href="abejas.html">Abejas</a></div>
     <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
     <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
-    <div class="nav-item"><a href="contacto.html">Contacto</a></div>
+    <div class="nav-item"><a href="#">Contacto</a></div>
   </div>
 </nav>
 
@@ -125,17 +98,17 @@
   <a href="abejas.html">Abejas</a>
   <a href="centro_rescate.html">Centro de Rescate</a>
   <a href="blog.html">Blog y Eventos</a>
-  <a href="contacto.html">Contacto</a>
+  <a href="#">Contacto</a>
 </div>
 
 <!-- HERO SLIDER -->
 <div class="hero">
   <div class="hero-slide active">
-    <img id="cms-hero-img1" src="imagen/inicio/inicio-1.png" alt="Experiencias">
+    <img src="imagen/inicio/inicio-1.png" alt="Experiencias" data-editable="hero_banner_1">
   </div>
   
   <div class="hero-slide">
-    <img id="cms-hero-img2" src="imagen/inicio/inicio-2.png" alt="Paquetes">
+    <img src="imagen/inicio/inicio-2.png" alt="Paquetes" data-editable="hero_banner_2">
   </div>
   <button class="hero-arrow prev" onclick="changeSlide(-1)">&#8592;</button>
   <button class="hero-arrow next" onclick="changeSlide(1)">&#8594;</button>
@@ -151,7 +124,7 @@
     <div style="text-align:center;margin-bottom:12px">
       <img src="imagen/logo.png" alt="Abeja" style="height:56px;object-fit:contain">
     </div>
-    <h2 class="section-title" id="cms-titulo-vendidos">¡LO MAS VENDIDO!</h2>
+    <h2 class="section-title" data-editable="titulo_lo_mas_vendido">¡LO MAS VENDIDO!</h2>
     <div class="prod-grid" id="grid-vendidos"><div style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Cargando...</div></div>
 
       <div class="prod-card">
@@ -185,7 +158,7 @@
 <!-- NUESTRAS COLECCIONES -->
 <section class="section" style="background:var(--gris-claro)">
   <div class="container">
-    <h2 class="section-title">Nuestras Colecciones</h2>
+    <h2 class="section-title" data-editable="titulo_colecciones">Nuestras Colecciones</h2>
     <div class="coll-grid">
       <a href="#" class="coll-card">
         <img src="" alt="Todo para el Apicultor">
@@ -208,7 +181,7 @@
 <!-- OTROS PRODUCTOS -->
 <section class="section" style="background:#fff">
   <div class="container">
-    <h2 class="section-title left">Otros Productos</h2>
+    <h2 class="section-title left" data-editable="titulo_otros_productos">Otros Productos</h2>
     <div class="prod-grid" id="grid-otros"></div>
 
       <div class="prod-card">
@@ -259,8 +232,8 @@
       <div style="text-align:center;margin-bottom:16px">
         <img src="https://cdn.shopify.com/s/files/1/0010/0660/0310/files/exagono.png?4715548033019962595" alt="" style="height:60px;object-fit:contain">
       </div>
-      <h2 id="cms-about-titulo">La miel pura de Miel Oro es extraída de colmenas en Jalisco y otras partes de México.</h2>
-      <p id="cms-about-texto">Somos distribuidores de material apícola, equipo de protección para el apicultor, insumos para producción de miel, así como medicamentos para las abejas y productos para el bienestar de las colmenas.</p>
+      <h2 data-editable="acerca_titulo">La miel pura de Miel Oro es extraída de colmenas en Jalisco y otras partes de México.</h2>
+      <p data-editable="acerca_parrafo1">Somos distribuidores de material apícola, equipo de protección para el apicultor, insumos para producción de miel, así como medicamentos para las abejas y productos para el bienestar de las colmenas.</p>
       <p>Brindamos pláticas, cursos de apicultura y asesorías a apicultores para el manejo adecuado de sus apiarios.</p>
       <a href="#" class="btn-link">¡Conoce más sobre nosotros!</a>
     </div>
@@ -294,8 +267,8 @@
       <img src="https://mieloro.com.mx/cdn/shop/files/educacion-miel-colmenas-ninos_b15e7c44-ecef-419e-a2c8-fd68b52b65e1_600x600@2x.jpg?v=1613669038" alt="Educación">
     </div>
     <div>
-      <h2>Asesoría a nuevos productores</h2>
-      <h3>¿Eres nuevo en el mundo de la apicultura?</h3>
+      <h2 data-editable="asesoria_titulo">Asesoría a nuevos productores</h2>
+      <h3 data-editable="asesoria_subtitulo">¿Eres nuevo en el mundo de la apicultura?</h3>
       <p>No dudes en consultarnos, podemos ofrecerte asesoría para mejorar tu sistema productivo apícola y la salud de tus colmenas.</p>
       <p>Tenemos amplia experiencia en el mundo de la apicultura en México desde hace más de 40 años.</p>
       <a href="#" class="btn-link">¿Quieres mejorar tus procesos productivos?</a>
@@ -323,7 +296,7 @@
 <!-- EXPERIENCIAS -->
 <section class="section" style="background:#fff">
   <div class="container">
-    <h2 class="section-title">Experiencias</h2>
+    <h2 class="section-title" data-editable="titulo_experiencias">Experiencias</h2>
     <div class="exp-grid">
 
       <div class="exp-card">
@@ -349,14 +322,6 @@
       </div>
 
     </div>
-  </div>
-</section>
-
-<!-- NOVEDADES (bloques dinámicos creados desde el panel de admin → pestaña Inicio) -->
-<section class="section" style="background:var(--gris-claro)" id="cms-novedades-section">
-  <div class="container">
-    <h2 class="section-title" id="cms-novedades-titulo">Novedades</h2>
-    <div class="novedades-grid" id="cms-novedades-grid"></div>
   </div>
 </section>
 
@@ -443,89 +408,6 @@
       btn.classList.remove('activo');
     }
   });
-})();
-</script>
-
-<!-- CMS: carga textos/imagenes editables desde el panel de Diseño -->
-<script>
-(async function cargarContenidoCMS(){
-  try {
-    const SURL = 'https://biiefknpnkynfobbetav.supabase.co';
-    const SKEY = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
-    const cdb = supabase.createClient(SURL, SKEY);
-
-    const { data, error } = await cdb.from('contenido').select('*').eq('pagina', 'index');
-    if (error || !data) return;
-
-    data.forEach(row => {
-      const el = document.getElementById('cms-' + row.clave);
-      if (!el) return;
-      if (row.tipo === 'imagen') el.src = row.valor;
-      else el.textContent = row.valor;
-    });
-  } catch(e) { console.warn('CMS textos:', e); }
-})();
-
-/* ── Cargar bloques de "Novedades" creados desde el admin (tabla index_bloques) ── */
-(async function cargarBloquesIndex(){
-  try {
-    const SURL = 'https://biiefknpnkynfobbetav.supabase.co';
-    const SKEY = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
-    const cdb = supabase.createClient(SURL, SKEY);
-
-    const { data, error } = await cdb.from('index_bloques').select('*').order('creado_en', { ascending: false });
-    const grid = document.getElementById('cms-novedades-grid');
-    const section = document.getElementById('cms-novedades-section');
-
-    if (error || !data || !data.length) {
-      // Si no hay bloques publicados, ocultamos la sección entera para no dejar un hueco vacío
-      if (section) section.style.display = 'none';
-      return;
-    }
-
-    grid.innerHTML = data.map(b => `
-      <div class="novedad-card">
-        <img src="${b.imagen || ''}" alt="${b.titulo || ''}" onerror="this.style.display='none'">
-        <div class="novedad-body">
-          <h3>${b.titulo || ''}</h3>
-          <p>${b.texto || ''}</p>
-          ${b.enlace ? `<a class="btn-link" href="${b.enlace}">Ver más →</a>` : ''}
-        </div>
-      </div>`).join('');
-
-  } catch(e) { console.warn('CMS bloques inicio:', e); }
-})();
-</script>
-
-<!-- ════════════════════════════════════════════
-   FIX: forzar que la barra/menú móvil se oculten
-   en computadora, sin depender solo del CSS
-   (por si el navegador tiene zoom o ventana chica)
-════════════════════════════════════════════ -->
-<script>
-(function () {
-  var barraMovil = document.querySelector('.barra-menu-movil');
-  var menu       = document.getElementById('menu-desplegable');
-  var navDesktop = document.querySelector('nav');
-
-  function sincronizarMenu() {
-    var esEscritorio = window.innerWidth > 768;
-
-    if (barraMovil) {
-      barraMovil.style.display = esEscritorio ? 'none' : '';
-    }
-    if (navDesktop) {
-      navDesktop.style.display = esEscritorio ? '' : 'none';
-    }
-    if (esEscritorio && menu) {
-      menu.classList.remove('abierto');
-      var btn = document.getElementById('hamburger-btn');
-      if (btn) btn.classList.remove('activo');
-    }
-  }
-
-  sincronizarMenu();
-  window.addEventListener('resize', sincronizarMenu);
 })();
 </script>
 </body>
