@@ -337,8 +337,16 @@ async function cargarContenidoEditable(paginaId) {
     if (!item || !item.valor) return;
 
     if (item.tipo === 'imagen') {
-      if (el.tagName === 'IMG') el.src = item.valor;
-      else el.style.backgroundImage = `url('${item.valor}')`;
+      if (el.tagName === 'IMG') {
+        el.src = item.valor;
+        el.style.display = '';      // por si onerror la había ocultado
+        el.onerror = null;          // evitar que vuelva a ocultarse
+        // Si el contenedor padre tiene un placeholder hermano, ocultarlo
+        const placeholder = el.parentElement?.querySelector('.bee-card-overlay, .nos-hex-placeholder, .blog-img-placeholder, .img-placeholder');
+        if (placeholder && !placeholder.classList.contains('bee-card-overlay')) placeholder.style.display = 'none';
+      } else {
+        el.style.backgroundImage = `url('${item.valor}')`;
+      }
     } else {
       el.innerHTML = item.valor;
     }
