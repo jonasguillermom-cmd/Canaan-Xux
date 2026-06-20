@@ -36,7 +36,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--fondo);color:var(--caf
 .btn-out{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
 
 /* TABS */
-.tabs{display:flex;background:#fff;border-bottom:2px solid var(--borde);position:sticky;top:56px;z-index:99;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.tabs{display:flex;background:#fff;border-bottom:2px solid var(--borde);position:sticky;top:106px;z-index:98;box-shadow:0 2px 6px rgba(0,0,0,.06)}
 .tab{flex:1;padding:13px 8px;text-align:center;font-size:12px;font-weight:700;color:var(--gris);cursor:pointer;border:none;background:none;font-family:inherit;letter-spacing:.04em;transition:color .2s}
 .tab.on{color:var(--naranja);border-bottom:3px solid var(--naranja);margin-bottom:-2px}
 
@@ -110,6 +110,21 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
 .pi-btns .b-e{background:#e8f4fd;color:#2980b9}
 .pi-btns .b-d{background:#fdecea;color:#c0392b}
 .empty-msg{text-align:center;padding:40px 20px;color:var(--gris);font-size:13px}
+/* SECCIONES PRINCIPALES */
+.secciones-principales{display:flex;gap:8px;padding:14px;background:#fff;border-bottom:2px solid var(--borde);position:sticky;top:56px;z-index:99}
+.sec-btn{flex:1;padding:13px 8px;border-radius:10px;border:2px solid var(--borde);background:#fff;font-size:13px;font-weight:800;color:var(--gris);cursor:pointer;font-family:inherit;transition:all .2s}
+.sec-btn.on{background:var(--naranja);border-color:var(--naranja);color:#fff}
+
+/* CAMPOS DE CONTENIDO EDITABLE */
+.cs-campo{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.cs-campo-label{font-size:11px;font-weight:800;color:var(--naranja);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:block}
+.cs-campo textarea{width:100%;min-height:70px;padding:11px 13px;border:1.5px solid var(--borde);border-radius:8px;font-size:14px;font-family:inherit;color:var(--cafe);outline:none;resize:vertical}
+.cs-campo textarea:focus{border-color:var(--naranja)}
+.cs-img-preview{width:100%;max-height:140px;object-fit:cover;border-radius:8px;margin-bottom:10px;background:var(--fondo)}
+.cs-img-drop{border:2px dashed var(--borde);border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:var(--fondo);font-size:12px;color:var(--gris)}
+.cs-img-drop:hover{border-color:var(--naranja)}
+.cs-guardar-todo{width:100%;background:var(--naranja);color:#fff;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin:16px 0;position:sticky;bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.cs-guardar-todo:disabled{background:#ccc}
 </style>
 </head>
 <body>
@@ -139,12 +154,18 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
     </div>
   </div>
 
+  <!-- SECCIONES PRINCIPALES -->
+  <div class="secciones-principales">
+    <button class="sec-btn on" id="sec-btn-productos" onclick="showSeccion('productos', this)">📦 Productos</button>
+    <button class="sec-btn" id="sec-btn-contenido" onclick="showSeccion('contenido', this)">🎨 Diseño del Sitio</button>
+  </div>
+
+  <!-- ═══════════ SECCIÓN: PRODUCTOS ═══════════ -->
+  <div class="seccion on" id="seccion-productos">
+
   <div class="tabs">
     <button class="tab on" id="tab-btn-nuevo" onclick="showTab('nuevo',this)">➕ Nuevo</button>
     <button class="tab" id="tab-btn-lista" onclick="showTab('lista',this);loadProductos()">📦 Productos</button>
-    <button class="tab" id="tab-btn-diseno" onclick="showTab('diseno',this);loadDiseno()">🎨 Diseño</button>
-    <button class="tab" id="tab-btn-blog" onclick="showTab('blogadmin',this);loadBlogEntradas()">📰 Blog</button>
-    <button class="tab" id="tab-btn-inicio" onclick="showTab('inicioadmin',this);loadIndexBloques()">🏠 Inicio</button>
   </div>
 
   <!-- NUEVO PRODUCTO -->
@@ -230,140 +251,45 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
     <div id="prod-lista"><div class="empty-msg">Toca "Productos" para cargar la lista.</div></div>
   </div>
 
-  <!-- DISEÑO Y TEXTOS -->
-  <div class="tab-pane" id="pane-diseno">
+  </div><!-- /seccion-productos -->
 
-    <div class="card">
-      <div class="card-title">🎨 Editor de Textos e Imágenes del Sitio</div>
-      <p style="font-size:12px;color:var(--gris);margin-bottom:14px">Aquí puedes cambiar los textos y banners de las páginas, sin tocar código. Elige la página, edita y guarda.</p>
+  <!-- ═══════════ SECCIÓN: DISEÑO DEL SITIO ═══════════ -->
+  <div class="seccion" id="seccion-contenido" style="display:none">
+
+    <div class="card" style="margin:16px 14px 0">
+      <div class="card-title">🎨 Editar textos e imágenes</div>
+      <p style="font-size:12px;color:var(--gris);margin-bottom:14px">
+        Elige la página que quieres modificar. Vas a poder cambiar los textos principales y las fotos/banners sin tocar código.
+      </p>
       <div class="campo">
-        <label>¿Qué página quieres editar?</label>
-        <select id="ds-pagina" onchange="renderCamposDiseno()">
-          <option value="index">⭐ Inicio</option>
-          <option value="blog">📰 Blog y Eventos</option>
-          <option value="centro_rescate">🐝 Centro de Rescate</option>
+        <label>Página a editar</label>
+        <select id="cs-pagina" onchange="cargarCamposPagina()">
+          <option value="">Selecciona una página...</option>
+          <option value="index.html">🏠 Inicio</option>
+          <option value="nosotros.html">👥 Nosotros</option>
+          <option value="abejas.html">🐝 Abejas</option>
+          <option value="melipona.html">🐝 Melipona</option>
+          <option value="centro_rescate.html">🆘 Centro de Rescate</option>
         </select>
       </div>
     </div>
 
-    <div id="ds-campos"></div>
+    <div id="cs-campos" style="padding:0 14px"></div>
 
-    <div class="msg" id="ds-msg"></div>
-  </div>
-
-  <!-- BLOG Y EVENTOS -->
-  <div class="tab-pane" id="pane-blogadmin">
-
-    <div class="card">
-      <div class="card-title" id="blog-form-title">📰 Nueva entrada de Blog/Evento</div>
-      <input type="hidden" id="be-id">
-
-      <div class="campo">
-        <label>Foto principal *</label>
-        <div class="foto-drop" onclick="document.getElementById('be-foto-principal').click()">
-          <input type="file" id="be-foto-principal" accept="image/*" style="display:none" onchange="onBlogFotoPrincipal(this)">
-          <div class="ico">📷</div>
-          <p>Toca para subir la foto principal</p>
-        </div>
-        <img id="be-preview-principal" src="" alt="" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:10px;display:none">
-      </div>
-
-      <div class="campo">
-        <label>Título *</label>
-        <input type="text" id="be-titulo" placeholder="Ej: Taller de velas en la comunidad">
-      </div>
-
-      <div class="row2">
-        <div class="campo"><label>Fecha</label><input type="text" id="be-fecha" placeholder="Ej: 12 julio 2025"></div>
-        <div class="campo">
-          <label>Categoría</label>
-          <select id="be-categoria">
-            <option value="evento">Evento</option>
-            <option value="apicultura">Apicultura</option>
-            <option value="comunidad">Comunidad</option>
-            <option value="galeria">Galería de fotos</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="campo">
-        <label>Resumen corto (aparece en la tarjeta)</label>
-        <textarea id="be-resumen" placeholder="1 o 2 líneas que resuman la entrada"></textarea>
-      </div>
-
-      <div class="campo">
-        <label>Texto completo (aparece al abrir la entrada)</label>
-        <textarea id="be-contenido" style="min-height:140px" placeholder="Escribe aquí toda la historia, separando párrafos con un salto de línea"></textarea>
-      </div>
-
-      <div class="campo">
-        <label>Fotos adicionales (galería, opcional, puedes elegir varias)</label>
-        <div class="foto-drop" onclick="document.getElementById('be-galeria-input').click()">
-          <input type="file" id="be-galeria-input" accept="image/*" multiple style="display:none" onchange="onBlogGaleria(this)">
-          <div class="ico">🖼️</div>
-          <p>Toca para subir fotos de la galería</p>
-        </div>
-        <div id="be-galeria-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
-      </div>
+    <!-- BLOG -->
+    <div class="card" style="margin:16px 14px">
+      <div class="card-title">📰 Entradas del Blog</div>
+      <p style="font-size:12px;color:var(--gris);margin-bottom:14px">Crea, edita o elimina las publicaciones del Blog y Eventos.</p>
+      <button class="btn-add-var" onclick="mostrarFormBlog()">+ Nueva entrada de blog</button>
+      <div id="blog-form-wrap" style="display:none;margin-top:14px"></div>
+      <div id="blog-lista-admin" style="margin-top:16px"></div>
     </div>
 
-    <button class="btn-g" id="be-btn-guardar" onclick="guardarBlogEntrada()">💾 Publicar entrada</button>
-    <button class="btn-c" id="be-btn-cancelar" onclick="cancelarBlogEdit()">✕ Cancelar edición</button>
-    <div class="msg" id="be-msg"></div>
-
-    <div class="card" style="margin-top:20px">
-      <div class="card-title">📋 Entradas publicadas</div>
-      <div id="be-lista"><div class="empty-msg">Cargando...</div></div>
-    </div>
-  </div>
-
-  <!-- BLOQUES DE INICIO -->
-  <div class="tab-pane" id="pane-inicioadmin">
-
-    <div class="card">
-      <div class="card-title" id="ib-form-title">🏠 Nuevo bloque para Inicio</div>
-      <p style="font-size:12px;color:var(--gris);margin-bottom:14px">Estos bloques aparecen en una nueva sección "Novedades" en tu página de Inicio, debajo de lo que ya tienes. Úsalo para anuncios, promociones, nuevas fotos, etc.</p>
-      <input type="hidden" id="ib-id">
-
-      <div class="campo">
-        <label>Foto *</label>
-        <div class="foto-drop" onclick="document.getElementById('ib-foto').click()">
-          <input type="file" id="ib-foto" accept="image/*" style="display:none" onchange="onIndexBloqueFoto(this)">
-          <div class="ico">📷</div>
-          <p>Toca para subir la foto</p>
-        </div>
-        <img id="ib-preview" src="" alt="" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:10px;display:none">
-      </div>
-
-      <div class="campo">
-        <label>Título *</label>
-        <input type="text" id="ib-titulo" placeholder="Ej: ¡Nueva colección de velas!">
-      </div>
-
-      <div class="campo">
-        <label>Texto</label>
-        <textarea id="ib-texto" placeholder="Describe la novedad, promoción o anuncio"></textarea>
-      </div>
-
-      <div class="campo">
-        <label>Enlace (opcional — a dónde lleva el botón "Ver más")</label>
-        <input type="text" id="ib-enlace" placeholder="Ej: velas.html">
-      </div>
-    </div>
-
-    <button class="btn-g" id="ib-btn-guardar" onclick="guardarIndexBloque()">💾 Publicar en Inicio</button>
-    <button class="btn-c" id="ib-btn-cancelar" onclick="cancelarIndexBloqueEdit()">✕ Cancelar edición</button>
-    <div class="msg" id="ib-msg"></div>
-
-    <div class="card" style="margin-top:20px">
-      <div class="card-title">📋 Bloques publicados en Inicio</div>
-      <div id="ib-lista"><div class="empty-msg">Cargando...</div></div>
-    </div>
-  </div>
-
-</div>
+  </div><!-- /seccion-contenido -->
+</div><!-- /panel -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 const SURL  = 'https://biiefknpnkynfobbetav.supabase.co';
 const SKEY  = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
@@ -386,6 +312,323 @@ function showTab(name, btn) {
   btn.classList.add('on');
 }
 
+// ── SECCIONES PRINCIPALES (Productos / Diseño del Sitio) ──
+function showSeccion(name, btn) {
+  document.getElementById('seccion-productos').style.display = name === 'productos' ? 'block' : 'none';
+  document.getElementById('seccion-contenido').style.display = name === 'contenido' ? 'block' : 'none';
+  document.querySelectorAll('.sec-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  if (name === 'contenido') cargarListaBlog();
+}
+
+// ════════════════════════════════════════════════════
+//   CONTENIDO EDITABLE DEL SITIO (textos e imágenes)
+// ════════════════════════════════════════════════════
+
+// Definición de campos editables por página
+// clave debe coincidir EXACTO con el data-editable del HTML
+const CAMPOS_POR_PAGINA = {
+  'index.html': [
+    { clave:'hero_banner_1', tipo:'imagen', etiqueta:'Banner principal 1 (slide 1)' },
+    { clave:'hero_banner_2', tipo:'imagen', etiqueta:'Banner principal 2 (slide 2)' },
+    { clave:'titulo_lo_mas_vendido', tipo:'texto', etiqueta:'Título "Lo más vendido"' },
+    { clave:'titulo_colecciones', tipo:'texto', etiqueta:'Título "Nuestras Colecciones"' },
+    { clave:'titulo_otros_productos', tipo:'texto', etiqueta:'Título "Otros Productos"' },
+    { clave:'acerca_titulo', tipo:'texto', etiqueta:'Título sección "Acerca de"' },
+    { clave:'acerca_parrafo1', tipo:'texto', etiqueta:'Párrafo "Acerca de"' },
+    { clave:'asesoria_titulo', tipo:'texto', etiqueta:'Título "Asesoría"' },
+    { clave:'asesoria_subtitulo', tipo:'texto', etiqueta:'Subtítulo "Asesoría"' },
+    { clave:'titulo_experiencias', tipo:'texto', etiqueta:'Título "Experiencias"' },
+  ],
+  'nosotros.html': [
+    { clave:'hero_titulo', tipo:'texto', etiqueta:'Título principal' },
+    { clave:'hero_descripcion', tipo:'texto', etiqueta:'Descripción principal' },
+    { clave:'intro_titulo', tipo:'texto', etiqueta:'Título "Conoce a los productores"' },
+    { clave:'intro_texto', tipo:'texto', etiqueta:'Texto de introducción' },
+    { clave:'mision_titulo', tipo:'texto', etiqueta:'Título "Misión y Visión"' },
+  ],
+  'abejas.html': [
+    { clave:'hero_banner', tipo:'imagen', etiqueta:'Banner principal' },
+    { clave:'hero_titulo', tipo:'texto', etiqueta:'Título principal' },
+    { clave:'hero_descripcion', tipo:'texto', etiqueta:'Descripción principal' },
+  ],
+  'melipona.html': [
+    { clave:'hero_titulo', tipo:'texto', etiqueta:'Título principal' },
+    { clave:'hero_descripcion', tipo:'texto', etiqueta:'Descripción principal' },
+  ],
+  'centro_rescate.html': [
+    { clave:'hero_banner', tipo:'imagen', etiqueta:'Banner principal' },
+    { clave:'hero_titulo', tipo:'texto', etiqueta:'Título principal' },
+    { clave:'hero_descripcion', tipo:'texto', etiqueta:'Descripción principal' },
+    { clave:'panal_titulo', tipo:'texto', etiqueta:'Título "¿Encontraste un panal?"' },
+    { clave:'panal_descripcion', tipo:'texto', etiqueta:'Descripción "¿Encontraste un panal?"' },
+    { clave:'img_no_debes_hacer', tipo:'imagen', etiqueta:'Foto "Lo que no debes hacer"' },
+    { clave:'proceso_titulo', tipo:'texto', etiqueta:'Título "Proceso de rescate"' },
+    { clave:'proceso_descripcion', tipo:'texto', etiqueta:'Descripción "Proceso de rescate"' },
+    { clave:'galeria_foto_1', tipo:'imagen', etiqueta:'Foto galería 1' },
+    { clave:'galeria_foto_2', tipo:'imagen', etiqueta:'Foto galería 2' },
+    { clave:'galeria_foto_3', tipo:'imagen', etiqueta:'Foto galería 3' },
+    { clave:'cta_titulo', tipo:'texto', etiqueta:'Título final (llamado a la acción)' },
+    { clave:'cta_descripcion', tipo:'texto', etiqueta:'Descripción final' },
+  ],
+  'blog.html': [
+    { clave:'hero_titulo', tipo:'texto', etiqueta:'Título principal del Blog' },
+    { clave:'hero_descripcion', tipo:'texto', etiqueta:'Descripción principal del Blog' },
+  ],
+};
+
+let valoresActuales = {};   // valores ya guardados en Supabase para la página elegida
+let archivosNuevos  = {};   // { clave: File } fotos nuevas pendientes de subir
+
+async function cargarCamposPagina() {
+  const pagina = document.getElementById('cs-pagina').value;
+  const wrap   = document.getElementById('cs-campos');
+  wrap.innerHTML = '';
+  archivosNuevos = {};
+  if (!pagina) return;
+
+  const campos = CAMPOS_POR_PAGINA[pagina] || [];
+  if (!campos.length) {
+    wrap.innerHTML = '<p class="empty-msg">Esta página no tiene campos editables configurados aún.</p>';
+    return;
+  }
+
+  wrap.innerHTML = '<p class="empty-msg">Cargando contenido actual...</p>';
+
+  const { data } = await db.from('contenido_sitio').select('clave, tipo, valor').eq('pagina', pagina);
+  valoresActuales = {};
+  (data || []).forEach(item => { valoresActuales[item.clave] = item.valor; });
+
+  wrap.innerHTML = campos.map(c => {
+    const valorGuardado = valoresActuales[c.clave] || '';
+    if (c.tipo === 'imagen') {
+      return `
+        <div class="cs-campo">
+          <span class="cs-campo-label">🖼️ ${c.etiqueta}</span>
+          ${valorGuardado ? `<img class="cs-img-preview" src="${valorGuardado}" id="prev-${c.clave}">` : `<img class="cs-img-preview" id="prev-${c.clave}" style="display:none">`}
+          <div class="cs-img-drop" onclick="document.getElementById('file-${c.clave}').click()">
+            <input type="file" id="file-${c.clave}" accept="image/*" style="display:none" onchange="onContenidoFoto(this,'${c.clave}')">
+            📷 Toca para ${valorGuardado ? 'cambiar' : 'subir'} la imagen
+          </div>
+        </div>`;
+    }
+    return `
+      <div class="cs-campo">
+        <span class="cs-campo-label">📝 ${c.etiqueta}</span>
+        <textarea id="campo-${c.clave}" oninput="valoresActuales['${c.clave}']=this.value">${valorGuardado}</textarea>
+      </div>`;
+  }).join('') + `<button class="cs-guardar-todo" id="btn-guardar-contenido" onclick="guardarContenidoPagina()">💾 Guardar cambios de esta página</button>
+  <div class="msg" id="cs-msg"></div>`;
+}
+
+function onContenidoFoto(input, clave) {
+  const file = input.files[0];
+  if (!file) return;
+  archivosNuevos[clave] = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('prev-' + clave);
+    img.src = e.target.result;
+    img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function guardarContenidoPagina() {
+  const pagina = document.getElementById('cs-pagina').value;
+  const campos = CAMPOS_POR_PAGINA[pagina] || [];
+  const btn    = document.getElementById('btn-guardar-contenido');
+  const msg    = document.getElementById('cs-msg');
+
+  btn.disabled = true; btn.textContent = '⏳ Guardando...';
+  msg.className = 'msg';
+
+  for (const c of campos) {
+    let valor = valoresActuales[c.clave] || '';
+
+    // Si hay una foto nueva pendiente, subirla primero
+    if (c.tipo === 'imagen' && archivosNuevos[c.clave]) {
+      const url = await subirFoto(archivosNuevos[c.clave], `contenido_${pagina}_${c.clave}`);
+      if (url) valor = url;
+    }
+
+    if (!valor) continue; // no sobreescribir con vacío si nunca se tocó
+
+    await db.from('contenido_sitio').upsert({
+      pagina, clave: c.clave, tipo: c.tipo, valor, etiqueta: c.etiqueta
+    }, { onConflict: 'pagina,clave' });
+  }
+
+  btn.disabled = false; btn.textContent = '💾 Guardar cambios de esta página';
+  msg.className = 'msg ok';
+  msg.textContent = '✓ Cambios guardados. Ya se ven reflejados en la página.';
+  archivosNuevos = {};
+}
+
+// ════════════════════════════════════════════════════
+//   GESTIÓN DE BLOG
+// ════════════════════════════════════════════════════
+let blogFotoFile = null;
+let blogGaleriaFiles = [null, null, null];
+let blogEditId = null;
+
+function mostrarFormBlog(entrada) {
+  blogEditId = entrada ? entrada.id : null;
+  blogFotoFile = null;
+  blogGaleriaFiles = [null, null, null];
+
+  const wrap = document.getElementById('blog-form-wrap');
+  wrap.style.display = 'block';
+  wrap.innerHTML = `
+    <div class="campo">
+      <label>Foto principal</label>
+      <div class="foto-drop" onclick="document.getElementById('blog-foto-input').click()">
+        <input type="file" id="blog-foto-input" accept="image/*" style="display:none" onchange="onBlogFoto(this)">
+        <div class="ico">📷</div>
+        <p>Toca para subir foto</p>
+      </div>
+      <img id="blog-preview-img" src="${entrada?entrada.imagen_url||'':''}" style="${entrada&&entrada.imagen_url?'display:block':'display:none'};width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-top:10px">
+    </div>
+    <div class="campo">
+      <label>Título *</label>
+      <input type="text" id="blog-titulo" value="${entrada?entrada.titulo||'':''}" placeholder="Título de la entrada">
+    </div>
+    <div class="row2">
+      <div class="campo">
+        <label>Categoría *</label>
+        <select id="blog-categoria">
+          <option value="evento" ${entrada&&entrada.categoria==='evento'?'selected':''}>Evento</option>
+          <option value="apicultura" ${entrada&&entrada.categoria==='apicultura'?'selected':''}>Apicultura</option>
+          <option value="comunidad" ${entrada&&entrada.categoria==='comunidad'?'selected':''}>Comunidad</option>
+          <option value="galeria" ${entrada&&entrada.categoria==='galeria'?'selected':''}>Galería</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label>Fecha</label>
+        <input type="text" id="blog-fecha" value="${entrada?entrada.fecha||'':''}" placeholder="Ej: 1 junio 2025">
+      </div>
+    </div>
+    <div class="campo">
+      <label>Resumen corto (aparece en la tarjeta)</label>
+      <textarea id="blog-resumen" placeholder="Resumen breve...">${entrada?entrada.resumen||'':''}</textarea>
+    </div>
+    <div class="campo">
+      <label>Contenido completo</label>
+      <textarea id="blog-contenido" style="min-height:120px" placeholder="Texto completo de la entrada...">${entrada?entrada.contenido||'':''}</textarea>
+    </div>
+    <div class="campo">
+      <label>Galería — hasta 3 fotos adicionales</label>
+      <div class="fotos-grid">
+        ${[0,1,2].map(j => {
+          const fotoExistente = entrada && entrada.galeria_fotos ? entrada.galeria_fotos[j] : null;
+          return `
+          <div class="foto-slot" id="blog-slot-${j}">
+            <input type="file" accept="image/*" onchange="onBlogGaleriaFoto(this,${j})">
+            <img id="blog-gimg-${j}" src="${fotoExistente||''}" style="${fotoExistente?'display:block':'display:none'}">
+            <div class="ph" id="blog-gph-${j}" style="${fotoExistente?'display:none':''}">📷<br>Foto ${j+1}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <button class="btn-g" onclick="guardarBlog()">💾 Guardar entrada</button>
+    <button class="btn-c" style="display:block" onclick="cancelarFormBlog()">✕ Cancelar</button>
+    <div class="msg" id="blog-msg"></div>
+  `;
+  window.scrollTo({top: wrap.offsetTop - 80, behavior:'smooth'});
+}
+
+function cancelarFormBlog() {
+  document.getElementById('blog-form-wrap').style.display = 'none';
+  document.getElementById('blog-form-wrap').innerHTML = '';
+  blogEditId = null;
+}
+
+function onBlogFoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  blogFotoFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('blog-preview-img');
+    img.src = e.target.result; img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function onBlogGaleriaFoto(input, idx) {
+  const file = input.files[0];
+  if (!file) return;
+  blogGaleriaFiles[idx] = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('blog-gimg-' + idx);
+    const ph  = document.getElementById('blog-gph-' + idx);
+    img.src = e.target.result; img.style.display = 'block';
+    if (ph) ph.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function guardarBlog() {
+  const titulo    = document.getElementById('blog-titulo').value.trim();
+  const categoria = document.getElementById('blog-categoria').value;
+  const fecha     = document.getElementById('blog-fecha').value.trim();
+  const resumen   = document.getElementById('blog-resumen').value.trim();
+  const contenido = document.getElementById('blog-contenido').value.trim();
+  const msg       = document.getElementById('blog-msg');
+
+  if (!titulo) { msg.className='msg er'; msg.textContent='El título es obligatorio.'; return; }
+
+  msg.className = 'msg';
+
+  let imagen_url = null;
+  if (blogFotoFile) imagen_url = await subirFoto(blogFotoFile, 'blog_' + titulo.slice(0,15));
+
+  const galeriaUrls = [];
+  for (const f of blogGaleriaFiles) {
+    if (f) { const url = await subirFoto(f, 'blog_galeria_' + titulo.slice(0,10) + '_' + Date.now()); if (url) galeriaUrls.push(url); }
+  }
+
+  const datos = { titulo, categoria, fecha, resumen, contenido, activo: true };
+  if (imagen_url) datos.imagen_url = imagen_url;
+  if (galeriaUrls.length) datos.galeria_fotos = galeriaUrls;
+
+  let error;
+  if (blogEditId) ({ error } = await db.from('blog_entradas').update(datos).eq('id', blogEditId));
+  else            ({ error } = await db.from('blog_entradas').insert(datos));
+
+  if (error) { msg.className='msg er'; msg.textContent='Error: '+error.message; return; }
+
+  msg.className = 'msg ok';
+  msg.textContent = '✓ Entrada guardada.';
+  setTimeout(() => { cancelarFormBlog(); cargarListaBlog(); }, 1000);
+}
+
+async function cargarListaBlog() {
+  const { data } = await db.from('blog_entradas').select('*').order('creado_en', { ascending: false });
+  const lista = document.getElementById('blog-lista-admin');
+  if (!data || !data.length) { lista.innerHTML = '<div class="empty-msg">No hay entradas aún.</div>'; return; }
+  lista.innerHTML = data.map(e => `
+    <div class="prod-item">
+      <img class="pi-img" src="${e.imagen_url||''}" onerror="this.style.background='#f5f0e8'">
+      <div class="pi-info">
+        <div class="pi-nombre">${e.titulo}</div>
+        <div class="pi-meta">${e.categoria} · ${e.fecha||''} · ${e.activo?'✅':'⛔'}</div>
+      </div>
+      <div class="pi-btns">
+        <button class="b-e" data-entrada='${JSON.stringify(e)}' onclick="mostrarFormBlog(JSON.parse(this.dataset.entrada))">✏️</button>
+        <button class="b-d" onclick="eliminarBlog('${e.id}','${(e.titulo||'').replace(/'/g,'')}')">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+async function eliminarBlog(id, titulo) {
+  if (!confirm('¿Eliminar "' + titulo + '"?')) return;
+  await db.from('blog_entradas').delete().eq('id', id);
+  cargarListaBlog();
+}
+
+
 // ── LOGIN ──
 async function doLogin() {
   const email = document.getElementById('a-email').value.trim();
@@ -407,7 +650,7 @@ async function doLogin() {
   document.getElementById('login-wrap').style.display = 'none';
   document.getElementById('panel').style.display = 'block';
   const nombre = adminUser.user_metadata?.nombre_completo || adminUser.email.split('@')[0];
-  document.getElementById('a-nombre').textContent = '' + nombre.split(' ')[0];
+  document.getElementById('a-nombre').textContent = '👤 ' + nombre.split(' ')[0];
 }
 
 async function doLogout() {
@@ -707,388 +950,6 @@ function resetForm() {
 
 function cancelEdit() { resetForm(); }
 
-// ════════════════════════════════════════
-// ── DISEÑO Y TEXTOS (NUEVO) ──
-// ════════════════════════════════════════
-
-// Define aquí los campos editables de cada página.
-// clave = identificador único en la tabla "contenido"
-// label = lo que ve el usuario en el panel
-// tipo  = 'imagen' | 'texto' | 'texto-largo'
-const CAMPOS_DISENO = {
-  index: [
-    { clave:'hero-img1', label:'Foto del banner principal 1 (Inicio)', tipo:'imagen' },
-    { clave:'hero-img2', label:'Foto del banner principal 2 (Inicio)', tipo:'imagen' },
-    { clave:'titulo-vendidos', label:'Título de la sección "Lo más vendido"', tipo:'texto' },
-    { clave:'about-titulo', label:'Título de la sección "Acerca de"', tipo:'texto' },
-    { clave:'about-texto', label:'Texto de la sección "Acerca de"', tipo:'texto-largo' },
-  ],
-  blog: [
-    { clave:'blog-hero', label:'Foto de fondo del banner de Blog y Eventos', tipo:'imagen' },
-    { clave:'blog-titulo', label:'Título principal del banner', tipo:'texto' },
-    { clave:'blog-subtitulo', label:'Texto debajo del título', tipo:'texto-largo' },
-  ],
-  centro_rescate: [
-    { clave:'cr-hero', label:'Foto de fondo del banner', tipo:'imagen' },
-    { clave:'cr-titulo', label:'Título principal', tipo:'texto' },
-    { clave:'cr-texto', label:'Texto descriptivo', tipo:'texto-largo' },
-  ],
-};
-
-let disenoValores  = {}; // 'pagina__clave' -> valor actual cargado de Supabase
-let disenoArchivos = {}; // clave -> File nuevo (si el usuario sube una imagen distinta)
-
-async function loadDiseno() {
-  const { data, error } = await db.from('contenido').select('*');
-  if (error) { console.error(error); }
-  disenoValores = {};
-  (data || []).forEach(r => disenoValores[r.pagina + '__' + r.clave] = r.valor);
-  renderCamposDiseno();
-}
-
-function renderCamposDiseno() {
-  const pagina = document.getElementById('ds-pagina').value;
-  const campos = CAMPOS_DISENO[pagina] || [];
-  const wrap   = document.getElementById('ds-campos');
-  disenoArchivos = {};
-
-  wrap.innerHTML = campos.map(c => {
-    const valorActual = disenoValores[pagina + '__' + c.clave] || '';
-
-    if (c.tipo === 'imagen') {
-      return `
-        <div class="card">
-          <div class="card-title">🖼️ ${c.label}</div>
-          ${valorActual ? `<img src="${valorActual}" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-bottom:10px">` : ''}
-          <div class="foto-drop" onclick="document.getElementById('ds-file-${c.clave}').click()">
-            <input type="file" id="ds-file-${c.clave}" accept="image/*" style="display:none"
-              onchange="disenoArchivos['${c.clave}']=this.files[0]; document.getElementById('ds-nombre-${c.clave}').textContent=this.files[0]?this.files[0].name:''">
-            <div class="ico">📷</div>
-            <p>Toca para subir nueva foto</p>
-          </div>
-          <p id="ds-nombre-${c.clave}" style="font-size:11px;color:var(--gris);margin-top:6px"></p>
-        </div>`;
-    }
-    if (c.tipo === 'texto-largo') {
-      return `
-        <div class="card">
-          <div class="card-title">✏️ ${c.label}</div>
-          <div class="campo"><textarea id="ds-${c.clave}">${valorActual}</textarea></div>
-        </div>`;
-    }
-    return `
-      <div class="card">
-        <div class="card-title">✏️ ${c.label}</div>
-        <div class="campo"><input type="text" id="ds-${c.clave}" value="${valorActual}"></div>
-      </div>`;
-  }).join('') + `<button class="btn-g" onclick="guardarDiseno()">💾 Guardar cambios de esta página</button>`;
-}
-
-async function guardarDiseno() {
-  const pagina = document.getElementById('ds-pagina').value;
-  const campos = CAMPOS_DISENO[pagina] || [];
-  const msg    = document.getElementById('ds-msg');
-  msg.className = 'msg'; msg.textContent = '';
-
-  for (const c of campos) {
-    let valor;
-    if (c.tipo === 'imagen') {
-      if (disenoArchivos[c.clave]) {
-        valor = await subirFoto(disenoArchivos[c.clave], `cms_${pagina}_${c.clave}`);
-      } else {
-        valor = disenoValores[pagina + '__' + c.clave] || null;
-      }
-      if (valor == null) continue; // no se subió nada nuevo y no había nada antes
-    } else {
-      const el = document.getElementById('ds-' + c.clave);
-      valor = el ? el.value : '';
-    }
-
-    const { error } = await db.from('contenido').upsert({
-      clave: c.clave, pagina, valor, tipo: c.tipo === 'imagen' ? 'imagen' : 'texto'
-    }, { onConflict: 'clave' });
-
-    if (error) { msg.className='msg er'; msg.textContent='Error guardando "'+c.label+'": '+error.message; return; }
-  }
-
-  msg.className = 'msg ok';
-  msg.textContent = '✓ Cambios guardados. Refresca la página pública para verlos.';
-  loadDiseno();
-}
-
-// ════════════════════════════════════════
-// ── BLOG Y EVENTOS (NUEVO) ──
-// ════════════════════════════════════════
-
-let beFotoPrincipal = null;       // File
-let beGaleriaArchivos = [];       // File[]
-let beGaleriaUrlsExistentes = []; // urls ya guardadas (al editar)
-
-function onBlogFotoPrincipal(input) {
-  beFotoPrincipal = input.files[0];
-  if (!beFotoPrincipal) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById('be-preview-principal');
-    img.src = e.target.result; img.style.display = 'block';
-  };
-  reader.readAsDataURL(beFotoPrincipal);
-}
-
-function onBlogGaleria(input) {
-  beGaleriaArchivos = beGaleriaArchivos.concat(Array.from(input.files));
-  renderBlogGaleriaPreview();
-}
-
-function renderBlogGaleriaPreview() {
-  const wrap = document.getElementById('be-galeria-preview');
-  wrap.innerHTML = '';
-
-  beGaleriaUrlsExistentes.forEach((url, i) => {
-    const div = document.createElement('div');
-    div.style = 'position:relative;width:70px;height:70px';
-    div.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:6px">
-      <button onclick="beGaleriaUrlsExistentes.splice(${i},1);renderBlogGaleriaPreview()" style="position:absolute;top:-6px;right:-6px;background:#c0392b;color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer">✕</button>`;
-    wrap.appendChild(div);
-  });
-
-  beGaleriaArchivos.forEach((file, i) => {
-    const div = document.createElement('div');
-    div.style = 'position:relative;width:70px;height:70px';
-    const img = document.createElement('img');
-    img.style = 'width:100%;height:100%;object-fit:cover;border-radius:6px';
-    const reader = new FileReader();
-    reader.onload = e => img.src = e.target.result;
-    reader.readAsDataURL(file);
-    const btn = document.createElement('button');
-    btn.textContent = '✕';
-    btn.style = 'position:absolute;top:-6px;right:-6px;background:#c0392b;color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer';
-    btn.onclick = () => { beGaleriaArchivos.splice(i,1); renderBlogGaleriaPreview(); };
-    div.appendChild(img); div.appendChild(btn);
-    wrap.appendChild(div);
-  });
-}
-
-async function guardarBlogEntrada() {
-  const titulo     = document.getElementById('be-titulo').value.trim();
-  const fecha      = document.getElementById('be-fecha').value.trim();
-  const categoria  = document.getElementById('be-categoria').value;
-  const resumen    = document.getElementById('be-resumen').value.trim();
-  const contenido  = document.getElementById('be-contenido').value.trim();
-  const editId     = document.getElementById('be-id').value;
-  const msg        = document.getElementById('be-msg');
-  const btn        = document.getElementById('be-btn-guardar');
-
-  msg.className = 'msg';
-  if (!titulo) { msg.className='msg er'; msg.textContent='El título es obligatorio.'; return; }
-  if (!editId && !beFotoPrincipal) { msg.className='msg er'; msg.textContent='La foto principal es obligatoria.'; return; }
-
-  btn.disabled = true; btn.textContent = '⏳ Guardando...';
-
-  let imagen_principal = null;
-  if (beFotoPrincipal) {
-    imagen_principal = await subirFoto(beFotoPrincipal, `blog_${titulo.slice(0,15)}`);
-  }
-
-  let galeriaUrls = [...beGaleriaUrlsExistentes];
-  for (const file of beGaleriaArchivos) {
-    const url = await subirFoto(file, `blog_${titulo.slice(0,15)}_g`);
-    if (url) galeriaUrls.push(url);
-  }
-
-  const datos = { titulo, fecha, categoria, resumen, contenido, galeria: galeriaUrls };
-  if (imagen_principal) datos.imagen_principal = imagen_principal;
-
-  let error;
-  if (editId) ({ error } = await db.from('blog_entradas').update(datos).eq('id', editId));
-  else        ({ error } = await db.from('blog_entradas').insert(datos));
-
-  btn.disabled = false; btn.textContent = '💾 Publicar entrada';
-  if (error) { msg.className='msg er'; msg.textContent='Error: '+error.message; return; }
-
-  msg.className='msg ok';
-  msg.textContent = editId ? '✓ Entrada actualizada.' : '✓ Entrada publicada. Ya aparece en blog.html';
-  resetBlogForm();
-  loadBlogEntradas();
-}
-
-async function loadBlogEntradas() {
-  const lista = document.getElementById('be-lista');
-  lista.innerHTML = '<div class="empty-msg">Cargando...</div>';
-  const { data } = await db.from('blog_entradas').select('*').order('creado_en', { ascending: false });
-  if (!data || !data.length) { lista.innerHTML = '<div class="empty-msg">Aún no hay entradas publicadas.</div>'; return; }
-
-  lista.innerHTML = data.map(e => `
-    <div class="prod-item">
-      <img class="pi-img" src="${e.imagen_principal||''}" alt="${e.titulo}" onerror="this.style.background='#f5f0e8'">
-      <div class="pi-info">
-        <div class="pi-nombre">${e.titulo}</div>
-        <div class="pi-meta">${e.categoria} · ${e.fecha||''} · ${(e.galeria||[]).length} fotos extra</div>
-      </div>
-      <div class="pi-btns">
-        <button class="b-e" onclick="editarBlogEntrada('${e.id}')">✏️ Editar</button>
-        <button class="b-d" onclick="eliminarBlogEntrada('${e.id}','${(e.titulo||'').replace(/'/g,'')}')">🗑 Borrar</button>
-      </div>
-    </div>`).join('');
-}
-
-async function editarBlogEntrada(id) {
-  const { data: e } = await db.from('blog_entradas').select('*').eq('id', id).single();
-  if (!e) return;
-
-  document.getElementById('be-id').value        = e.id;
-  document.getElementById('be-titulo').value     = e.titulo || '';
-  document.getElementById('be-fecha').value      = e.fecha || '';
-  document.getElementById('be-categoria').value  = e.categoria || 'evento';
-  document.getElementById('be-resumen').value    = e.resumen || '';
-  document.getElementById('be-contenido').value  = e.contenido || '';
-  document.getElementById('blog-form-title').textContent = '✏️ Editando: ' + e.titulo;
-  document.getElementById('be-btn-cancelar').style.display = 'block';
-
-  if (e.imagen_principal) {
-    const img = document.getElementById('be-preview-principal');
-    img.src = e.imagen_principal; img.style.display = 'block';
-  }
-
-  beGaleriaUrlsExistentes = e.galeria ? [...e.galeria] : [];
-  beGaleriaArchivos = [];
-  renderBlogGaleriaPreview();
-
-  showTab('blogadmin', document.getElementById('tab-btn-blog'));
-  window.scrollTo({ top:0, behavior:'smooth' });
-}
-
-async function eliminarBlogEntrada(id, titulo) {
-  if (!confirm(`¿Eliminar la entrada "${titulo}"? Esta acción no se puede deshacer.`)) return;
-  await db.from('blog_entradas').delete().eq('id', id);
-  loadBlogEntradas();
-}
-
-function resetBlogForm() {
-  document.getElementById('be-id').value = '';
-  ['be-titulo','be-fecha','be-resumen','be-contenido'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('be-categoria').value = 'evento';
-  document.getElementById('be-preview-principal').style.display = 'none';
-  document.getElementById('be-foto-principal').value = '';
-  document.getElementById('be-galeria-input').value = '';
-  document.getElementById('be-galeria-preview').innerHTML = '';
-  document.getElementById('blog-form-title').textContent = '📰 Nueva entrada de Blog/Evento';
-  document.getElementById('be-btn-cancelar').style.display = 'none';
-  document.getElementById('be-msg').className = 'msg';
-  beFotoPrincipal = null; beGaleriaArchivos = []; beGaleriaUrlsExistentes = [];
-}
-
-function cancelarBlogEdit() { resetBlogForm(); }
-
-// ════════════════════════════════════════
-// ── BLOQUES DE INICIO (NUEVO) ──
-// ════════════════════════════════════════
-
-let ibFoto = null; // File
-
-function onIndexBloqueFoto(input) {
-  ibFoto = input.files[0];
-  if (!ibFoto) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById('ib-preview');
-    img.src = e.target.result; img.style.display = 'block';
-  };
-  reader.readAsDataURL(ibFoto);
-}
-
-async function guardarIndexBloque() {
-  const titulo = document.getElementById('ib-titulo').value.trim();
-  const texto  = document.getElementById('ib-texto').value.trim();
-  const enlace = document.getElementById('ib-enlace').value.trim();
-  const editId = document.getElementById('ib-id').value;
-  const msg    = document.getElementById('ib-msg');
-  const btn    = document.getElementById('ib-btn-guardar');
-
-  msg.className = 'msg';
-  if (!titulo) { msg.className='msg er'; msg.textContent='El título es obligatorio.'; return; }
-  if (!editId && !ibFoto) { msg.className='msg er'; msg.textContent='La foto es obligatoria.'; return; }
-
-  btn.disabled = true; btn.textContent = '⏳ Guardando...';
-
-  let imagen = null;
-  if (ibFoto) imagen = await subirFoto(ibFoto, `inicio_${titulo.slice(0,15)}`);
-
-  const datos = { titulo, texto, enlace };
-  if (imagen) datos.imagen = imagen;
-
-  let error;
-  if (editId) ({ error } = await db.from('index_bloques').update(datos).eq('id', editId));
-  else        ({ error } = await db.from('index_bloques').insert(datos));
-
-  btn.disabled = false; btn.textContent = '💾 Publicar en Inicio';
-  if (error) { msg.className='msg er'; msg.textContent='Error: '+error.message; return; }
-
-  msg.className='msg ok';
-  msg.textContent = editId ? '✓ Bloque actualizado.' : '✓ Bloque publicado. Ya aparece en Inicio.';
-  resetIndexBloqueForm();
-  loadIndexBloques();
-}
-
-async function loadIndexBloques() {
-  const lista = document.getElementById('ib-lista');
-  lista.innerHTML = '<div class="empty-msg">Cargando...</div>';
-  const { data } = await db.from('index_bloques').select('*').order('creado_en', { ascending: false });
-  if (!data || !data.length) { lista.innerHTML = '<div class="empty-msg">Aún no hay bloques publicados.</div>'; return; }
-
-  lista.innerHTML = data.map(b => `
-    <div class="prod-item">
-      <img class="pi-img" src="${b.imagen||''}" alt="${b.titulo}" onerror="this.style.background='#f5f0e8'">
-      <div class="pi-info">
-        <div class="pi-nombre">${b.titulo}</div>
-        <div class="pi-meta">${b.enlace ? 'Enlace: '+b.enlace : 'Sin enlace'}</div>
-      </div>
-      <div class="pi-btns">
-        <button class="b-e" onclick="editarIndexBloque('${b.id}')">✏️ Editar</button>
-        <button class="b-d" onclick="eliminarIndexBloque('${b.id}','${(b.titulo||'').replace(/'/g,'')}')">🗑 Borrar</button>
-      </div>
-    </div>`).join('');
-}
-
-async function editarIndexBloque(id) {
-  const { data: b } = await db.from('index_bloques').select('*').eq('id', id).single();
-  if (!b) return;
-
-  document.getElementById('ib-id').value     = b.id;
-  document.getElementById('ib-titulo').value = b.titulo || '';
-  document.getElementById('ib-texto').value  = b.texto || '';
-  document.getElementById('ib-enlace').value = b.enlace || '';
-  document.getElementById('ib-form-title').textContent = '✏️ Editando: ' + b.titulo;
-  document.getElementById('ib-btn-cancelar').style.display = 'block';
-
-  if (b.imagen) {
-    const img = document.getElementById('ib-preview');
-    img.src = b.imagen; img.style.display = 'block';
-  }
-
-  showTab('inicioadmin', document.getElementById('tab-btn-inicio'));
-  window.scrollTo({ top:0, behavior:'smooth' });
-}
-
-async function eliminarIndexBloque(id, titulo) {
-  if (!confirm(`¿Eliminar el bloque "${titulo}"? Esta acción no se puede deshacer.`)) return;
-  await db.from('index_bloques').delete().eq('id', id);
-  loadIndexBloques();
-}
-
-function resetIndexBloqueForm() {
-  document.getElementById('ib-id').value = '';
-  ['ib-titulo','ib-texto','ib-enlace'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('ib-preview').style.display = 'none';
-  document.getElementById('ib-foto').value = '';
-  document.getElementById('ib-form-title').textContent = '🏠 Nuevo bloque para Inicio';
-  document.getElementById('ib-btn-cancelar').style.display = 'none';
-  document.getElementById('ib-msg').className = 'msg';
-  ibFoto = null;
-}
-
-function cancelarIndexBloqueEdit() { resetIndexBloqueForm(); }
-
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', async () => {
   const { data } = await db.auth.getSession();
@@ -1101,7 +962,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('a-nombre').textContent = ' ' + nombre.split(' ')[0];
   }
 });
-
 </script>
 </body>
 </html>
