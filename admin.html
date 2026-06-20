@@ -272,6 +272,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
           <option value="centro_rescate.html">🆘 Centro de Rescate</option>
         </select>
       </div>
+      <button class="btn-add-var" id="btn-ver-pagina" onclick="abrirVistaPrevia()" style="display:none">👁 Ver esta página en otra pestaña</button>
     </div>
 
     <div id="cs-campos" style="padding:0 14px"></div>
@@ -345,7 +346,18 @@ const CAMPOS_POR_PAGINA = {
     { clave:'hero_descripcion', tipo:'texto', etiqueta:'Descripción principal' },
     { clave:'intro_titulo', tipo:'texto', etiqueta:'Título "Conoce a los productores"' },
     { clave:'intro_texto', tipo:'texto', etiqueta:'Texto de introducción' },
+    { clave:'productora_1_foto', tipo:'imagen', etiqueta:'Foto — Productora 1' },
+    { clave:'productora_1_nombre', tipo:'texto', etiqueta:'Nombre — Productora 1' },
+    { clave:'productora_1_rol', tipo:'texto', etiqueta:'Rol/cargo — Productora 1' },
+    { clave:'productora_2_foto', tipo:'imagen', etiqueta:'Foto — Productora 2' },
+    { clave:'productora_2_nombre', tipo:'texto', etiqueta:'Nombre — Productora 2' },
+    { clave:'productora_2_rol', tipo:'texto', etiqueta:'Rol/cargo — Productora 2' },
+    { clave:'productora_3_foto', tipo:'imagen', etiqueta:'Foto — Productora 3' },
+    { clave:'productora_3_nombre', tipo:'texto', etiqueta:'Nombre — Productora 3' },
+    { clave:'productora_3_rol', tipo:'texto', etiqueta:'Rol/cargo — Productora 3' },
     { clave:'mision_titulo', tipo:'texto', etiqueta:'Título "Misión y Visión"' },
+    { clave:'mision_texto', tipo:'texto', etiqueta:'Texto de la Misión' },
+    { clave:'vision_texto', tipo:'texto', etiqueta:'Texto de la Visión' },
   ],
   'abejas.html': [
     { clave:'hero_banner', tipo:'imagen', etiqueta:'Banner principal' },
@@ -380,12 +392,24 @@ const CAMPOS_POR_PAGINA = {
 let valoresActuales = {};   // valores ya guardados en Supabase para la página elegida
 let archivosNuevos  = {};   // { clave: File } fotos nuevas pendientes de subir
 
+// ── VISTA PREVIA ──
+const SITIO_URL = 'https://canaan-xux.vercel.app';
+
+function abrirVistaPrevia() {
+  const pagina = document.getElementById('cs-pagina').value;
+  if (!pagina) return;
+  window.open(SITIO_URL + '/' + pagina, '_blank');
+}
+
 async function cargarCamposPagina() {
   const pagina = document.getElementById('cs-pagina').value;
   const wrap   = document.getElementById('cs-campos');
+  const btnVer = document.getElementById('btn-ver-pagina');
   wrap.innerHTML = '';
   archivosNuevos = {};
-  if (!pagina) return;
+
+  if (!pagina) { btnVer.style.display = 'none'; return; }
+  btnVer.style.display = 'block';
 
   const campos = CAMPOS_POR_PAGINA[pagina] || [];
   if (!campos.length) {
@@ -959,7 +983,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('login-wrap').style.display = 'none';
     document.getElementById('panel').style.display = 'block';
     const nombre = user.user_metadata?.nombre_completo || user.email.split('@')[0];
-    document.getElementById('a-nombre').textContent = ' ' + nombre.split(' ')[0];
+    document.getElementById('a-nombre').textContent = '👤 ' + nombre.split(' ')[0];
   }
 });
 </script>
