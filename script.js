@@ -319,7 +319,6 @@ function irPagina(n) {
 // y los reemplaza con lo guardado en Supabase (si existe).
 async function cargarContenidoEditable(paginaId) {
   const elementos = document.querySelectorAll('[data-editable]');
-  if (!elementos.length) return;
 
   const { data } = await db
     .from('contenido_sitio')
@@ -331,6 +330,7 @@ async function cargarContenidoEditable(paginaId) {
   const mapa = {};
   data.forEach(item => { mapa[item.clave] = item; });
 
+  // Textos e imágenes
   elementos.forEach(el => {
     const clave = el.getAttribute('data-editable');
     const item = mapa[clave];
@@ -339,9 +339,8 @@ async function cargarContenidoEditable(paginaId) {
     if (item.tipo === 'imagen') {
       if (el.tagName === 'IMG') {
         el.src = item.valor;
-        el.style.display = '';      // por si onerror la había ocultado
-        el.onerror = null;          // evitar que vuelva a ocultarse
-        // Si el contenedor padre tiene un placeholder hermano, ocultarlo
+        el.style.display = '';
+        el.onerror = null;
         const placeholder = el.parentElement?.querySelector('.bee-card-overlay, .nos-hex-placeholder, .blog-img-placeholder, .img-placeholder');
         if (placeholder && !placeholder.classList.contains('bee-card-overlay')) placeholder.style.display = 'none';
       } else {
@@ -350,6 +349,14 @@ async function cargarContenidoEditable(paginaId) {
     } else {
       el.innerHTML = item.valor;
     }
+  });
+
+  // Colores de fondo de bloques (data-bg-id en la base, aplicado por id="bloque-x")
+  data.filter(item => item.tipo === 'color').forEach(item => {
+    // clave tiene formato: bloque_<id>_fondo
+    const bloqueId = item.clave.replace('bloque_', '').replace('_fondo', '');
+    const el = document.getElementById('bloque-' + bloqueId);
+    if (el && item.valor) el.style.background = item.valor;
   });
 }
 
