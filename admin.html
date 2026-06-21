@@ -111,8 +111,8 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
 .pi-btns .b-d{background:#fdecea;color:#c0392b}
 .empty-msg{text-align:center;padding:40px 20px;color:var(--gris);font-size:13px}
 /* SECCIONES PRINCIPALES */
-.secciones-principales{display:flex;gap:8px;padding:14px;background:#fff;border-bottom:2px solid var(--borde);position:sticky;top:56px;z-index:99}
-.sec-btn{flex:1;padding:13px 8px;border-radius:10px;border:2px solid var(--borde);background:#fff;font-size:13px;font-weight:800;color:var(--gris);cursor:pointer;font-family:inherit;transition:all .2s}
+.secciones-principales{display:flex;flex-wrap:wrap;gap:8px;padding:14px;background:#fff;border-bottom:2px solid var(--borde);position:sticky;top:56px;z-index:99}
+.sec-btn{flex:1;min-width:130px;padding:13px 8px;border-radius:10px;border:2px solid var(--borde);background:#fff;font-size:13px;font-weight:800;color:var(--gris);cursor:pointer;font-family:inherit;transition:all .2s}
 .sec-btn.on{background:var(--naranja);border-color:var(--naranja);color:#fff}
 
 /* CAMPOS DE CONTENIDO EDITABLE */
@@ -125,6 +125,45 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
 .cs-img-drop:hover{border-color:var(--naranja)}
 .cs-guardar-todo{width:100%;background:var(--naranja);color:#fff;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin:16px 0;position:sticky;bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 .cs-guardar-todo:disabled{background:#ccc}
+
+/* COSTOS */
+.costo-prod-card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.costo-prod-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:12px;border-bottom:2px solid var(--fondo)}
+.costo-prod-header img{width:48px;height:48px;border-radius:8px;object-fit:cover;background:var(--fondo)}
+.costo-prod-header .nombre{font-weight:800;font-size:14px;color:var(--cafe)}
+.costo-prod-header .precio-venta{font-size:12px;color:var(--gris)}
+.costo-item-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.costo-item-row input{flex:1;padding:9px 11px;border:1.5px solid var(--borde);border-radius:7px;font-size:13px;font-family:inherit}
+.costo-item-row input.costo-num{max-width:90px;flex:none}
+.costo-item-row .btn-quitar{background:#fdecea;color:#c0392b;border:none;border-radius:6px;width:32px;height:32px;font-size:14px;cursor:pointer;flex-shrink:0}
+.btn-add-costo{width:100%;background:var(--fondo);border:2px dashed var(--borde);border-radius:8px;padding:9px;font-size:12px;font-weight:700;color:var(--gris);cursor:pointer;font-family:inherit;margin-top:4px}
+.costo-resumen{margin-top:14px;padding-top:14px;border-top:2px solid var(--fondo);display:flex;flex-direction:column;gap:6px}
+.costo-resumen-row{display:flex;justify-content:space-between;font-size:13px}
+.costo-resumen-row.total{font-weight:800;font-size:15px;padding-top:8px;border-top:1px dashed var(--borde)}
+.costo-resumen-row .ganancia-positiva{color:#1e8449}
+.costo-resumen-row .ganancia-negativa{color:#c0392b}
+.btn-guardar-costo{width:100%;background:var(--naranja);color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:12px}
+
+/* INVENTARIO */
+.inv-resumen-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.inv-resumen-card{background:#fff;border-radius:12px;padding:14px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.inv-resumen-card .num{font-size:24px;font-weight:800;color:var(--cafe)}
+.inv-resumen-card .lbl{font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.inv-resumen-card.alerta .num{color:#c0392b}
+.inv-item{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;gap:12px;align-items:center;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.inv-item img{width:48px;height:48px;border-radius:8px;object-fit:cover;background:var(--fondo);flex-shrink:0}
+.inv-item-info{flex:1;min-width:0}
+.inv-item-info .nombre{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inv-stock-badge{font-size:11px;font-weight:800;padding:3px 10px;border-radius:12px;margin-top:4px;display:inline-block}
+.inv-stock-badge.ok{background:#eafaf1;color:#1e8449}
+.inv-stock-badge.bajo{background:#fff3e0;color:#e08600}
+.inv-stock-badge.agotado{background:#fdecea;color:#c0392b}
+.inv-ctrl{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.inv-btn{width:30px;height:30px;border:1.5px solid var(--borde);border-radius:7px;background:#fff;font-size:16px;font-weight:700;color:var(--cafe);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.inv-num{font-weight:800;font-size:15px;min-width:24px;text-align:center}
+.filtro-inv{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.filtro-inv button{flex:1;min-width:80px;padding:8px;border-radius:7px;border:1.5px solid var(--borde);background:#fff;font-size:11px;font-weight:700;color:var(--gris);cursor:pointer;font-family:inherit}
+.filtro-inv button.on{background:var(--cafe);border-color:var(--cafe);color:#fff}
 
 /* LAYOUT CON VISTA PREVIA (desktop) */
 .cs-layout{display:block}
@@ -174,6 +213,8 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
   <div class="secciones-principales">
     <button class="sec-btn on" id="sec-btn-productos" onclick="showSeccion('productos', this)">📦 Productos</button>
     <button class="sec-btn" id="sec-btn-contenido" onclick="showSeccion('contenido', this)">🎨 Diseño del Sitio</button>
+    <button class="sec-btn" id="sec-btn-costos" onclick="showSeccion('costos', this)">💰 Costos</button>
+    <button class="sec-btn" id="sec-btn-inventario" onclick="showSeccion('inventario', this)">📊 Inventario</button>
   </div>
 
   <!-- ═══════════ SECCIÓN: PRODUCTOS ═══════════ -->
@@ -321,6 +362,40 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
     </div>
 
   </div><!-- /seccion-contenido -->
+
+  <!-- ═══════════ SECCIÓN: COSTOS ═══════════ -->
+  <div class="seccion" id="seccion-costos" style="display:none; padding:16px 14px">
+    <div class="card">
+      <div class="card-title">💰 Costo de producción</div>
+      <p style="font-size:12px;color:var(--gris);margin-bottom:4px">
+        Para cada producto, agrega los ingredientes o materiales que usas y su costo. Así sabrás cuánto ganas en cada venta.
+      </p>
+    </div>
+    <div id="costos-lista"><div class="empty-msg">Cargando productos...</div></div>
+  </div>
+
+  <!-- ═══════════ SECCIÓN: INVENTARIO ═══════════ -->
+  <div class="seccion" id="seccion-inventario" style="display:none; padding:16px 14px">
+    <div class="inv-resumen-cards">
+      <div class="inv-resumen-card">
+        <div class="num" id="inv-total-productos">0</div>
+        <div class="lbl">Productos</div>
+      </div>
+      <div class="inv-resumen-card alerta">
+        <div class="num" id="inv-total-agotados">0</div>
+        <div class="lbl">Agotados</div>
+      </div>
+    </div>
+
+    <div class="filtro-inv">
+      <button class="on" onclick="filtrarInventario('todos', this)">Todos</button>
+      <button onclick="filtrarInventario('bajo', this)">Stock bajo</button>
+      <button onclick="filtrarInventario('agotado', this)">Agotados</button>
+    </div>
+
+    <div id="inventario-lista"><div class="empty-msg">Cargando inventario...</div></div>
+  </div>
+
 </div><!-- /panel -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -349,11 +424,15 @@ function showTab(name, btn) {
 
 // ── SECCIONES PRINCIPALES (Productos / Diseño del Sitio) ──
 function showSeccion(name, btn) {
-  document.getElementById('seccion-productos').style.display = name === 'productos' ? 'block' : 'none';
-  document.getElementById('seccion-contenido').style.display = name === 'contenido' ? 'block' : 'none';
+  document.getElementById('seccion-productos').style.display  = name === 'productos'  ? 'block' : 'none';
+  document.getElementById('seccion-contenido').style.display  = name === 'contenido'  ? 'block' : 'none';
+  document.getElementById('seccion-costos').style.display     = name === 'costos'     ? 'block' : 'none';
+  document.getElementById('seccion-inventario').style.display = name === 'inventario' ? 'block' : 'none';
   document.querySelectorAll('.sec-btn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
-  if (name === 'contenido') cargarListaBlog();
+  if (name === 'contenido')  cargarListaBlog();
+  if (name === 'costos')     cargarCostos();
+  if (name === 'inventario') cargarInventario();
 }
 
 // ════════════════════════════════════════════════════
@@ -1056,6 +1135,216 @@ function resetForm() {
 }
 
 function cancelEdit() { resetForm(); }
+
+// ════════════════════════════════════════════════════
+//   COSTOS DE PRODUCCIÓN
+// ════════════════════════════════════════════════════
+let costosData = {}; // { productoId: [{id, concepto, costo}, ...] }
+
+async function cargarCostos() {
+  const lista = document.getElementById('costos-lista');
+  lista.innerHTML = '<div class="empty-msg">Cargando productos...</div>';
+
+  const { data: productos } = await db.from('productos').select('*').order('nombre');
+  if (!productos || !productos.length) { lista.innerHTML = '<div class="empty-msg">No hay productos aún.</div>'; return; }
+
+  const { data: costos } = await db.from('producto_costos').select('*');
+  costosData = {};
+  (costos || []).forEach(c => {
+    if (!costosData[c.producto_id]) costosData[c.producto_id] = [];
+    costosData[c.producto_id].push(c);
+  });
+
+  lista.innerHTML = productos.map(p => {
+    const img = (p.imagenes && p.imagenes[0]) ? p.imagenes[0] : (p.imagen_url || '');
+    const items = costosData[p.id] || [];
+    const totalCosto = items.reduce((s, i) => s + parseFloat(i.costo || 0), 0);
+    const ganancia = parseFloat(p.precio) - totalCosto;
+    const margenPct = parseFloat(p.precio) > 0 ? ((ganancia / parseFloat(p.precio)) * 100).toFixed(0) : 0;
+
+    return `
+    <div class="costo-prod-card" id="costo-card-${p.id}">
+      <div class="costo-prod-header">
+        <img src="${img}" onerror="this.style.background='#f5f0e8'">
+        <div>
+          <div class="nombre">${p.nombre}</div>
+          <div class="precio-venta">Precio de venta: $${parseFloat(p.precio).toFixed(2)}</div>
+        </div>
+      </div>
+
+      <div id="costo-items-${p.id}">
+        ${items.map(item => filaCosto(p.id, item)).join('')}
+      </div>
+      <button class="btn-add-costo" onclick="agregarFilaCosto('${p.id}')">+ Agregar ingrediente/material</button>
+
+      <div class="costo-resumen">
+        <div class="costo-resumen-row"><span>Costo total de producción</span><strong id="costo-total-${p.id}">$${totalCosto.toFixed(2)}</strong></div>
+        <div class="costo-resumen-row total">
+          <span>Ganancia por unidad</span>
+          <strong id="costo-ganancia-${p.id}" class="${ganancia>=0?'ganancia-positiva':'ganancia-negativa'}">$${ganancia.toFixed(2)} (${margenPct}%)</strong>
+        </div>
+      </div>
+      <button class="btn-guardar-costo" onclick="guardarCostos('${p.id}')">💾 Guardar costos</button>
+    </div>`;
+  }).join('');
+}
+
+function filaCosto(productoId, item) {
+  const id = item.id || ('nuevo_' + Date.now() + Math.random().toString(36).slice(2,6));
+  return `
+    <div class="costo-item-row" id="fila-${id}">
+      <input type="text" placeholder="Ej: Cera de abeja" value="${item.concepto||''}"
+        oninput="actualizarFilaCosto('${productoId}','${id}','concepto',this.value)">
+      <input type="number" class="costo-num" placeholder="$0.00" min="0" step="0.01" value="${item.costo||''}"
+        oninput="actualizarFilaCosto('${productoId}','${id}','costo',this.value)">
+      <button class="btn-quitar" onclick="quitarFilaCosto('${productoId}','${id}')">✕</button>
+    </div>`;
+}
+
+function agregarFilaCosto(productoId) {
+  if (!costosData[productoId]) costosData[productoId] = [];
+  const nuevoId = 'nuevo_' + Date.now();
+  costosData[productoId].push({ id: nuevoId, concepto: '', costo: 0, _esNuevo: true });
+  document.getElementById('costo-items-' + productoId).insertAdjacentHTML('beforeend', filaCosto(productoId, { id: nuevoId, concepto:'', costo:'' }));
+}
+
+function actualizarFilaCosto(productoId, itemId, campo, valor) {
+  const lista = costosData[productoId] || [];
+  const item = lista.find(i => (i.id || '').toString() === itemId);
+  if (item) item[campo] = campo === 'costo' ? parseFloat(valor)||0 : valor;
+  recalcularResumenCosto(productoId);
+}
+
+function quitarFilaCosto(productoId, itemId) {
+  costosData[productoId] = (costosData[productoId]||[]).filter(i => (i.id||'').toString() !== itemId);
+  document.getElementById('fila-' + itemId)?.remove();
+  recalcularResumenCosto(productoId);
+}
+
+function recalcularResumenCosto(productoId) {
+  const items = costosData[productoId] || [];
+  const totalCosto = items.reduce((s,i) => s + parseFloat(i.costo||0), 0);
+  const totalEl = document.getElementById('costo-total-' + productoId);
+  if (totalEl) totalEl.textContent = '$' + totalCosto.toFixed(2);
+
+  // Buscar precio del producto desde el DOM (texto "Precio de venta: $X")
+  const card = document.getElementById('costo-card-' + productoId);
+  const precioTxt = card?.querySelector('.precio-venta')?.textContent || '';
+  const precio = parseFloat(precioTxt.replace(/[^0-9.]/g,'')) || 0;
+  const ganancia = precio - totalCosto;
+  const margenPct = precio > 0 ? ((ganancia/precio)*100).toFixed(0) : 0;
+
+  const gananciaEl = document.getElementById('costo-ganancia-' + productoId);
+  if (gananciaEl) {
+    gananciaEl.textContent = `$${ganancia.toFixed(2)} (${margenPct}%)`;
+    gananciaEl.className = ganancia >= 0 ? 'ganancia-positiva' : 'ganancia-negativa';
+  }
+}
+
+async function guardarCostos(productoId) {
+  const items = costosData[productoId] || [];
+
+  // Borrar costos previos de este producto y volver a insertar (simple y confiable)
+  await db.from('producto_costos').delete().eq('producto_id', productoId);
+
+  const filasValidas = items.filter(i => i.concepto && i.concepto.trim());
+  if (filasValidas.length) {
+    await db.from('producto_costos').insert(
+      filasValidas.map(i => ({ producto_id: productoId, concepto: i.concepto.trim(), costo: parseFloat(i.costo)||0 }))
+    );
+  }
+
+  const card = document.getElementById('costo-card-' + productoId);
+  const btn = card?.querySelector('.btn-guardar-costo');
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Guardado';
+    btn.style.background = '#4caf50';
+    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1500);
+  }
+}
+
+// ════════════════════════════════════════════════════
+//   INVENTARIO
+// ════════════════════════════════════════════════════
+let inventarioData = [];
+let filtroInvActual = 'todos';
+
+async function cargarInventario() {
+  const lista = document.getElementById('inventario-lista');
+  lista.innerHTML = '<div class="empty-msg">Cargando inventario...</div>';
+
+  const { data } = await db.from('productos').select('*').order('nombre');
+  inventarioData = data || [];
+
+  document.getElementById('inv-total-productos').textContent = inventarioData.length;
+  document.getElementById('inv-total-agotados').textContent = inventarioData.filter(p => p.stock <= 0).length;
+
+  renderInventario();
+}
+
+function filtrarInventario(tipo, btn) {
+  filtroInvActual = tipo;
+  document.querySelectorAll('.filtro-inv button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderInventario();
+}
+
+function renderInventario() {
+  const lista = document.getElementById('inventario-lista');
+  let datos = inventarioData;
+  if (filtroInvActual === 'bajo')     datos = datos.filter(p => p.stock > 0 && p.stock <= 5);
+  if (filtroInvActual === 'agotado')  datos = datos.filter(p => p.stock <= 0);
+
+  if (!datos.length) { lista.innerHTML = '<div class="empty-msg">No hay productos en este filtro.</div>'; return; }
+
+  lista.innerHTML = datos.map(p => {
+    const img = (p.imagenes && p.imagenes[0]) ? p.imagenes[0] : (p.imagen_url || '');
+    let badgeClass = 'ok', badgeTxt = 'Disponible';
+    if (p.stock <= 0)      { badgeClass = 'agotado'; badgeTxt = 'Agotado'; }
+    else if (p.stock <= 5) { badgeClass = 'bajo';     badgeTxt = 'Stock bajo'; }
+
+    return `
+    <div class="inv-item" id="inv-item-${p.id}">
+      <img src="${img}" onerror="this.style.background='#f5f0e8'">
+      <div class="inv-item-info">
+        <div class="nombre">${p.nombre}</div>
+        <span class="inv-stock-badge ${badgeClass}" id="inv-badge-${p.id}">${badgeTxt}</span>
+      </div>
+      <div class="inv-ctrl">
+        <button class="inv-btn" onclick="ajustarStock('${p.id}', -1)">−</button>
+        <span class="inv-num" id="inv-num-${p.id}">${p.stock}</span>
+        <button class="inv-btn" onclick="ajustarStock('${p.id}', 1)">+</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function ajustarStock(productoId, delta) {
+  const producto = inventarioData.find(p => p.id === productoId);
+  if (!producto) return;
+
+  const nuevoStock = Math.max(0, producto.stock + delta);
+  producto.stock = nuevoStock;
+
+  await db.from('productos').update({ stock: nuevoStock }).eq('id', productoId);
+
+  // Registrar el movimiento manual en el historial
+  await db.from('inventario_movimientos').insert({
+    producto_id: productoId, tipo: 'ajuste', cantidad: delta,
+    stock_resultante: nuevoStock, nota: 'Ajuste manual desde panel admin'
+  });
+
+  // Actualizar UI sin recargar todo
+  document.getElementById('inv-num-' + productoId).textContent = nuevoStock;
+  const badge = document.getElementById('inv-badge-' + productoId);
+  if (nuevoStock <= 0)      { badge.className = 'inv-stock-badge agotado'; badge.textContent = 'Agotado'; }
+  else if (nuevoStock <= 5) { badge.className = 'inv-stock-badge bajo';    badge.textContent = 'Stock bajo'; }
+  else                      { badge.className = 'inv-stock-badge ok';     badge.textContent = 'Disponible'; }
+
+  document.getElementById('inv-total-agotados').textContent = inventarioData.filter(p => p.stock <= 0).length;
+}
+
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', async () => {
