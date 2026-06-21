@@ -129,7 +129,7 @@ async function iniciarSesion() {
   await sincronizarCarritoLocal(data.user.id);
 
   // Si es administrador → redirigir al panel admin
-  const ADMIN_EMAIL = 'jonasguillermom@gmail.com';
+  const ADMIN_EMAIL = 'apicultorestenosique@gmail.com';
   if (data.user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
     msg.className = 'auth-msg ok';
     msg.textContent = '¡Bienvenido, Admin! Entrando al panel...';
