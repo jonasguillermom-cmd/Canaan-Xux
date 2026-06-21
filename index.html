@@ -126,31 +126,6 @@
     </div>
     <h2 class="section-title" data-editable="titulo_lo_mas_vendido">¡LO MAS VENDIDO!</h2>
     <div class="prod-grid" id="grid-vendidos"><div style="text-align:center;padding:40px;color:#7a7a6a;grid-column:1/-1">Cargando...</div></div>
-
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <span class="prod-badge agotado">Agotado</span>
-          <img src="" alt="Acondicionador sólido con miel">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Acondicionador sólido con miel</div>
-          <div class="prod-price sold">Agotado</div>
-          <button class="btn-add disabled" disabled>Agotado</button>
-        </div>
-      </div>
-
-      <div class="prod-card" onclick="addToCart(this)">
-        <div class="prod-img-wrap">
-          <img src="productos/Pvelas/imagenesV/vela_hexagonoVioleta.png" alt="Miel con Jengibre">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Vela hexagono violeta</div>
-          <div class="prod-price">$ 60.00</div>
-          <button class="btn-add">Agregar al carrito</button>
-        </div>
-      </div>
-
-    </div>
     <div class="ver-todos-wrap"><a href="#" class="ver-todos">Ver todos los productos</a></div>
   </div>
 </section>
@@ -183,50 +158,12 @@
   <div class="container">
     <h2 class="section-title left" data-editable="titulo_otros_productos">Otros Productos</h2>
     <div class="prod-grid" id="grid-otros"></div>
-
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <span class="prod-badge agotado">Agotado</span>
-          <img src="https://mieloro.com.mx/cdn/shop/products/IR008_300x300.jpg?v=1627663834" alt="Crema Ligera">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Crema Ligera</div>
-          <div class="prod-price sold">Agotado</div>
-          <button class="btn-add disabled" disabled>Agotado</button>
-        </div>
-      </div>
-
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <span class="prod-badge agotado">Agotado</span>
-          <img src="https://mieloro.com.mx/cdn/shop/files/FotosproductosyKITS_b0ca2e70-6845-42a1-bada-4fef58267197_300x300.png?v=1714851289" alt="Galletas con Polen">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Galletas con Polen</div>
-          <div class="prod-price sold">Agotado</div>
-          <button class="btn-add disabled" disabled>Agotado</button>
-        </div>
-      </div>
-
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <span class="prod-badge agotado">Agotado</span>
-          <img src="https://mieloro.com.mx/cdn/shop/products/IR005_300x300.jpg?v=1542476627" alt="Contorno de Ojos">
-        </div>
-        <div class="prod-info">
-          <div class="prod-name">Contorno de Ojos</div>
-          <div class="prod-price sold">Agotado</div>
-          <button class="btn-add disabled" disabled>Agotado</button>
-        </div>
-      </div>
-
-    </div>
     <div class="ver-todos-wrap"><a href="#" class="ver-todos">Ver todos los productos</a></div>
   </div>
 </section>
 
 <!-- ACERCA DE MIEL ORO -->
-<div class="about-strip">
+<div class="about-strip" id="bloque-acerca">
   <div class="about-inner">
     <div class="about-text">
       <div style="text-align:center;margin-bottom:16px">
@@ -234,25 +171,25 @@
       </div>
       <h2 data-editable="acerca_titulo">La miel pura de Miel Oro es extraída de colmenas en Jalisco y otras partes de México.</h2>
       <p data-editable="acerca_parrafo1">Somos distribuidores de material apícola, equipo de protección para el apicultor, insumos para producción de miel, así como medicamentos para las abejas y productos para el bienestar de las colmenas.</p>
-      <p>Brindamos pláticas, cursos de apicultura y asesorías a apicultores para el manejo adecuado de sus apiarios.</p>
-      <a href="#" class="btn-link">¡Conoce más sobre nosotros!</a>
+      <p data-editable="acerca_parrafo2">Brindamos pláticas, cursos de apicultura y asesorías a apicultores para el manejo adecuado de sus apiarios.</p>
+      <a href="#" class="btn-link" data-editable="acerca_boton_texto">¡Conoce más sobre nosotros!</a>
     </div>
     <div>
-      <p style="font-size:14px;color:var(--gris);line-height:1.8;margin-bottom:24px">
+      <p style="font-size:14px;color:var(--gris);line-height:1.8;margin-bottom:24px" data-editable="acerca_parrafo3">
         En Miel Oro somos parte de ese sistema productivo de la miel que se inicia en el vuelo de las abejas de flor en flor, que pasa por un sistema de procesamiento y empaque y que termina en la puerta de tu casa o negocio.
       </p>
       <div class="icon-cats">
         <div class="icon-cat">
-          <img src="https://fernandorueda.studio/demos/mielOro/Miel-a-Granel.png" alt="Miel a Granel">
-          <span>Miel a Granel</span>
+          <img src="https://fernandorueda.studio/demos/mielOro/Miel-a-Granel.png" alt="Miel a Granel" data-editable="acerca_icono1_img">
+          <span data-editable="acerca_icono1_texto">Miel a Granel</span>
         </div>
         <div class="icon-cat">
-          <img src="https://fernandorueda.studio/demos/mielOro/Todo-para-el-Apicultor.png" alt="Todo para el Apicultor">
-          <span>Todo para el Apicultor</span>
+          <img src="https://fernandorueda.studio/demos/mielOro/Todo-para-el-Apicultor.png" alt="Todo para el Apicultor" data-editable="acerca_icono2_img">
+          <span data-editable="acerca_icono2_texto">Todo para el Apicultor</span>
         </div>
         <div class="icon-cat">
-          <img src="https://fernandorueda.studio/demos/mielOro/Productos-de-la-Colmena.png" alt="Productos de la Colmena">
-          <span>Productos de la Colmena</span>
+          <img src="https://fernandorueda.studio/demos/mielOro/Productos-de-la-Colmena.png" alt="Productos de la Colmena" data-editable="acerca_icono3_img">
+          <span data-editable="acerca_icono3_texto">Productos de la Colmena</span>
         </div>
       </div>
     </div>
@@ -260,35 +197,35 @@
 </div>
 
 <!-- ASESORÍA -->
-<div class="asesoria">
+<div class="asesoria" id="bloque-asesoria">
   <div class="asesoria-inner">
     <div class="asesoria-imgs">
-      <img src="https://mieloro.com.mx/cdn/shop/files/apicultores-miel-mexico_ed581441-d2e6-4b7e-b6f4-b4826e7be80e_600x600@2x.jpg?v=1613669038" alt="Apicultores">
-      <img src="https://mieloro.com.mx/cdn/shop/files/educacion-miel-colmenas-ninos_b15e7c44-ecef-419e-a2c8-fd68b52b65e1_600x600@2x.jpg?v=1613669038" alt="Educación">
+      <img src="https://mieloro.com.mx/cdn/shop/files/apicultores-miel-mexico_ed581441-d2e6-4b7e-b6f4-b4826e7be80e_600x600@2x.jpg?v=1613669038" alt="Apicultores" data-editable="asesoria_img1">
+      <img src="https://mieloro.com.mx/cdn/shop/files/educacion-miel-colmenas-ninos_b15e7c44-ecef-419e-a2c8-fd68b52b65e1_600x600@2x.jpg?v=1613669038" alt="Educación" data-editable="asesoria_img2">
     </div>
     <div>
       <h2 data-editable="asesoria_titulo">Asesoría a nuevos productores</h2>
       <h3 data-editable="asesoria_subtitulo">¿Eres nuevo en el mundo de la apicultura?</h3>
-      <p>No dudes en consultarnos, podemos ofrecerte asesoría para mejorar tu sistema productivo apícola y la salud de tus colmenas.</p>
-      <p>Tenemos amplia experiencia en el mundo de la apicultura en México desde hace más de 40 años.</p>
-      <a href="#" class="btn-link">¿Quieres mejorar tus procesos productivos?</a>
+      <p data-editable="asesoria_parrafo1">No dudes en consultarnos, podemos ofrecerte asesoría para mejorar tu sistema productivo apícola y la salud de tus colmenas.</p>
+      <p data-editable="asesoria_parrafo2">Tenemos amplia experiencia en el mundo de la apicultura en México desde hace más de 40 años.</p>
+      <a href="#" class="btn-link" data-editable="asesoria_boton_texto">¿Quieres mejorar tus procesos productivos?</a>
     </div>
   </div>
 </div>
 
 <!-- APRENDIENDO DE LAS COLMENAS -->
-<div class="about-strip">
+<div class="about-strip" id="bloque-aprendiendo">
   <div class="about-inner">
     <div class="about-text">
-      <h2>Aprendiendo de las colmenas</h2>
-      <p>En Miel Oro queremos fomentar la cultura del cuidado de las abejas y el medio ambiente desde los primeros años.</p>
-      <p>Por ello impartimos pláticas, talleres y cursos donde las niñas y niños aprenden sobre la vida de las abejas y su cuidado.</p>
-      <p>Creemos que la educación ambiental es una estrategia necesaria para acercar a las nuevas generaciones a la naturaleza y al consumo responsable.</p>
-      <a href="#" class="btn-link">¿Quieres llevar a los expertos de Miel Oro a tu escuela?</a>
+      <h2 data-editable="aprendiendo_titulo">Aprendiendo de las colmenas</h2>
+      <p data-editable="aprendiendo_parrafo1">En Miel Oro queremos fomentar la cultura del cuidado de las abejas y el medio ambiente desde los primeros años.</p>
+      <p data-editable="aprendiendo_parrafo2">Por ello impartimos pláticas, talleres y cursos donde las niñas y niños aprenden sobre la vida de las abejas y su cuidado.</p>
+      <p data-editable="aprendiendo_parrafo3">Creemos que la educación ambiental es una estrategia necesaria para acercar a las nuevas generaciones a la naturaleza y al consumo responsable.</p>
+      <a href="#" class="btn-link" data-editable="aprendiendo_boton_texto">¿Quieres llevar a los expertos de Miel Oro a tu escuela?</a>
     </div>
     <div class="about-imgs">
-      <img src="https://mieloro.com.mx/cdn/shop/files/apicultores-miel-mexico_ed581441-d2e6-4b7e-b6f4-b4826e7be80e_600x600@2x.jpg?v=1613669038" alt="">
-      <img src="https://mieloro.com.mx/cdn/shop/files/educacion-miel-colmenas-ninos_b15e7c44-ecef-419e-a2c8-fd68b52b65e1_600x600@2x.jpg?v=1613669038" alt="">
+      <img src="https://mieloro.com.mx/cdn/shop/files/apicultores-miel-mexico_ed581441-d2e6-4b7e-b6f4-b4826e7be80e_600x600@2x.jpg?v=1613669038" alt="" data-editable="aprendiendo_img1">
+      <img src="https://mieloro.com.mx/cdn/shop/files/educacion-miel-colmenas-ninos_b15e7c44-ecef-419e-a2c8-fd68b52b65e1_600x600@2x.jpg?v=1613669038" alt="" data-editable="aprendiendo_img2">
     </div>
   </div>
 </div>
