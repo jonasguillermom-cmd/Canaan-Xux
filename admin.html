@@ -477,6 +477,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
           <option value="todos">📢 Todos los clientes registrados</option>
           <option value="especifico">✉️ Un correo específico</option>
         </select>
+        <p id="cupon-contador-clientes" style="font-size:12px;color:var(--gris);margin-top:6px"></p>
       </div>
       <div class="campo" id="cupon-correo-especifico-wrap" style="display:none">
         <label>Correo del cliente</label>
@@ -532,7 +533,7 @@ function showSeccion(name, btn) {
   if (name === 'contenido')  cargarListaBlog();
   if (name === 'costos')     cargarCostos();
   if (name === 'inventario') cargarInventario();
-  if (name === 'cupones')    cargarCupones();
+  if (name === 'cupones')    { cargarCupones(); actualizarContadorClientes(); }
 }
 
 // ════════════════════════════════════════════════════
@@ -1505,6 +1506,19 @@ let cuponEditId = null;
 function toggleCorreoEspecifico() {
   const tipo = document.getElementById('cupon-destinatarios').value;
   document.getElementById('cupon-correo-especifico-wrap').style.display = tipo === 'especifico' ? 'block' : 'none';
+  if (tipo === 'todos') actualizarContadorClientes();
+  else document.getElementById('cupon-contador-clientes').textContent = '';
+}
+
+async function actualizarContadorClientes() {
+  const contador = document.getElementById('cupon-contador-clientes');
+  contador.textContent = '⏳ Consultando clientes registrados...';
+  const { data, error } = await db.functions.invoke('enviar-cupon', { body: { modo: 'contar' } });
+  if (error || !data) {
+    contador.textContent = '⚠️ No se pudo consultar el total de clientes.';
+    return;
+  }
+  contador.textContent = `📊 Actualmente tienes ${data.total} cliente(s) registrado(s). El cupón se enviará a todos ellos.`;
 }
 
 async function guardarCupon() {
@@ -1666,7 +1680,9 @@ async function enviarCupon() {
   }
 
   msg.className = 'msg ok';
-  msg.textContent = `✓ Cupón enviado a ${data?.enviados || 0} destinatario(s).`;
+  const fallidos = data?.fallidos?.length || 0;
+  msg.textContent = `✓ Cupón enviado a ${data?.enviados || 0} de ${data?.total || 0} destinatario(s).` +
+    (fallidos ? ` ⚠️ ${fallidos} correo(s) no se pudieron enviar.` : '');
 }
 
 
