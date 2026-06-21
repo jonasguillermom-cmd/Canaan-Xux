@@ -81,7 +81,7 @@ async function cargarCarrito() {
 
   const { data: items, error } = await db
     .from('carrito')
-    .select(`cantidad, productos(id, nombre, precio, imagen_url)`)
+    .select(`cantidad, productos(id, nombre, precio, imagen_url, stock)`)
     .eq('usuario_id', usuario.id);
 
   const contenedor = document.getElementById('carrito-contenido');
@@ -130,7 +130,7 @@ async function cargarCarrito() {
         <div class="resumen-row"><span>Subtotal</span><span id="txt-total">$${total.toFixed(2)}</span></div>
         <div class="resumen-row"><span>Envío</span><span>Por calcular</span></div>
         <div class="resumen-total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
-        <button class="btn-pagar">Proceder al pago</button>
+        <button class="btn-pagar" onclick="procesarPedido()">Proceder al pago</button>
       </div>
     </div>`;
 }
@@ -157,6 +157,81 @@ async function eliminarItem(productoId) {
   await db.from('carrito').delete().eq('usuario_id', uid).eq('producto_id', productoId);
   cargarCarrito();
   actualizarBadgeCarrito();
+}
+
+// ─── PROCESAR PEDIDO: descuenta stock automáticamente ───
+async function procesarPedido() {
+  const { data: s } = await db.auth.getSession();
+  const usuario = s?.session?.user;
+  if (!usuario) { window.location.href = 'login.html'; return; }
+
+  const btn = document.querySelector('.btn-pagar');
+  btn.disabled = true; btn.textContent = 'Procesando...';
+
+  const { data: items } = await db
+    .from('carrito')
+    .select(`cantidad, productos(id, nombre, precio, stock)`)
+    .eq('usuario_id', usuario.id);
+
+  if (!items || !items.length) { btn.disabled = false; btn.textContent = 'Proceder al pago'; return; }
+
+  // Verificar que haya suficiente stock antes de procesar
+  for (const item of items) {
+    if (item.cantidad > item.productos.stock) {
+      alert(`Lo sentimos, solo quedan ${item.productos.stock} unidades de "${item.productos.nombre}".`);
+      btn.disabled = false; btn.textContent = 'Proceder al pago';
+      return;
+    }
+  }
+
+  const total = items.reduce((s, i) => s + (i.productos.precio * i.cantidad), 0);
+
+  // Crear el pedido
+  const { data: pedido, error: errPedido } = await db.from('pedidos').insert({
+    usuario_id: usuario.id, total, estado: 'pagado'
+  }).select().single();
+
+  if (errPedido) {
+    alert('Hubo un error al procesar tu pedido. Intenta de nuevo.');
+    btn.disabled = false; btn.textContent = 'Proceder al pago';
+    return;
+  }
+
+  // Crear items del pedido + descontar stock + registrar movimiento
+  for (const item of items) {
+    const p = item.productos;
+    const nuevoStock = p.stock - item.cantidad;
+
+    await db.from('pedido_items').insert({
+      pedido_id: pedido.id, producto_id: p.id, cantidad: item.cantidad, precio_unit: p.precio
+    });
+
+    // Descontar stock — si llega a 0 el producto se marca agotado automáticamente
+    // porque la tienda ya verifica stock <= 0 para mostrar "Agotado"
+    await db.from('productos').update({ stock: nuevoStock }).eq('id', p.id);
+
+    // Registrar el movimiento en el historial de inventario
+    await db.from('inventario_movimientos').insert({
+      producto_id: p.id, tipo: 'venta', cantidad: -item.cantidad,
+      stock_resultante: nuevoStock, nota: `Pedido #${pedido.id.slice(0,8)}`
+    });
+  }
+
+  // Vaciar el carrito
+  await db.from('carrito').delete().eq('usuario_id', usuario.id);
+
+  btn.textContent = '✓ ¡Pedido realizado!';
+  btn.style.background = '#4caf50';
+  await actualizarBadgeCarrito();
+
+  setTimeout(() => {
+    document.getElementById('carrito-contenido').innerHTML = `
+      <div class="carrito-vacio">
+        <div class="icon">✅</div>
+        <p>¡Gracias por tu compra! Tu pedido fue registrado correctamente.</p>
+        <a href="index.html" class="btn-link" style="background:var(--naranja);color:#fff;padding:12px 28px;border-radius:8px;font-weight:700;">Seguir comprando</a>
+      </div>`;
+  }, 1200);
 }
 
 document.addEventListener('DOMContentLoaded', cargarCarrito);
