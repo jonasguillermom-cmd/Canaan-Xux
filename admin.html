@@ -403,7 +403,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
 <script>
 const SURL  = 'https://biiefknpnkynfobbetav.supabase.co';
 const SKEY  = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
-const AMAIL = 'apicultorestenosique@gmail.com';
+const AMAIL = 'jonasguillermom@gmail.com';
 const { createClient } = supabase;
 const db = createClient(SURL, SKEY);
 
@@ -448,11 +448,41 @@ const CAMPOS_POR_PAGINA = {
     { clave:'titulo_lo_mas_vendido', tipo:'texto', etiqueta:'Título "Lo más vendido"' },
     { clave:'titulo_colecciones', tipo:'texto', etiqueta:'Título "Nuestras Colecciones"' },
     { clave:'titulo_otros_productos', tipo:'texto', etiqueta:'Título "Otros Productos"' },
-    { clave:'acerca_titulo', tipo:'texto', etiqueta:'Título sección "Acerca de"' },
-    { clave:'acerca_parrafo1', tipo:'texto', etiqueta:'Párrafo "Acerca de"' },
-    { clave:'asesoria_titulo', tipo:'texto', etiqueta:'Título "Asesoría"' },
-    { clave:'asesoria_subtitulo', tipo:'texto', etiqueta:'Subtítulo "Asesoría"' },
     { clave:'titulo_experiencias', tipo:'texto', etiqueta:'Título "Experiencias"' },
+
+    // ── Publicación 1: Acerca de ──
+    { clave:'bloque_acerca_fondo', tipo:'color', etiqueta:'🎨 Color de fondo — Publicación "Acerca de"' },
+    { clave:'acerca_titulo', tipo:'texto', etiqueta:'Acerca de — Título' },
+    { clave:'acerca_parrafo1', tipo:'texto', etiqueta:'Acerca de — Párrafo 1' },
+    { clave:'acerca_parrafo2', tipo:'texto', etiqueta:'Acerca de — Párrafo 2' },
+    { clave:'acerca_parrafo3', tipo:'texto', etiqueta:'Acerca de — Párrafo 3 (columna derecha)' },
+    { clave:'acerca_boton_texto', tipo:'texto', etiqueta:'Acerca de — Texto del botón' },
+    { clave:'acerca_icono1_img', tipo:'imagen', etiqueta:'Acerca de — Ícono 1' },
+    { clave:'acerca_icono1_texto', tipo:'texto', etiqueta:'Acerca de — Texto ícono 1' },
+    { clave:'acerca_icono2_img', tipo:'imagen', etiqueta:'Acerca de — Ícono 2' },
+    { clave:'acerca_icono2_texto', tipo:'texto', etiqueta:'Acerca de — Texto ícono 2' },
+    { clave:'acerca_icono3_img', tipo:'imagen', etiqueta:'Acerca de — Ícono 3' },
+    { clave:'acerca_icono3_texto', tipo:'texto', etiqueta:'Acerca de — Texto ícono 3' },
+
+    // ── Publicación 2: Asesoría ──
+    { clave:'bloque_asesoria_fondo', tipo:'color', etiqueta:'🎨 Color de fondo — Publicación "Asesoría"' },
+    { clave:'asesoria_titulo', tipo:'texto', etiqueta:'Asesoría — Título' },
+    { clave:'asesoria_subtitulo', tipo:'texto', etiqueta:'Asesoría — Subtítulo' },
+    { clave:'asesoria_parrafo1', tipo:'texto', etiqueta:'Asesoría — Párrafo 1' },
+    { clave:'asesoria_parrafo2', tipo:'texto', etiqueta:'Asesoría — Párrafo 2' },
+    { clave:'asesoria_boton_texto', tipo:'texto', etiqueta:'Asesoría — Texto del botón' },
+    { clave:'asesoria_img1', tipo:'imagen', etiqueta:'Asesoría — Foto 1' },
+    { clave:'asesoria_img2', tipo:'imagen', etiqueta:'Asesoría — Foto 2' },
+
+    // ── Publicación 3: Aprendiendo de las colmenas ──
+    { clave:'bloque_aprendiendo_fondo', tipo:'color', etiqueta:'🎨 Color de fondo — Publicación "Aprendiendo de las colmenas"' },
+    { clave:'aprendiendo_titulo', tipo:'texto', etiqueta:'Aprendiendo — Título' },
+    { clave:'aprendiendo_parrafo1', tipo:'texto', etiqueta:'Aprendiendo — Párrafo 1' },
+    { clave:'aprendiendo_parrafo2', tipo:'texto', etiqueta:'Aprendiendo — Párrafo 2' },
+    { clave:'aprendiendo_parrafo3', tipo:'texto', etiqueta:'Aprendiendo — Párrafo 3' },
+    { clave:'aprendiendo_boton_texto', tipo:'texto', etiqueta:'Aprendiendo — Texto del botón' },
+    { clave:'aprendiendo_img1', tipo:'imagen', etiqueta:'Aprendiendo — Foto 1' },
+    { clave:'aprendiendo_img2', tipo:'imagen', etiqueta:'Aprendiendo — Foto 2' },
   ],
   'nosotros.html': [
     { clave:'hero_titulo', tipo:'texto', etiqueta:'Título principal' },
@@ -535,6 +565,15 @@ function aplicarPreviewEnVivo() {
   Object.keys(valoresActuales).forEach(clave => {
     const valor = valoresActuales[clave];
     if (!valor) return;
+
+    // Colores de bloque: clave = bloque_<id>_fondo
+    if (clave.startsWith('bloque_') && clave.endsWith('_fondo')) {
+      const bloqueId = clave.replace('bloque_', '').replace('_fondo', '');
+      const elBloque = doc.getElementById('bloque-' + bloqueId);
+      if (elBloque) elBloque.style.background = valor;
+      return;
+    }
+
     const el = doc.querySelector(`[data-editable="${clave}"]`);
     if (!el) return;
     if (el.tagName === 'IMG') {
@@ -581,6 +620,18 @@ async function cargarCamposPagina() {
 
   wrap.innerHTML = campos.map(c => {
     const valorGuardado = valoresActuales[c.clave] || '';
+    if (c.tipo === 'color') {
+      const colorActual = valorGuardado || '#f5f0e8';
+      return `
+        <div class="cs-campo" style="background:#fff8f0;border:1.5px solid #f0d9b5">
+          <span class="cs-campo-label">${c.etiqueta}</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <input type="color" value="${colorActual}" style="width:54px;height:42px;border:1.5px solid var(--borde);border-radius:8px;cursor:pointer;padding:2px"
+              oninput="valoresActuales['${c.clave}']=this.value; aplicarPreviewEnVivo()">
+            <span style="font-size:12px;color:var(--gris)">Toca el cuadro para elegir el color de fondo</span>
+          </div>
+        </div>`;
+    }
     if (c.tipo === 'imagen') {
       return `
         <div class="cs-campo">
