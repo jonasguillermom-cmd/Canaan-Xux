@@ -498,11 +498,18 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
 </div><!-- /panel -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <script>
 const SURL  = 'https://biiefknpnkynfobbetav.supabase.co';
 const SKEY  = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
 const AMAIL = 'jonasguillermom@gmail.com';
+
+// EmailJS — envío de cupones por correo
+const EMAILJS_SERVICE_ID  = 'service_lfv6e5u';
+const EMAILJS_TEMPLATE_ID = 'template_yu7x7xg';
+const EMAILJS_PUBLIC_KEY  = 'myF1SY_7rM2aM6jHj';
+emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 const { createClient } = supabase;
 const db = createClient(SURL, SKEY);
 
@@ -1513,12 +1520,12 @@ function toggleCorreoEspecifico() {
 async function actualizarContadorClientes() {
   const contador = document.getElementById('cupon-contador-clientes');
   contador.textContent = '⏳ Consultando clientes registrados...';
-  const { data, error } = await db.functions.invoke('enviar-cupon', { body: { modo: 'contar' } });
-  if (error || !data) {
-    contador.textContent = '⚠️ No se pudo consultar el total de clientes.';
+  const { data, error } = await db.from('perfiles').select('email');
+  if (error) {
+    contador.textContent = '⚠️ No se pudo consultar el total de clientes. ¿Ya creaste la tabla "perfiles"? (ver SQL_PERFILES.md)';
     return;
   }
-  contador.textContent = `📊 Actualmente tienes ${data.total} cliente(s) registrado(s). El cupón se enviará a todos ellos.`;
+  contador.textContent = `📊 Actualmente tienes ${data.length} cliente(s) registrado(s). El cupón se enviará a todos ellos.`;
 }
 
 async function guardarCupon() {
@@ -1647,7 +1654,7 @@ async function cargarCupones() {
   }).join('');
 }
 
-// ── ENVIAR CUPÓN POR CORREO ──
+// ── ENVIAR CUPÓN POR CORREO (usando EmailJS, directo desde el navegador) ──
 async function enviarCupon() {
   const cuponId = document.getElementById('cupon-enviar-select').value;
   const destino  = document.getElementById('cupon-destinatarios').value;
@@ -1663,26 +1670,64 @@ async function enviarCupon() {
 
   btn.disabled = true; btn.textContent = '⏳ Enviando...';
 
-  const { data, error } = await db.functions.invoke('enviar-cupon', {
-    body: {
-      cupon_id: cuponId,
-      destino: destino,                  // 'todos' | 'especifico'
-      correo_especifico: correoEspecifico
-    }
-  });
-
-  btn.disabled = false; btn.textContent = '📧 Enviar cupón';
-
-  if (error) {
-    msg.className = 'msg er';
-    msg.textContent = 'Error al enviar: ' + (error.message || 'revisa que la función esté desplegada (ver INSTRUCCIONES_CUPONES.md).');
+  // 1. Obtener datos del cupón
+  const { data: cupon, error: errCupon } = await db.from('cupones').select('*').eq('id', cuponId).single();
+  if (errCupon || !cupon) {
+    msg.className = 'msg er'; msg.textContent = 'No se pudo cargar el cupón.';
+    btn.disabled = false; btn.textContent = '📧 Enviar cupón';
     return;
   }
 
-  msg.className = 'msg ok';
-  const fallidos = data?.fallidos?.length || 0;
-  msg.textContent = `✓ Cupón enviado a ${data?.enviados || 0} de ${data?.total || 0} destinatario(s).` +
-    (fallidos ? ` ⚠️ ${fallidos} correo(s) no se pudieron enviar.` : '');
+  // 2. Determinar destinatarios
+  let correos = [];
+  if (destino === 'especifico') {
+    correos = [correoEspecifico];
+  } else {
+    const { data: perfiles, error: errPerfiles } = await db.from('perfiles').select('email');
+    if (errPerfiles) {
+      msg.className = 'msg er';
+      msg.textContent = 'No se pudo leer la lista de clientes. ¿Ya creaste la tabla "perfiles"? (ver SQL_PERFILES.md)';
+      btn.disabled = false; btn.textContent = '📧 Enviar cupón';
+      return;
+    }
+    correos = (perfiles || []).map(p => p.email).filter(Boolean);
+  }
+
+  if (!correos.length) {
+    msg.className = 'msg er'; msg.textContent = 'No hay destinatarios para enviar.';
+    btn.disabled = false; btn.textContent = '📧 Enviar cupón';
+    return;
+  }
+
+  // 3. Armar textos de la plantilla
+  const descuentoTxt = cupon.tipo_descuento === 'porcentaje'
+    ? `${cupon.valor}% de descuento`
+    : `$${parseFloat(cupon.valor).toFixed(2)} de descuento`;
+
+  // 4. Enviar uno por uno con EmailJS
+  let enviados = 0;
+  const fallidos = [];
+
+  for (const correo of correos) {
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email: correo,
+        titulo: cupon.titulo,
+        codigo: cupon.codigo,
+        descuento_texto: descuentoTxt,
+        descripcion: cupon.descripcion || cupon.titulo,
+      });
+      enviados++;
+    } catch (e) {
+      fallidos.push(correo);
+    }
+  }
+
+  btn.disabled = false; btn.textContent = '📧 Enviar cupón';
+
+  msg.className = enviados > 0 ? 'msg ok' : 'msg er';
+  msg.textContent = `✓ Cupón enviado a ${enviados} de ${correos.length} destinatario(s).` +
+    (fallidos.length ? ` ⚠️ Fallaron: ${fallidos.join(', ')}` : '');
 }
 
 
