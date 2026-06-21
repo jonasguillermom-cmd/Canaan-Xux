@@ -403,7 +403,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
 <script>
 const SURL  = 'https://biiefknpnkynfobbetav.supabase.co';
 const SKEY  = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
-const AMAIL = 'jonasguillermom@gmail.com';
+const AMAIL = 'apicultorestenosique@gmail.com';
 const { createClient } = supabase;
 const db = createClient(SURL, SKEY);
 
@@ -887,7 +887,7 @@ async function doLogin() {
   document.getElementById('login-wrap').style.display = 'none';
   document.getElementById('panel').style.display = 'block';
   const nombre = adminUser.user_metadata?.nombre_completo || adminUser.email.split('@')[0];
-  document.getElementById('a-nombre').textContent = '👤 ' + nombre.split(' ')[0];
+  document.getElementById('a-nombre').textContent = ' ' + nombre.split(' ')[0];
 }
 
 async function doLogout() {
