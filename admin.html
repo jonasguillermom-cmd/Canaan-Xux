@@ -215,6 +215,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
     <button class="sec-btn" id="sec-btn-contenido" onclick="showSeccion('contenido', this)">🎨 Diseño del Sitio</button>
     <button class="sec-btn" id="sec-btn-costos" onclick="showSeccion('costos', this)">💰 Costos</button>
     <button class="sec-btn" id="sec-btn-inventario" onclick="showSeccion('inventario', this)">📊 Inventario</button>
+    <button class="sec-btn" id="sec-btn-cupones" onclick="showSeccion('cupones', this)">🎟️ Cupones</button>
   </div>
 
   <!-- ═══════════ SECCIÓN: PRODUCTOS ═══════════ -->
@@ -396,6 +397,103 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
     <div id="inventario-lista"><div class="empty-msg">Cargando inventario...</div></div>
   </div>
 
+  <!-- ═══════════ SECCIÓN: CUPONES ═══════════ -->
+  <div class="seccion" id="seccion-cupones" style="display:none; padding:16px 14px">
+
+    <div class="card">
+      <div class="card-title" id="cupon-form-titulo">🎟️ Nuevo cupón de descuento</div>
+      <input type="hidden" id="cupon-edit-id">
+
+      <div class="campo">
+        <label>Código del cupón *</label>
+        <input type="text" id="cupon-codigo" placeholder="Ej: VERANO20" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+      </div>
+      <div class="campo">
+        <label>Título visible para el cliente *</label>
+        <input type="text" id="cupon-titulo" placeholder="Ej: 20% de descuento en miel">
+      </div>
+      <div class="campo">
+        <label>Descripción</label>
+        <textarea id="cupon-descripcion" placeholder="Detalles del cupón..."></textarea>
+      </div>
+
+      <div class="row2">
+        <div class="campo">
+          <label>Tipo de descuento *</label>
+          <select id="cupon-tipo">
+            <option value="porcentaje">Porcentaje (%)</option>
+            <option value="monto_fijo">Monto fijo ($)</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Valor *</label>
+          <input type="number" id="cupon-valor" placeholder="20" min="0" step="0.01">
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="campo">
+          <label>Compra mínima ($)</label>
+          <input type="number" id="cupon-minimo" placeholder="0" min="0" step="0.01">
+        </div>
+        <div class="campo">
+          <label>Usos máximos totales</label>
+          <input type="number" id="cupon-usos-max" placeholder="Sin límite" min="1">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Fecha de expiración</label>
+        <input type="date" id="cupon-expira">
+      </div>
+
+      <div class="toggle-row">
+        <span>Visible para clientes en la tienda</span>
+        <input type="checkbox" id="cupon-visible" checked>
+      </div>
+      <div class="toggle-row">
+        <span>Activo</span>
+        <input type="checkbox" id="cupon-activo" checked>
+      </div>
+
+      <button class="btn-g" id="btn-guardar-cupon" onclick="guardarCupon()">💾 Guardar cupón</button>
+      <button class="btn-c" id="btn-cancelar-cupon" onclick="cancelarCupon()" style="display:none">✕ Cancelar edición</button>
+      <div class="msg" id="cupon-msg"></div>
+    </div>
+
+    <!-- ENVIAR POR CORREO -->
+    <div class="card">
+      <div class="card-title">📧 Enviar cupón por correo</div>
+      <p style="font-size:12px;color:var(--gris);margin-bottom:14px">
+        Envía el cupón a todos tus clientes registrados o a uno específico.
+      </p>
+      <div class="campo">
+        <label>Selecciona el cupón a enviar</label>
+        <select id="cupon-enviar-select"><option value="">Cargando cupones...</option></select>
+      </div>
+      <div class="campo">
+        <label>Destinatarios</label>
+        <select id="cupon-destinatarios" onchange="toggleCorreoEspecifico()">
+          <option value="todos">📢 Todos los clientes registrados</option>
+          <option value="especifico">✉️ Un correo específico</option>
+        </select>
+      </div>
+      <div class="campo" id="cupon-correo-especifico-wrap" style="display:none">
+        <label>Correo del cliente</label>
+        <input type="email" id="cupon-correo-especifico" placeholder="cliente@correo.com">
+      </div>
+      <button class="btn-g" onclick="enviarCupon()" id="btn-enviar-cupon">📧 Enviar cupón</button>
+      <div class="msg" id="cupon-envio-msg"></div>
+    </div>
+
+    <!-- LISTA DE CUPONES -->
+    <div class="card">
+      <div class="card-title">📋 Cupones existentes</div>
+      <div id="cupones-lista"><div class="empty-msg">Cargando cupones...</div></div>
+    </div>
+
+  </div>
+
 </div><!-- /panel -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -403,7 +501,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
 <script>
 const SURL  = 'https://biiefknpnkynfobbetav.supabase.co';
 const SKEY  = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
-const AMAIL = 'apicultorestenosique@gmail.com';
+const AMAIL = 'jonasguillermom@gmail.com';
 const { createClient } = supabase;
 const db = createClient(SURL, SKEY);
 
@@ -428,11 +526,13 @@ function showSeccion(name, btn) {
   document.getElementById('seccion-contenido').style.display  = name === 'contenido'  ? 'block' : 'none';
   document.getElementById('seccion-costos').style.display     = name === 'costos'     ? 'block' : 'none';
   document.getElementById('seccion-inventario').style.display = name === 'inventario' ? 'block' : 'none';
+  document.getElementById('seccion-cupones').style.display    = name === 'cupones'    ? 'block' : 'none';
   document.querySelectorAll('.sec-btn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   if (name === 'contenido')  cargarListaBlog();
   if (name === 'costos')     cargarCostos();
   if (name === 'inventario') cargarInventario();
+  if (name === 'cupones')    cargarCupones();
 }
 
 // ════════════════════════════════════════════════════
@@ -887,7 +987,7 @@ async function doLogin() {
   document.getElementById('login-wrap').style.display = 'none';
   document.getElementById('panel').style.display = 'block';
   const nombre = adminUser.user_metadata?.nombre_completo || adminUser.email.split('@')[0];
-  document.getElementById('a-nombre').textContent = ' ' + nombre.split(' ')[0];
+  document.getElementById('a-nombre').textContent = '👤 ' + nombre.split(' ')[0];
 }
 
 async function doLogout() {
@@ -1397,6 +1497,179 @@ async function ajustarStock(productoId, delta) {
 }
 
 
+// ════════════════════════════════════════════════════
+//   CUPONES
+// ════════════════════════════════════════════════════
+let cuponEditId = null;
+
+function toggleCorreoEspecifico() {
+  const tipo = document.getElementById('cupon-destinatarios').value;
+  document.getElementById('cupon-correo-especifico-wrap').style.display = tipo === 'especifico' ? 'block' : 'none';
+}
+
+async function guardarCupon() {
+  const codigo      = document.getElementById('cupon-codigo').value.trim().toUpperCase();
+  const titulo      = document.getElementById('cupon-titulo').value.trim();
+  const descripcion = document.getElementById('cupon-descripcion').value.trim();
+  const tipo        = document.getElementById('cupon-tipo').value;
+  const valor       = parseFloat(document.getElementById('cupon-valor').value);
+  const minimo      = parseFloat(document.getElementById('cupon-minimo').value) || 0;
+  const usosMax     = document.getElementById('cupon-usos-max').value ? parseInt(document.getElementById('cupon-usos-max').value) : null;
+  const expira      = document.getElementById('cupon-expira').value || null;
+  const visible     = document.getElementById('cupon-visible').checked;
+  const activo      = document.getElementById('cupon-activo').checked;
+  const editId      = document.getElementById('cupon-edit-id').value;
+  const msg         = document.getElementById('cupon-msg');
+  const btn         = document.getElementById('btn-guardar-cupon');
+
+  msg.className = 'msg';
+  if (!codigo || !titulo || !valor) {
+    msg.className = 'msg er'; msg.textContent = 'Código, título y valor son obligatorios.'; return;
+  }
+
+  btn.disabled = true; btn.textContent = '⏳ Guardando...';
+
+  const datos = {
+    codigo, titulo, descripcion, tipo_descuento: tipo, valor,
+    monto_minimo: minimo, usos_maximos: usosMax,
+    fecha_expira: expira ? new Date(expira + 'T23:59:59').toISOString() : null,
+    visible_publico: visible, activo
+  };
+
+  let error;
+  if (editId) ({ error } = await db.from('cupones').update(datos).eq('id', editId));
+  else        ({ error } = await db.from('cupones').insert(datos));
+
+  btn.disabled = false; btn.textContent = '💾 Guardar cupón';
+
+  if (error) {
+    msg.className = 'msg er';
+    msg.textContent = error.message.includes('duplicate') ? 'Ya existe un cupón con ese código.' : 'Error: ' + error.message;
+    return;
+  }
+
+  msg.className = 'msg ok';
+  msg.textContent = editId ? '✓ Cupón actualizado.' : '✓ Cupón creado.';
+  cancelarCupon();
+  cargarCupones();
+}
+
+function cancelarCupon() {
+  document.getElementById('cupon-edit-id').value = '';
+  document.getElementById('cupon-codigo').value = '';
+  document.getElementById('cupon-titulo').value = '';
+  document.getElementById('cupon-descripcion').value = '';
+  document.getElementById('cupon-tipo').value = 'porcentaje';
+  document.getElementById('cupon-valor').value = '';
+  document.getElementById('cupon-minimo').value = '';
+  document.getElementById('cupon-usos-max').value = '';
+  document.getElementById('cupon-expira').value = '';
+  document.getElementById('cupon-visible').checked = true;
+  document.getElementById('cupon-activo').checked = true;
+  document.getElementById('cupon-form-titulo').textContent = '🎟️ Nuevo cupón de descuento';
+  document.getElementById('btn-cancelar-cupon').style.display = 'none';
+  document.getElementById('cupon-msg').className = 'msg';
+  cuponEditId = null;
+}
+
+async function editarCupon(id) {
+  const { data: c } = await db.from('cupones').select('*').eq('id', id).single();
+  if (!c) return;
+
+  document.getElementById('cupon-edit-id').value = c.id;
+  document.getElementById('cupon-codigo').value = c.codigo;
+  document.getElementById('cupon-titulo').value = c.titulo;
+  document.getElementById('cupon-descripcion').value = c.descripcion || '';
+  document.getElementById('cupon-tipo').value = c.tipo_descuento;
+  document.getElementById('cupon-valor').value = c.valor;
+  document.getElementById('cupon-minimo').value = c.monto_minimo || '';
+  document.getElementById('cupon-usos-max').value = c.usos_maximos || '';
+  document.getElementById('cupon-expira').value = c.fecha_expira ? c.fecha_expira.split('T')[0] : '';
+  document.getElementById('cupon-visible').checked = c.visible_publico;
+  document.getElementById('cupon-activo').checked = c.activo;
+  document.getElementById('cupon-form-titulo').textContent = '✏️ Editando: ' + c.codigo;
+  document.getElementById('btn-cancelar-cupon').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function eliminarCupon(id, codigo) {
+  if (!confirm(`¿Eliminar el cupón "${codigo}"?`)) return;
+  await db.from('cupones').delete().eq('id', id);
+  cargarCupones();
+}
+
+async function cargarCupones() {
+  const lista = document.getElementById('cupones-lista');
+  const selectEnviar = document.getElementById('cupon-enviar-select');
+  lista.innerHTML = '<div class="empty-msg">Cargando...</div>';
+
+  const { data } = await db.from('cupones').select('*').order('creado_en', { ascending: false });
+
+  if (!data || !data.length) {
+    lista.innerHTML = '<div class="empty-msg">No has creado ningún cupón aún.</div>';
+    selectEnviar.innerHTML = '<option value="">No hay cupones creados</option>';
+    return;
+  }
+
+  selectEnviar.innerHTML = data.map(c => `<option value="${c.id}">${c.codigo} — ${c.titulo}</option>`).join('');
+
+  const hoy = new Date();
+  lista.innerHTML = data.map(c => {
+    const expirado = c.fecha_expira && new Date(c.fecha_expira) < hoy;
+    const valorTxt = c.tipo_descuento === 'porcentaje' ? c.valor + '%' : '$' + parseFloat(c.valor).toFixed(2);
+    const usosTxt  = c.usos_maximos ? `${c.usos_actuales}/${c.usos_maximos} usos` : `${c.usos_actuales} usos`;
+    return `
+    <div class="prod-item">
+      <div style="width:48px;height:48px;border-radius:8px;background:var(--fondo);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎟️</div>
+      <div class="pi-info">
+        <div class="pi-nombre">${c.codigo} — ${valorTxt} off</div>
+        <div class="pi-meta">${c.titulo} · ${usosTxt} · ${expirado ? '⛔ Expirado' : (c.activo ? '✅ Activo' : '⛔ Inactivo')}</div>
+      </div>
+      <div class="pi-btns">
+        <button class="b-e" onclick="editarCupon('${c.id}')">✏️</button>
+        <button class="b-d" onclick="eliminarCupon('${c.id}','${c.codigo}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── ENVIAR CUPÓN POR CORREO ──
+async function enviarCupon() {
+  const cuponId = document.getElementById('cupon-enviar-select').value;
+  const destino  = document.getElementById('cupon-destinatarios').value;
+  const correoEspecifico = document.getElementById('cupon-correo-especifico').value.trim();
+  const msg = document.getElementById('cupon-envio-msg');
+  const btn = document.getElementById('btn-enviar-cupon');
+
+  msg.className = 'msg';
+  if (!cuponId) { msg.className = 'msg er'; msg.textContent = 'Selecciona un cupón.'; return; }
+  if (destino === 'especifico' && !correoEspecifico) {
+    msg.className = 'msg er'; msg.textContent = 'Ingresa el correo del cliente.'; return;
+  }
+
+  btn.disabled = true; btn.textContent = '⏳ Enviando...';
+
+  const { data, error } = await db.functions.invoke('enviar-cupon', {
+    body: {
+      cupon_id: cuponId,
+      destino: destino,                  // 'todos' | 'especifico'
+      correo_especifico: correoEspecifico
+    }
+  });
+
+  btn.disabled = false; btn.textContent = '📧 Enviar cupón';
+
+  if (error) {
+    msg.className = 'msg er';
+    msg.textContent = 'Error al enviar: ' + (error.message || 'revisa que la función esté desplegada (ver INSTRUCCIONES_CUPONES.md).');
+    return;
+  }
+
+  msg.className = 'msg ok';
+  msg.textContent = `✓ Cupón enviado a ${data?.enviados || 0} destinatario(s).`;
+}
+
+
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', async () => {
   const { data } = await db.auth.getSession();
@@ -1406,7 +1679,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('login-wrap').style.display = 'none';
     document.getElementById('panel').style.display = 'block';
     const nombre = user.user_metadata?.nombre_completo || user.email.split('@')[0];
-    document.getElementById('a-nombre').textContent = ' ' + nombre.split(' ')[0];
+    document.getElementById('a-nombre').textContent = '👤 ' + nombre.split(' ')[0];
   }
 });
 </script>
