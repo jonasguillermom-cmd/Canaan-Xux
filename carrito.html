@@ -30,6 +30,24 @@
   .resumen-total { display:flex; justify-content:space-between; font-size:18px; font-weight:700; color:var(--cafe); margin-top:14px; padding-top:14px; border-top:2px solid var(--borde); }
   .btn-pagar { width:100%; background:var(--naranja); color:#fff; border:none; border-radius:8px; padding:14px; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; margin-top:16px; transition:background .2s; }
   .btn-pagar:hover { background:var(--naranja-oscuro); }
+
+  /* CUPONES */
+  .cupon-banner-wrap { margin: 20px 0; display: flex; flex-direction: column; gap: 10px; }
+  .cupon-banner { background: linear-gradient(135deg, #fef8f2, #fdf0e0); border: 2px dashed var(--naranja); border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: transform .15s; }
+  .cupon-banner:hover { transform: translateY(-2px); }
+  .cupon-banner .icon { font-size: 26px; }
+  .cupon-banner .info { flex: 1; }
+  .cupon-banner .codigo { font-weight: 800; color: var(--naranja); font-size: 14px; letter-spacing: 1px; }
+  .cupon-banner .desc { font-size: 12px; color: var(--gris); margin-top: 2px; }
+  .cupon-banner .usar-btn { background: var(--naranja); color: #fff; border: none; border-radius: 6px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+
+  .campo-cupon { display: flex; gap: 8px; margin-bottom: 14px; }
+  .campo-cupon input { flex: 1; padding: 10px 12px; border: 1.5px solid var(--borde); border-radius: 7px; font-size: 13px; font-family: inherit; outline: none; }
+  .campo-cupon input:focus { border-color: var(--naranja); }
+  .campo-cupon button { background: var(--cafe); color: #fff; border: none; border-radius: 7px; padding: 0 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .msg-cupon { font-size: 12px; margin-bottom: 10px; display: none; padding: 8px 12px; border-radius: 6px; }
+  .msg-cupon.ok { background: #eafaf1; color: #1e8449; display: block; }
+  .msg-cupon.error { background: #fdecea; color: #c0392b; display: block; }
   .loading { text-align:center; padding:40px; color:var(--gris); }
 </style>
 </head>
@@ -73,6 +91,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 <script>
+let totalCarritoActual = 0;
+let cuponAplicado = null; // {id, codigo, tipo_descuento, valor, monto_minimo}
+
 // Cargar items del carrito desde Supabase
 async function cargarCarrito() {
   const { data: session } = await db.auth.getSession();
@@ -118,6 +139,8 @@ async function cargarCarrito() {
       </tr>`;
   }).join('');
 
+  totalCarritoActual = total;
+
   contenedor.innerHTML = `
     <table class="carrito-tabla">
       <thead><tr>
@@ -125,14 +148,26 @@ async function cargarCarrito() {
       </tr></thead>
       <tbody>${filas}</tbody>
     </table>
+
+    <div class="cupon-banner-wrap" id="cupon-banner-wrap"></div>
+
     <div class="carrito-resumen">
       <div class="resumen-card">
-        <div class="resumen-row"><span>Subtotal</span><span id="txt-total">$${total.toFixed(2)}</span></div>
+        <div class="campo-cupon">
+          <input type="text" id="input-cupon" placeholder="Código de cupón" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+          <button onclick="aplicarCupon()" id="btn-aplicar-cupon">Aplicar</button>
+        </div>
+        <div class="msg-cupon" id="msg-cupon"></div>
+
+        <div class="resumen-row"><span>Subtotal</span><span id="txt-subtotal">$${total.toFixed(2)}</span></div>
+        <div class="resumen-row" id="row-descuento" style="display:none;color:#1e8449"><span>Descuento <span id="cupon-aplicado-txt"></span></span><span id="txt-descuento">-$0.00</span></div>
         <div class="resumen-row"><span>Envío</span><span>Por calcular</span></div>
-        <div class="resumen-total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
+        <div class="resumen-total"><span>Total</span><span id="txt-total">$${total.toFixed(2)}</span></div>
         <button class="btn-pagar" onclick="procesarPedido()">Proceder al pago</button>
       </div>
     </div>`;
+
+  cargarCuponesDisponibles();
 }
 
 async function cambiarCantidad(productoId, delta) {
@@ -157,6 +192,115 @@ async function eliminarItem(productoId) {
   await db.from('carrito').delete().eq('usuario_id', uid).eq('producto_id', productoId);
   cargarCarrito();
   actualizarBadgeCarrito();
+}
+
+// ─── CUPONES ───
+async function cargarCuponesDisponibles() {
+  const wrap = document.getElementById('cupon-banner-wrap');
+  if (!wrap) return;
+
+  const { data } = await db.from('cupones')
+    .select('*')
+    .eq('activo', true)
+    .eq('visible_publico', true)
+    .order('creado_en', { ascending: false });
+
+  const hoy = new Date();
+  const vigentes = (data || []).filter(c => {
+    if (c.fecha_expira && new Date(c.fecha_expira) < hoy) return false;
+    if (c.usos_maximos && c.usos_actuales >= c.usos_maximos) return false;
+    return true;
+  });
+
+  if (!vigentes.length) { wrap.innerHTML = ''; return; }
+
+  wrap.innerHTML = vigentes.map(c => {
+    const valorTxt = c.tipo_descuento === 'porcentaje' ? c.valor + '% de descuento' : '$' + parseFloat(c.valor).toFixed(2) + ' de descuento';
+    return `
+      <div class="cupon-banner" onclick="document.getElementById('input-cupon').value='${c.codigo}'; aplicarCupon();">
+        <span class="icon">🎟️</span>
+        <div class="info">
+          <div class="codigo">${c.codigo} — ${valorTxt}</div>
+          <div class="desc">${c.titulo}${c.monto_minimo > 0 ? ' · Compra mínima $' + c.monto_minimo : ''}</div>
+        </div>
+        <button class="usar-btn">Usar</button>
+      </div>`;
+  }).join('');
+}
+
+async function aplicarCupon() {
+  const codigo = document.getElementById('input-cupon').value.trim().toUpperCase();
+  const msg = document.getElementById('msg-cupon');
+  msg.className = 'msg-cupon';
+  if (!codigo) return;
+
+  const { data: cupon } = await db.from('cupones')
+    .select('*').eq('codigo', codigo).eq('activo', true).single();
+
+  if (!cupon) {
+    msg.className = 'msg-cupon error'; msg.textContent = 'Cupón no válido.';
+    cuponAplicado = null; actualizarResumenConCupon();
+    return;
+  }
+
+  const hoy = new Date();
+  if (cupon.fecha_expira && new Date(cupon.fecha_expira) < hoy) {
+    msg.className = 'msg-cupon error'; msg.textContent = 'Este cupón ya expiró.';
+    cuponAplicado = null; actualizarResumenConCupon();
+    return;
+  }
+  if (cupon.usos_maximos && cupon.usos_actuales >= cupon.usos_maximos) {
+    msg.className = 'msg-cupon error'; msg.textContent = 'Este cupón ya alcanzó su límite de usos.';
+    cuponAplicado = null; actualizarResumenConCupon();
+    return;
+  }
+  if (cupon.monto_minimo && totalCarritoActual < cupon.monto_minimo) {
+    msg.className = 'msg-cupon error';
+    msg.textContent = `Este cupón requiere una compra mínima de $${cupon.monto_minimo.toFixed(2)}.`;
+    cuponAplicado = null; actualizarResumenConCupon();
+    return;
+  }
+
+  // Verificar que el usuario no lo haya usado ya
+  const { data: s } = await db.auth.getSession();
+  const uid = s?.session?.user?.id;
+  const { data: usoPrevio } = await db.from('cupones_usos')
+    .select('id').eq('cupon_id', cupon.id).eq('usuario_id', uid).maybeSingle();
+
+  if (usoPrevio) {
+    msg.className = 'msg-cupon error'; msg.textContent = 'Ya usaste este cupón anteriormente.';
+    cuponAplicado = null; actualizarResumenConCupon();
+    return;
+  }
+
+  cuponAplicado = cupon;
+  msg.className = 'msg-cupon ok'; msg.textContent = `✓ Cupón "${cupon.codigo}" aplicado.`;
+  actualizarResumenConCupon();
+}
+
+function actualizarResumenConCupon() {
+  const rowDescuento = document.getElementById('row-descuento');
+  const txtDescuento = document.getElementById('txt-descuento');
+  const txtTotal = document.getElementById('txt-total');
+  const cuponTxt = document.getElementById('cupon-aplicado-txt');
+
+  if (!cuponAplicado) {
+    rowDescuento.style.display = 'none';
+    txtTotal.textContent = '$' + totalCarritoActual.toFixed(2);
+    return;
+  }
+
+  let descuento = cuponAplicado.tipo_descuento === 'porcentaje'
+    ? totalCarritoActual * (cuponAplicado.valor / 100)
+    : cuponAplicado.valor;
+  descuento = Math.min(descuento, totalCarritoActual);
+
+  const totalFinal = totalCarritoActual - descuento;
+
+  rowDescuento.style.display = 'flex';
+  cuponTxt.textContent = '(' + cuponAplicado.codigo + ')';
+  txtDescuento.textContent = '-$' + descuento.toFixed(2);
+  txtTotal.textContent = '$' + totalFinal.toFixed(2);
 }
 
 // ─── PROCESAR PEDIDO: descuenta stock automáticamente ───
@@ -186,15 +330,33 @@ async function procesarPedido() {
 
   const total = items.reduce((s, i) => s + (i.productos.precio * i.cantidad), 0);
 
+  // Aplicar descuento de cupón si hay uno válido
+  let descuento = 0;
+  if (cuponAplicado) {
+    descuento = cuponAplicado.tipo_descuento === 'porcentaje'
+      ? total * (cuponAplicado.valor / 100)
+      : cuponAplicado.valor;
+    descuento = Math.min(descuento, total);
+  }
+  const totalFinal = total - descuento;
+
   // Crear el pedido
   const { data: pedido, error: errPedido } = await db.from('pedidos').insert({
-    usuario_id: usuario.id, total, estado: 'pagado'
+    usuario_id: usuario.id, total: totalFinal, estado: 'pagado'
   }).select().single();
 
   if (errPedido) {
     alert('Hubo un error al procesar tu pedido. Intenta de nuevo.');
     btn.disabled = false; btn.textContent = 'Proceder al pago';
     return;
+  }
+
+  // Registrar el uso del cupón
+  if (cuponAplicado) {
+    await db.from('cupones_usos').insert({
+      cupon_id: cuponAplicado.id, usuario_id: usuario.id, pedido_id: pedido.id
+    });
+    await db.from('cupones').update({ usos_actuales: (cuponAplicado.usos_actuales || 0) + 1 }).eq('id', cuponAplicado.id);
   }
 
   // Crear items del pedido + descontar stock + registrar movimiento
