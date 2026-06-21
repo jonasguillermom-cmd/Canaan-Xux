@@ -125,6 +125,22 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
 .cs-img-drop:hover{border-color:var(--naranja)}
 .cs-guardar-todo{width:100%;background:var(--naranja);color:#fff;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin:16px 0;position:sticky;bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 .cs-guardar-todo:disabled{background:#ccc}
+
+/* LAYOUT CON VISTA PREVIA (desktop) */
+.cs-layout{display:block}
+.cs-editor-col{width:100%}
+.cs-preview-col{display:none}
+
+@media(min-width:980px){
+  .cs-layout{display:grid;grid-template-columns:420px 1fr;gap:20px;align-items:start}
+  .cs-editor-col{max-height:calc(100vh - 110px);overflow-y:auto;padding-right:6px}
+  .cs-preview-col{display:block;position:sticky;top:110px}
+  .cs-preview-frame-wrap{background:#2a2510;border-radius:14px;padding:14px;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+  .cs-preview-frame-wrap .cs-preview-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 4px}
+  .cs-preview-frame-wrap .cs-preview-bar span{color:#fff;font-size:12px;font-weight:700;letter-spacing:.04em}
+  .cs-preview-frame-wrap .cs-preview-bar button{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+  #cs-preview-iframe{width:100%;height:calc(100vh - 190px);border:none;border-radius:8px;background:#fff}
+}
 </style>
 </head>
 <body>
@@ -254,31 +270,49 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--naranja)}
   </div><!-- /seccion-productos -->
 
   <!-- ═══════════ SECCIÓN: DISEÑO DEL SITIO ═══════════ -->
-  <div class="seccion" id="seccion-contenido" style="display:none">
+  <div class="seccion" id="seccion-contenido" style="display:none; padding:16px 14px">
 
-    <div class="card" style="margin:16px 14px 0">
-      <div class="card-title">🎨 Editar textos e imágenes</div>
-      <p style="font-size:12px;color:var(--gris);margin-bottom:14px">
-        Elige la página que quieres modificar. Vas a poder cambiar los textos principales y las fotos/banners sin tocar código.
-      </p>
-      <div class="campo">
-        <label>Página a editar</label>
-        <select id="cs-pagina" onchange="cargarCamposPagina()">
-          <option value="">Selecciona una página...</option>
-          <option value="index.html">🏠 Inicio</option>
-          <option value="nosotros.html">👥 Nosotros</option>
-          <option value="abejas.html">🐝 Abejas</option>
-          <option value="melipona.html">🐝 Melipona</option>
-          <option value="centro_rescate.html">🆘 Centro de Rescate</option>
-        </select>
+    <div class="cs-layout">
+
+      <!-- COLUMNA EDITOR -->
+      <div class="cs-editor-col">
+        <div class="card">
+          <div class="card-title">🎨 Editar textos e imágenes</div>
+          <p style="font-size:12px;color:var(--gris);margin-bottom:14px">
+            Elige la página que quieres modificar. En computadora verás la vista previa en vivo a la derecha.
+          </p>
+          <div class="campo">
+            <label>Página a editar</label>
+            <select id="cs-pagina" onchange="cargarCamposPagina()">
+              <option value="">Selecciona una página...</option>
+              <option value="index.html">🏠 Inicio</option>
+              <option value="nosotros.html">👥 Nosotros</option>
+              <option value="abejas.html">🐝 Abejas</option>
+              <option value="melipona.html">🐝 Melipona</option>
+              <option value="centro_rescate.html">🆘 Centro de Rescate</option>
+            </select>
+          </div>
+          <button class="btn-add-var" id="btn-ver-pagina" onclick="abrirVistaPrevia()" style="display:none">👁 Ver esta página en otra pestaña</button>
+        </div>
+
+        <div id="cs-campos"></div>
       </div>
-      <button class="btn-add-var" id="btn-ver-pagina" onclick="abrirVistaPrevia()" style="display:none">👁 Ver esta página en otra pestaña</button>
+
+      <!-- COLUMNA VISTA PREVIA (solo desktop) -->
+      <div class="cs-preview-col">
+        <div class="cs-preview-frame-wrap">
+          <div class="cs-preview-bar">
+            <span>👁 Vista previa en vivo</span>
+            <button onclick="recargarPreview()">↻ Recargar</button>
+          </div>
+          <iframe id="cs-preview-iframe" src="about:blank"></iframe>
+        </div>
+      </div>
+
     </div>
 
-    <div id="cs-campos" style="padding:0 14px"></div>
-
     <!-- BLOG -->
-    <div class="card" style="margin:16px 14px">
+    <div class="card" style="margin:16px 0 0">
       <div class="card-title">📰 Entradas del Blog</div>
       <p style="font-size:12px;color:var(--gris);margin-bottom:14px">Crea, edita o elimina las publicaciones del Blog y Eventos.</p>
       <button class="btn-add-var" onclick="mostrarFormBlog()">+ Nueva entrada de blog</button>
@@ -394,11 +428,44 @@ let archivosNuevos  = {};   // { clave: File } fotos nuevas pendientes de subir
 
 // ── VISTA PREVIA ──
 const SITIO_URL = 'https://canaan-xux.vercel.app';
+let previewListo = false;
 
 function abrirVistaPrevia() {
   const pagina = document.getElementById('cs-pagina').value;
   if (!pagina) return;
   window.open(SITIO_URL + '/' + pagina, '_blank');
+}
+
+function recargarPreview() {
+  const pagina = document.getElementById('cs-pagina').value;
+  if (!pagina) return;
+  previewListo = false;
+  const iframe = document.getElementById('cs-preview-iframe');
+  iframe.src = SITIO_URL + '/' + pagina + '?preview=1&t=' + Date.now();
+}
+
+// Aplica TODOS los valores actuales (guardados + los que el admin va escribiendo)
+// directamente dentro del iframe, sin necesidad de guardar en Supabase.
+function aplicarPreviewEnVivo() {
+  const iframe = document.getElementById('cs-preview-iframe');
+  if (!iframe || !previewListo) return;
+  let doc;
+  try { doc = iframe.contentDocument || iframe.contentWindow.document; }
+  catch(e) { return; } // bloqueado por cross-origin si el dominio no coincide
+
+  Object.keys(valoresActuales).forEach(clave => {
+    const valor = valoresActuales[clave];
+    if (!valor) return;
+    const el = doc.querySelector(`[data-editable="${clave}"]`);
+    if (!el) return;
+    if (el.tagName === 'IMG') {
+      el.src = valor;
+      el.style.display = '';
+      el.onerror = null;
+    } else {
+      el.innerHTML = valor;
+    }
+  });
 }
 
 async function cargarCamposPagina() {
@@ -408,8 +475,18 @@ async function cargarCamposPagina() {
   wrap.innerHTML = '';
   archivosNuevos = {};
 
-  if (!pagina) { btnVer.style.display = 'none'; return; }
+  if (!pagina) {
+    btnVer.style.display = 'none';
+    document.getElementById('cs-preview-iframe').src = 'about:blank';
+    return;
+  }
   btnVer.style.display = 'block';
+
+  // Cargar vista previa en el iframe (solo visible en desktop, pero la cargamos siempre)
+  previewListo = false;
+  const iframe = document.getElementById('cs-preview-iframe');
+  iframe.src = SITIO_URL + '/' + pagina + '?preview=1&t=' + Date.now();
+  iframe.onload = () => { previewListo = true; aplicarPreviewEnVivo(); };
 
   const campos = CAMPOS_POR_PAGINA[pagina] || [];
   if (!campos.length) {
@@ -439,10 +516,13 @@ async function cargarCamposPagina() {
     return `
       <div class="cs-campo">
         <span class="cs-campo-label">📝 ${c.etiqueta}</span>
-        <textarea id="campo-${c.clave}" oninput="valoresActuales['${c.clave}']=this.value">${valorGuardado}</textarea>
+        <textarea id="campo-${c.clave}" oninput="valoresActuales['${c.clave}']=this.value; aplicarPreviewEnVivo()">${valorGuardado}</textarea>
       </div>`;
   }).join('') + `<button class="cs-guardar-todo" id="btn-guardar-contenido" onclick="guardarContenidoPagina()">💾 Guardar cambios de esta página</button>
   <div class="msg" id="cs-msg"></div>`;
+
+  // Aplicar valores guardados al iframe en cuanto esté listo (por si carga antes que este punto)
+  setTimeout(aplicarPreviewEnVivo, 600);
 }
 
 function onContenidoFoto(input, clave) {
@@ -454,6 +534,9 @@ function onContenidoFoto(input, clave) {
     const img = document.getElementById('prev-' + clave);
     img.src = e.target.result;
     img.style.display = 'block';
+    // Vista previa en vivo: usar el base64 temporal hasta que se guarde de verdad
+    valoresActuales[clave] = e.target.result;
+    aplicarPreviewEnVivo();
   };
   reader.readAsDataURL(file);
 }
@@ -983,7 +1066,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('login-wrap').style.display = 'none';
     document.getElementById('panel').style.display = 'block';
     const nombre = user.user_metadata?.nombre_completo || user.email.split('@')[0];
-    document.getElementById('a-nombre').textContent = '👤 ' + nombre.split(' ')[0];
+    document.getElementById('a-nombre').textContent = ' ' + nombre.split(' ')[0];
   }
 });
 </script>
