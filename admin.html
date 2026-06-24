@@ -335,6 +335,7 @@ input[type=checkbox]{width:19px;height:19px;accent-color:var(--naranja);cursor:p
     <button class="sec-btn" id="sec-btn-costos" onclick="showSeccion('costos', this)">💰 Costos</button>
     <button class="sec-btn" id="sec-btn-inventario" onclick="showSeccion('inventario', this)">📊 Inventario</button>
     <button class="sec-btn" id="sec-btn-cupones" onclick="showSeccion('cupones', this)">🎟️ Cupones</button>
+    <button class="sec-btn" id="sec-btn-usuarios" onclick="showSeccion('usuarios', this)">👥 Usuarios</button>
   </div>
 
   <div class="main-content">
@@ -616,6 +617,18 @@ input[type=checkbox]{width:19px;height:19px;accent-color:var(--naranja);cursor:p
 
   </div>
 
+  <!-- ═══════════ SECCIÓN: USUARIOS ═══════════ -->
+  <div class="seccion" id="seccion-usuarios" style="display:none; padding:16px 14px">
+    <div class="card">
+      <div class="card-title">👥 Usuarios registrados (<span id="usuarios-total">0</span>)</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input type="text" id="usuarios-buscar" placeholder="Buscar por nombre o correo..." style="flex:1;padding:10px 12px;border:1.5px solid var(--borde);border-radius:7px;font-size:13px;font-family:inherit;outline:none" oninput="filtrarUsuarios()">
+        <button class="btn-c" onclick="cargarUsuarios()">🔄 Refrescar</button>
+      </div>
+      <div id="usuarios-lista"><div class="empty-msg">Cargando usuarios...</div></div>
+    </div>
+  </div>
+
   </div><!-- /main-content -->
   </div><!-- /app-shell -->
 
@@ -659,12 +672,14 @@ function showSeccion(name, btn) {
   document.getElementById('seccion-costos').style.display     = name === 'costos'     ? 'block' : 'none';
   document.getElementById('seccion-inventario').style.display = name === 'inventario' ? 'block' : 'none';
   document.getElementById('seccion-cupones').style.display    = name === 'cupones'    ? 'block' : 'none';
+  document.getElementById('seccion-usuarios').style.display   = name === 'usuarios'   ? 'block' : 'none';
   document.querySelectorAll('.sec-btn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   if (name === 'contenido')  cargarListaBlog();
   if (name === 'costos')     cargarCostos();
   if (name === 'inventario') cargarInventario();
   if (name === 'cupones')    { cargarCupones(); actualizarContadorClientes(); }
+  if (name === 'usuarios')   cargarUsuarios();
 }
 
 // ════════════════════════════════════════════════════
@@ -1737,6 +1752,11 @@ async function editarCupon(id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+async function quitarRestriccionCupon(id) {
+  await db.from('cupones').update({ destinatario_email: null }).eq('id', id);
+  cargarCupones();
+}
+
 async function eliminarCupon(id, codigo) {
   if (!confirm(`¿Eliminar el cupón "${codigo}"?`)) return;
   await db.from('cupones').delete().eq('id', id);
@@ -1768,9 +1788,10 @@ async function cargarCupones() {
       <div style="width:48px;height:48px;border-radius:8px;background:var(--fondo);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎟️</div>
       <div class="pi-info">
         <div class="pi-nombre">${c.codigo} — ${valorTxt} off</div>
-        <div class="pi-meta">${c.titulo} · ${usosTxt} · ${expirado ? '⛔ Expirado' : (c.activo ? '✅ Activo' : '⛔ Inactivo')}</div>
+        <div class="pi-meta">${c.titulo} · ${usosTxt} · ${expirado ? '⛔ Expirado' : (c.activo ? '✅ Activo' : '⛔ Inactivo')}${c.destinatario_email ? ' · 🔒 Solo: ' + c.destinatario_email : ''}</div>
       </div>
       <div class="pi-btns">
+        ${c.destinatario_email ? `<button class="b-e" onclick="quitarRestriccionCupon('${c.id}')" title="Quitar restricción">🔓</button>` : ''}
         <button class="b-e" onclick="editarCupon('${c.id}')">✏️</button>
         <button class="b-d" onclick="eliminarCupon('${c.id}','${c.codigo}')">🗑</button>
       </div>
@@ -1806,7 +1827,11 @@ async function enviarCupon() {
   let correos = [];
   if (destino === 'especifico') {
     correos = [correoEspecifico];
+    // Restringir el uso de este cupón únicamente a este correo
+    await db.from('cupones').update({ destinatario_email: correoEspecifico.toLowerCase() }).eq('id', cuponId);
   } else {
+    // Enviar a todos: el cupón vuelve a estar abierto para cualquier cliente
+    await db.from('cupones').update({ destinatario_email: null }).eq('id', cuponId);
     const { data: perfiles, error: errPerfiles } = await db.from('perfiles').select('email');
     if (errPerfiles) {
       msg.className = 'msg er';
@@ -1851,9 +1876,72 @@ async function enviarCupon() {
 
   msg.className = enviados > 0 ? 'msg ok' : 'msg er';
   msg.textContent = `✓ Cupón enviado a ${enviados} de ${correos.length} destinatario(s).` +
+    (destino === 'especifico' ? ` 🔒 Este cupón solo podrá usarlo ${correoEspecifico}.` : '') +
     (fallidos.length ? ` ⚠️ Fallaron: ${fallidos.join(', ')}` : '');
 }
 
+
+// ════════════════════════════════════════════════════
+//   USUARIOS REGISTRADOS
+// ════════════════════════════════════════════════════
+let usuariosCache = [];
+
+async function cargarUsuarios() {
+  const lista = document.getElementById('usuarios-lista');
+  lista.innerHTML = '<div class="empty-msg">Cargando usuarios...</div>';
+
+  const { data, error } = await db.from('perfiles').select('*');
+
+  if (error) {
+    lista.innerHTML = '<div class="empty-msg">⚠️ No se pudo leer la tabla "perfiles". ¿Ya existe en Supabase?</div>';
+    document.getElementById('usuarios-total').textContent = '0';
+    return;
+  }
+
+  // Ordenar por fecha de registro si existe la columna (creado_en o created_at)
+  usuariosCache = (data || []).slice().sort((a, b) => {
+    const fa = a.creado_en || a.created_at || '';
+    const fb = b.creado_en || b.created_at || '';
+    return fb.localeCompare(fa);
+  });
+
+  document.getElementById('usuarios-total').textContent = usuariosCache.length;
+  renderUsuarios(usuariosCache);
+}
+
+function filtrarUsuarios() {
+  const q = document.getElementById('usuarios-buscar').value.trim().toLowerCase();
+  if (!q) { renderUsuarios(usuariosCache); return; }
+  const filtrados = usuariosCache.filter(u =>
+    (u.email || '').toLowerCase().includes(q) ||
+    (u.nombre_completo || '').toLowerCase().includes(q)
+  );
+  renderUsuarios(filtrados);
+}
+
+function renderUsuarios(usuarios) {
+  const lista = document.getElementById('usuarios-lista');
+  if (!usuarios.length) {
+    lista.innerHTML = '<div class="empty-msg">No se encontraron usuarios.</div>';
+    return;
+  }
+  lista.innerHTML = usuarios.map(u => {
+    const fecha = u.creado_en || u.created_at;
+    const fechaTxt = fecha ? new Date(fecha).toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+    const nombre = u.nombre_completo || u.nombre || '(sin nombre)';
+    return `
+    <div class="prod-item">
+      <div style="width:48px;height:48px;border-radius:8px;background:var(--fondo);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👤</div>
+      <div class="pi-info">
+        <div class="pi-nombre">${nombre}</div>
+        <div class="pi-meta">${u.email || '—'}${fechaTxt ? ' · Registrado: ' + fechaTxt : ''}</div>
+      </div>
+      <div class="pi-btns">
+        <button class="b-e" onclick="document.getElementById('cupon-destinatarios').value='especifico'; document.getElementById('cupon-correo-especifico').value='${u.email || ''}'; toggleCorreoEspecifico(); showSeccion('cupones', document.getElementById('sec-btn-cupones'));" title="Enviarle un cupón">🎟️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', async () => {
