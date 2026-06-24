@@ -199,6 +199,9 @@ async function cargarCuponesDisponibles() {
   const wrap = document.getElementById('cupon-banner-wrap');
   if (!wrap) return;
 
+  const { data: s } = await db.auth.getSession();
+  const miCorreo = (s?.session?.user?.email || '').toLowerCase();
+
   const { data } = await db.from('cupones')
     .select('*')
     .eq('activo', true)
@@ -209,6 +212,8 @@ async function cargarCuponesDisponibles() {
   const vigentes = (data || []).filter(c => {
     if (c.fecha_expira && new Date(c.fecha_expira) < hoy) return false;
     if (c.usos_maximos && c.usos_actuales >= c.usos_maximos) return false;
+    // Si el cupón es exclusivo para un correo, solo mostrarlo a ese usuario
+    if (c.destinatario_email && c.destinatario_email.toLowerCase() !== miCorreo) return false;
     return true;
   });
 
@@ -239,6 +244,15 @@ async function aplicarCupon() {
 
   if (!cupon) {
     msg.className = 'msg-cupon error'; msg.textContent = 'Cupón no válido.';
+    cuponAplicado = null; actualizarResumenConCupon();
+    return;
+  }
+
+  // Verificar que el cupón no sea exclusivo de otro usuario
+  const { data: sCheck } = await db.auth.getSession();
+  const miCorreoCheck = (sCheck?.session?.user?.email || '').toLowerCase();
+  if (cupon.destinatario_email && cupon.destinatario_email.toLowerCase() !== miCorreoCheck) {
+    msg.className = 'msg-cupon error'; msg.textContent = 'Este cupón es exclusivo para otro usuario.';
     cuponAplicado = null; actualizarResumenConCupon();
     return;
   }
