@@ -602,8 +602,11 @@ input[type=checkbox]{width:19px;height:19px;accent-color:var(--naranja);cursor:p
         <p id="cupon-contador-clientes" style="font-size:12px;color:var(--gris);margin-top:6px"></p>
       </div>
       <div class="campo" id="cupon-correo-especifico-wrap" style="display:none">
-        <label>Correo del cliente</label>
-        <input type="email" id="cupon-correo-especifico" placeholder="cliente@correo.com">
+        <label>Selecciona el cliente</label>
+        <input type="text" id="cupon-correo-buscar" placeholder="🔍 Buscar por nombre o correo..." style="margin-bottom:8px" oninput="filtrarSelectUsuariosCupon()">
+        <select id="cupon-correo-especifico">
+          <option value="">Cargando usuarios...</option>
+        </select>
       </div>
       <button class="btn-g" onclick="enviarCupon()" id="btn-enviar-cupon">📧 Enviar cupón</button>
       <div class="msg" id="cupon-envio-msg"></div>
@@ -1653,7 +1656,42 @@ function toggleCorreoEspecifico() {
   const tipo = document.getElementById('cupon-destinatarios').value;
   document.getElementById('cupon-correo-especifico-wrap').style.display = tipo === 'especifico' ? 'block' : 'none';
   if (tipo === 'todos') actualizarContadorClientes();
-  else document.getElementById('cupon-contador-clientes').textContent = '';
+  else { document.getElementById('cupon-contador-clientes').textContent = ''; cargarSelectUsuariosCupon(); }
+}
+
+async function cargarSelectUsuariosCupon() {
+  const sel = document.getElementById('cupon-correo-especifico');
+  if (!usuariosCache.length) {
+    const { data, error } = await db.from('perfiles').select('*');
+    if (error) {
+      sel.innerHTML = '<option value="">⚠️ No se pudo cargar la lista de usuarios</option>';
+      return;
+    }
+    usuariosCache = data || [];
+  }
+  renderSelectUsuariosCupon(usuariosCache);
+}
+
+function renderSelectUsuariosCupon(usuarios) {
+  const sel = document.getElementById('cupon-correo-especifico');
+  if (!usuarios.length) {
+    sel.innerHTML = '<option value="">No hay usuarios registrados</option>';
+    return;
+  }
+  sel.innerHTML = usuarios
+    .filter(u => u.email)
+    .map(u => `<option value="${u.email}">${u.nombre_completo || u.nombre || u.email} — ${u.email}</option>`)
+    .join('');
+}
+
+function filtrarSelectUsuariosCupon() {
+  const q = document.getElementById('cupon-correo-buscar').value.trim().toLowerCase();
+  if (!q) { renderSelectUsuariosCupon(usuariosCache); return; }
+  const filtrados = usuariosCache.filter(u =>
+    (u.email || '').toLowerCase().includes(q) ||
+    (u.nombre_completo || '').toLowerCase().includes(q)
+  );
+  renderSelectUsuariosCupon(filtrados);
 }
 
 async function actualizarContadorClientes() {
@@ -1937,7 +1975,7 @@ function renderUsuarios(usuarios) {
         <div class="pi-meta">${u.email || '—'}${fechaTxt ? ' · Registrado: ' + fechaTxt : ''}</div>
       </div>
       <div class="pi-btns">
-        <button class="b-e" onclick="document.getElementById('cupon-destinatarios').value='especifico'; document.getElementById('cupon-correo-especifico').value='${u.email || ''}'; toggleCorreoEspecifico(); showSeccion('cupones', document.getElementById('sec-btn-cupones'));" title="Enviarle un cupón">🎟️</button>
+        <button class="b-e" onclick="document.getElementById('cupon-destinatarios').value='especifico'; toggleCorreoEspecifico(); document.getElementById('cupon-correo-especifico').value='${u.email || ''}'; showSeccion('cupones', document.getElementById('sec-btn-cupones'));" title="Enviarle un cupón">🎟️</button>
       </div>
     </div>`;
   }).join('');
@@ -1952,7 +1990,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('login-wrap').style.display = 'none';
     document.getElementById('panel').style.display = 'block';
     const nombre = user.user_metadata?.nombre_completo || user.email.split('@')[0];
-    document.getElementById('a-nombre').textContent = '👤 ' + nombre.split(' ')[0];
+    document.getElementById('a-nombre').textContent = ' ' + nombre.split(' ')[0];
   }
 });
 </script>
