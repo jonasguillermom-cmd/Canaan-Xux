@@ -7,7 +7,7 @@ const SUPABASE_ANON = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-const PAGINAS_PROTEGIDAS = ['carrito.html'];
+const PAGINAS_PROTEGIDAS = ['carrito.html', 'cupones.html', 'mis-compras.html'];
 
 // ─── HERO SLIDER ───
 let slide = 0;
@@ -75,6 +75,8 @@ function toggleMenuUsuario(e) {
       <div style="font-size:12px;color:#999;margin-top:2px;">${usuarioActual.email}</div>
     </div>
     <a href="carrito.html" style="display:block;padding:12px 16px;font-size:14px;color:#3d3b1f;text-decoration:none;border-bottom:1px solid #f5f5f5;">🛒 Mi carrito</a>
+    <a href="cupones.html" style="display:block;padding:12px 16px;font-size:14px;color:#3d3b1f;text-decoration:none;border-bottom:1px solid #f5f5f5;">🎟️ Mis cupones</a>
+    <a href="mis-compras.html" style="display:block;padding:12px 16px;font-size:14px;color:#3d3b1f;text-decoration:none;border-bottom:1px solid #f5f5f5;">📦 Mis compras</a>
     <a href="#" id="btn-cerrar-sesion" style="display:block;padding:12px 16px;font-size:14px;color:#c0392b;text-decoration:none;">↩ Cerrar sesión</a>
   `;
   document.body.appendChild(menu);
