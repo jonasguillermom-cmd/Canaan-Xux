@@ -297,6 +297,32 @@ input[type=checkbox]{width:19px;height:19px;accent-color:var(--naranja);cursor:p
   .cs-preview-frame-wrap .cs-preview-bar button:hover{background:rgba(255,255,255,.22)}
   #cs-preview-iframe{width:100%;height:calc(100vh - 190px);border:none;border-radius:11px;background:#fff;box-shadow:0 4px 18px rgba(0,0,0,.18)}
 }
+
+/* VENTAS */
+.ventas-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:16px}
+@media(min-width:640px){.ventas-kpis{grid-template-columns:repeat(4,1fr)}}
+.ventas-kpi-card{background:var(--panel-bg);border-radius:var(--radio);padding:16px;text-align:center;box-shadow:var(--sombra-md);
+  border:1px solid var(--borde)}
+.ventas-kpi-card .num{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--cafe)}
+.ventas-kpi-card .lbl{font-size:9.5px;color:var(--gris);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;font-weight:700}
+.ventas-kpi-card.destacado .num{color:var(--naranja-claro)}
+.filtro-ventas{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap}
+.filtro-ventas button{flex:1;min-width:80px;padding:9px;border-radius:8px;border:1.5px solid var(--borde);background:var(--panel-bg);
+  font-size:11px;font-weight:700;color:var(--gris);cursor:pointer;font-family:inherit;transition:all .15s}
+.filtro-ventas button:hover{border-color:var(--naranja-claro)}
+.filtro-ventas button.on{background:var(--naranja);border-color:var(--naranja);color:#16110a}
+.chart-wrap{position:relative;height:260px;margin-top:6px}
+.pedido-item{background:var(--blanco);border-radius:var(--radio-sm);padding:13px;margin-bottom:9px;display:flex;gap:13px;
+  align-items:center;box-shadow:var(--sombra-sm);border:1px solid rgba(230,223,208,.6)}
+.pedido-item .pe-info{flex:1;min-width:0}
+.pedido-item .pe-id{font-size:10.5px;color:var(--gris);font-weight:700}
+.pedido-item .pe-fecha{font-size:11.5px;color:var(--gris);margin-top:2px}
+.pedido-item .pe-total{font-size:15px;font-weight:800;color:var(--naranja)}
+.pedido-estado{font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em}
+.pedido-estado.pagado{background:var(--ok-bg);color:var(--ok-fg)}
+.pedido-estado.enviado{background:#173024;color:#4fc986}
+.pedido-estado.pendiente{background:#3a2a14;color:#e0a23a}
+.pedido-estado.cancelado{background:var(--er-bg);color:var(--er-fg)}
 </style>
 </head>
 <body>
@@ -331,6 +357,7 @@ input[type=checkbox]{width:19px;height:19px;accent-color:var(--naranja);cursor:p
   <!-- SECCIONES PRINCIPALES -->
   <div class="secciones-principales">
     <button class="sec-btn on" id="sec-btn-productos" onclick="showSeccion('productos', this)">📦 Productos</button>
+    <button class="sec-btn" id="sec-btn-ventas" onclick="showSeccion('ventas', this)">📈 Ventas</button>
     <button class="sec-btn" id="sec-btn-contenido" onclick="showSeccion('contenido', this)">🎨 Diseño del Sitio</button>
     <button class="sec-btn" id="sec-btn-costos" onclick="showSeccion('costos', this)">💰 Costos</button>
     <button class="sec-btn" id="sec-btn-inventario" onclick="showSeccion('inventario', this)">📊 Inventario</button>
@@ -432,6 +459,52 @@ input[type=checkbox]{width:19px;height:19px;accent-color:var(--naranja);cursor:p
   </div>
 
   </div><!-- /seccion-productos -->
+
+  <!-- ═══════════ SECCIÓN: VENTAS ═══════════ -->
+  <div class="seccion" id="seccion-ventas" style="display:none; padding:16px 14px">
+
+    <div class="filtro-ventas">
+      <button class="on" onclick="filtrarVentas(7, this)">7 días</button>
+      <button onclick="filtrarVentas(30, this)">30 días</button>
+      <button onclick="filtrarVentas(90, this)">90 días</button>
+      <button onclick="filtrarVentas(9999, this)">Todo</button>
+    </div>
+
+    <div class="ventas-kpis">
+      <div class="ventas-kpi-card destacado">
+        <div class="num" id="kpi-ventas-total">$0</div>
+        <div class="lbl">Ventas totales</div>
+      </div>
+      <div class="ventas-kpi-card">
+        <div class="num" id="kpi-pedidos-total">0</div>
+        <div class="lbl">Pedidos</div>
+      </div>
+      <div class="ventas-kpi-card">
+        <div class="num" id="kpi-ticket-prom">$0</div>
+        <div class="lbl">Ticket promedio</div>
+      </div>
+      <div class="ventas-kpi-card">
+        <div class="num" id="kpi-unidades">0</div>
+        <div class="lbl">Unidades vendidas</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📈 Ventas por día</div>
+      <div class="chart-wrap"><canvas id="chart-ventas-dia"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏆 Productos más vendidos</div>
+      <div class="chart-wrap"><canvas id="chart-top-productos"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🧾 Pedidos recientes</div>
+      <div id="ventas-pedidos-lista"><div class="empty-msg">Cargando pedidos...</div></div>
+    </div>
+
+  </div><!-- /seccion-ventas -->
 
   <!-- ═══════════ SECCIÓN: DISEÑO DEL SITIO ═══════════ -->
   <div class="seccion" id="seccion-contenido" style="display:none; padding:16px 14px">
@@ -639,6 +712,7 @@ input[type=checkbox]{width:19px;height:19px;accent-color:var(--naranja);cursor:p
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
 <script>
 const SURL  = 'https://biiefknpnkynfobbetav.supabase.co';
@@ -668,9 +742,10 @@ function showTab(name, btn) {
   btn.classList.add('on');
 }
 
-// ── SECCIONES PRINCIPALES (Productos / Diseño del Sitio) ──
+// ── SECCIONES PRINCIPALES (Productos / Ventas / Diseño del Sitio / ...) ──
 function showSeccion(name, btn) {
   document.getElementById('seccion-productos').style.display  = name === 'productos'  ? 'block' : 'none';
+  document.getElementById('seccion-ventas').style.display     = name === 'ventas'     ? 'block' : 'none';
   document.getElementById('seccion-contenido').style.display  = name === 'contenido'  ? 'block' : 'none';
   document.getElementById('seccion-costos').style.display     = name === 'costos'     ? 'block' : 'none';
   document.getElementById('seccion-inventario').style.display = name === 'inventario' ? 'block' : 'none';
@@ -678,11 +753,189 @@ function showSeccion(name, btn) {
   document.getElementById('seccion-usuarios').style.display   = name === 'usuarios'   ? 'block' : 'none';
   document.querySelectorAll('.sec-btn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
+  if (name === 'ventas')     cargarVentas(ventasDiasActual);
   if (name === 'contenido')  cargarListaBlog();
   if (name === 'costos')     cargarCostos();
   if (name === 'inventario') cargarInventario();
   if (name === 'cupones')    { cargarCupones(); actualizarContadorClientes(); }
   if (name === 'usuarios')   cargarUsuarios();
+}
+
+// ════════════════════════════════════════════════════
+//   CONTROL DE VENTAS
+// ════════════════════════════════════════════════════
+let ventasDiasActual = 7;
+let chartVentasDia = null;
+let chartTopProductos = null;
+
+function filtrarVentas(dias, btn) {
+  ventasDiasActual = dias;
+  document.querySelectorAll('.filtro-ventas button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  cargarVentas(dias);
+}
+
+function fmtMoney(n) {
+  return '$' + (parseFloat(n) || 0).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+async function cargarVentas(dias) {
+  const ESTADOS_VENTA = ['pagado', 'enviado'];
+  const desde = new Date();
+  desde.setDate(desde.getDate() - dias);
+  const desdeISO = desde.toISOString();
+
+  // ── Pedidos dentro del rango (ventas confirmadas) ──
+  const { data: pedidos, error: errPedidos } = await db
+    .from('pedidos')
+    .select('id, total, estado, creado_en')
+    .gte('creado_en', desdeISO)
+    .order('creado_en', { ascending: true });
+
+  if (errPedidos) {
+    document.getElementById('ventas-pedidos-lista').innerHTML =
+      '<div class="empty-msg">⚠️ No se pudo leer la tabla "pedidos": ' + errPedidos.message + '</div>';
+    return;
+  }
+
+  const pedidosVenta = (pedidos || []).filter(p => ESTADOS_VENTA.includes(p.estado));
+
+  // ── KPIs ──
+  const totalVentas = pedidosVenta.reduce((s, p) => s + parseFloat(p.total || 0), 0);
+  const numPedidos = pedidosVenta.length;
+  const ticketProm = numPedidos > 0 ? totalVentas / numPedidos : 0;
+
+  document.getElementById('kpi-ventas-total').textContent = fmtMoney(totalVentas);
+  document.getElementById('kpi-pedidos-total').textContent = numPedidos;
+  document.getElementById('kpi-ticket-prom').textContent = fmtMoney(ticketProm);
+
+  // ── Ventas por día (para la gráfica) ──
+  const porDia = {};
+  pedidosVenta.forEach(p => {
+    const fecha = p.creado_en.slice(0, 10); // YYYY-MM-DD
+    porDia[fecha] = (porDia[fecha] || 0) + parseFloat(p.total || 0);
+  });
+  const etiquetasDias = Object.keys(porDia).sort();
+  const valoresDias = etiquetasDias.map(f => porDia[f]);
+  const etiquetasDiasFmt = etiquetasDias.map(f => {
+    const d = new Date(f + 'T00:00:00');
+    return d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
+  });
+
+  renderChartVentasDia(etiquetasDiasFmt, valoresDias);
+
+  // ── Productos más vendidos (join con pedido_items) ──
+  const idsVenta = pedidosVenta.map(p => p.id);
+  let unidadesTotales = 0;
+  let topLabels = [];
+  let topValores = [];
+
+  if (idsVenta.length) {
+    const { data: items, error: errItems } = await db
+      .from('pedido_items')
+      .select('cantidad, precio_unit, producto_id, pedido_id, productos(nombre)')
+      .in('pedido_id', idsVenta);
+
+    if (!errItems && items) {
+      const porProducto = {};
+      items.forEach(it => {
+        unidadesTotales += it.cantidad || 0;
+        const nombre = it.productos?.nombre || 'Producto eliminado';
+        porProducto[nombre] = (porProducto[nombre] || 0) + it.cantidad;
+      });
+      const ordenado = Object.entries(porProducto).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      topLabels = ordenado.map(o => o[0]);
+      topValores = ordenado.map(o => o[1]);
+    }
+  }
+
+  document.getElementById('kpi-unidades').textContent = unidadesTotales;
+  renderChartTopProductos(topLabels, topValores);
+
+  // ── Lista de pedidos recientes (últimos 15, cualquier estado) ──
+  const recientes = (pedidos || []).slice(-15).reverse();
+  const lista = document.getElementById('ventas-pedidos-lista');
+  if (!recientes.length) {
+    lista.innerHTML = '<div class="empty-msg">No hay pedidos en este rango de fechas.</div>';
+    return;
+  }
+  lista.innerHTML = recientes.map(p => {
+    const fechaTxt = new Date(p.creado_en).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return `
+    <div class="pedido-item">
+      <div class="pe-info">
+        <div class="pe-id">#${p.id.slice(0, 8)}</div>
+        <div class="pe-fecha">${fechaTxt}</div>
+      </div>
+      <span class="pedido-estado ${p.estado}">${p.estado}</span>
+      <div class="pe-total">${fmtMoney(p.total)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderChartVentasDia(labels, valores) {
+  const ctx = document.getElementById('chart-ventas-dia');
+  if (chartVentasDia) chartVentasDia.destroy();
+  if (!labels.length) {
+    ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
+    return;
+  }
+  chartVentasDia = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Ventas ($)',
+        data: valores,
+        backgroundColor: 'rgba(221,154,62,0.55)',
+        borderColor: '#dd9a3e',
+        borderWidth: 1.5,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { color: '#9a9aa5' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+        x: { ticks: { color: '#9a9aa5' }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+function renderChartTopProductos(labels, valores) {
+  const ctx = document.getElementById('chart-top-productos');
+  if (chartTopProductos) chartTopProductos.destroy();
+  if (!labels.length) {
+    ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
+    return;
+  }
+  chartTopProductos = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Unidades vendidas',
+        data: valores,
+        backgroundColor: 'rgba(111,179,232,0.55)',
+        borderColor: '#6fb3e8',
+        borderWidth: 1.5,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { beginAtZero: true, ticks: { color: '#9a9aa5', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.06)' } },
+        y: { ticks: { color: '#9a9aa5' }, grid: { display: false } }
+      }
+    }
+  });
 }
 
 // ════════════════════════════════════════════════════
