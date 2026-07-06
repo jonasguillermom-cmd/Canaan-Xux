@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mis Cupones — Cana´an Xu´x</title>
+<link href="imagen/logo.jpg" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<style>
+  .cupones-wrap{max-width:900px;margin:0 auto;padding:40px 20px 70px}
+  .cupones-titulo{font-size:26px;font-weight:800;color:#3d3b1f;margin-bottom:6px}
+  .cupones-sub{font-size:14px;color:#7a7a6a;margin-bottom:28px}
+  .cupon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+  .cupon-card{position:relative;background:#fff;border:1.5px dashed #e0b97a;border-radius:14px;
+    padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.05);overflow:hidden}
+  .cupon-card::before,.cupon-card::after{content:'';position:absolute;width:18px;height:18px;
+    background:var(--gris-claro,#f5f0e8);border-radius:50%;top:50%;transform:translateY(-50%)}
+  .cupon-card::before{left:-9px}
+  .cupon-card::after{right:-9px}
+  .cupon-valor{font-size:28px;font-weight:800;color:#eb904d;line-height:1}
+  .cupon-titulo{font-size:15px;font-weight:700;color:#3d3b1f;margin-top:6px}
+  .cupon-desc{font-size:13px;color:#7a7a6a;margin-top:6px;line-height:1.5}
+  .cupon-meta{font-size:12px;color:#a39c85;margin-top:10px;display:flex;flex-direction:column;gap:2px}
+  .cupon-codigo-row{display:flex;align-items:center;gap:8px;margin-top:14px;
+    border-top:1px dashed #e0d8cc;padding-top:14px}
+  .cupon-codigo{flex:1;font-family:monospace;font-weight:800;font-size:15px;letter-spacing:1px;
+    background:#f5f0e8;border-radius:8px;padding:9px 12px;color:#3d3b1f;text-align:center}
+  .btn-copiar{background:#eb904d;color:#fff;border:none;border-radius:8px;padding:9px 14px;
+    font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s}
+  .btn-copiar:hover{background:#d67f3c}
+  .btn-copiar.copiado{background:#4caf50}
+  .cupones-empty{text-align:center;padding:60px 20px;color:#7a7a6a}
+  .cupones-empty .ico{font-size:44px;margin-bottom:14px}
+  .cupon-skel{background:#f5f0e8;border-radius:14px;height:180px}
+</style>
+</head>
+<body>
+
+<div class="announce"></div>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="logo-wrap">
+      <img class="logo-img" src="imagen/logo.png" alt="Miel Oro">
+      <div class="logo-name">
+        Cana´an  Xu´x
+        <span>Apicultoras Tenosiquenses</span>
+      </div>
+    </a>
+    <div class="header-icons">
+      <a href="#" onclick="toggleSearch(); return false">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        Buscar
+      </a>
+      <a href="login.html" id="btn-ingresar">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="txt-sesion">Ingresar</span>
+      </a>
+      <a href="#" id="cart-btn">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Carrito <span class="cart-count-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-item"><a href="index.html">Inicio</a></div>
+    <div class="nav-item"><a href="nosotros.html">Nosotros</a></div>
+    <div class="nav-item">
+      <span>Productos <span class="chevron">▾</span></span>
+      <div class="dropdown">
+        <div class="dropdown-group">
+          <div class="dropdown-title">Productos de la Colmena</div>
+          <a href="miel.html">Miel</a>
+          <a href="#">Miel en panal</a>
+          <a href="#">Jabones</a>
+        </div>
+        <div class="dropdown-group">
+          <div class="dropdown-title">Otros Productos</div>
+          <a href="#">Gotas</a>
+          <a href="#">Dulces</a>
+          <a href="velas.html">Velas</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item"><a href="abejas.html">Abejas</a></div>
+    <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
+    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="#">Contacto</a></div>
+  </div>
+</nav>
+
+<div class="barra-menu-movil">
+  <span class="menu-label">☰ Menú</span>
+  <button class="hamburger-btn" id="hamburger-btn" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<div class="menu-desplegable" id="menu-desplegable">
+  <a href="index.html">Inicio</a>
+  <a href="nosotros.html">Nosotros</a>
+  <div class="menu-seccion">Productos</div>
+  <div class="submenu">
+    <a href="miel.html">Miel</a>
+    <a href="#">Miel en panal</a>
+    <a href="#">Jabones</a>
+    <a href="#">Gotas</a>
+    <a href="#">Dulces</a>
+    <a href="velas.html">Velas</a>
+  </div>
+  <a href="abejas.html">Abejas</a>
+  <a href="centro_rescate.html">Centro de Rescate</a>
+  <a href="blog.html">Blog y Eventos</a>
+  <a href="#">Contacto</a>
+</div>
+
+<!-- CONTENIDO -->
+<div class="cupones-wrap">
+  <div class="cupones-titulo">🎟️ Mis cupones</div>
+  <div class="cupones-sub">Estos son los cupones que tienes disponibles. Úsalos al pagar tu pedido.</div>
+  <div class="cupon-grid" id="cupones-grid">
+    <div class="cupon-skel"></div>
+    <div class="cupon-skel"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Cana´an <span>Xu´x</span></div>
+        <p class="footer-desc">Somos apicultores mexicanos. Ofrecemos miel de abeja pura y todos los productos derivados de la colmena.</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/mielorogdl/" target="_blank" title="Instagram">📷</a>
+          <a href="https://www.facebook.com/mielorogdl" target="_blank" title="Facebook">f</a>
+          <a href="https://www.pinterest.es/mielorogdl/" target="_blank" title="Pinterest">P</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Tienda</h4>
+        <ul>
+          <li><a href="#">Todo para el Apicultor</a></li>
+          <li><a href="#">Productos de la Colmena</a></li>
+          <li><a href="#">Miel y Salud</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="#">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 · Todos los derechos reservados · Hecho en México </div>
+  </div>
+</footer>
+
+<div class="search-overlay">
+  <div class="search-box">
+    <button class="search-close">✕</button>
+    <input type="text" placeholder="Buscar productos...">
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank" title="WhatsApp">💬</a>
+
+<script>
+// ─── MIS CUPONES ───
+async function cargarCuponesUsuario() {
+  const grid = document.getElementById('cupones-grid');
+  if (!usuarioActual) return; // el guard de página protegida ya redirige a login
+
+  // 1. Cupones activos y vigentes que sean públicos o dirigidos a mi correo
+  const ahora = new Date().toISOString();
+  const { data: cupones, error } = await db
+    .from('cupones')
+    .select('*')
+    .eq('activo', true)
+    .or(`fecha_expira.is.null,fecha_expira.gt.${ahora}`)
+    .or(`visible_publico.eq.true,destinatario_email.eq.${usuarioActual.email}`);
+
+  if (error) {
+    grid.innerHTML = '<div class="cupones-empty"><div class="ico">⚠️</div>No pudimos cargar tus cupones. Intenta de nuevo más tarde.</div>';
+    return;
+  }
+
+  // 2. Cupones que YO ya usé (para ocultarlos)
+  const { data: usados } = await db
+    .from('cupones_usos')
+    .select('cupon_id')
+    .eq('usuario_id', usuarioActual.id);
+  const idsUsados = new Set((usados || []).map(u => u.cupon_id));
+
+  // 3. Filtrar: no usados por mí, con cupo disponible, y (públicos o dirigidos a mi correo)
+  const disponibles = (cupones || []).filter(c => {
+    if (idsUsados.has(c.id)) return false;
+    if (c.usos_maximos && c.usos_actuales >= c.usos_maximos) return false;
+    const esParaMi = c.visible_publico || (c.destinatario_email && c.destinatario_email.toLowerCase() === usuarioActual.email.toLowerCase());
+    return esParaMi;
+  });
+
+  if (!disponibles.length) {
+    grid.innerHTML = '<div class="cupones-empty"><div class="ico">🎟️</div>No tienes cupones disponibles por ahora.<br>¡Vuelve pronto!</div>';
+    return;
+  }
+
+  grid.innerHTML = disponibles.map(c => {
+    const valorTxt = c.tipo_descuento === 'porcentaje' ? c.valor + '% OFF' : '$' + parseFloat(c.valor).toFixed(2) + ' OFF';
+    const minTxt = c.monto_minimo > 0 ? `Compra mínima $${parseFloat(c.monto_minimo).toFixed(2)}` : 'Sin compra mínima';
+    const expTxt = c.fecha_expira ? 'Vence: ' + new Date(c.fecha_expira).toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' }) : 'Sin fecha de vencimiento';
+    return `
+      <div class="cupon-card">
+        <div class="cupon-valor">${valorTxt}</div>
+        <div class="cupon-titulo">${c.titulo}</div>
+        ${c.descripcion ? `<div class="cupon-desc">${c.descripcion}</div>` : ''}
+        <div class="cupon-meta">
+          <span>${minTxt}</span>
+          <span>${expTxt}</span>
+        </div>
+        <div class="cupon-codigo-row">
+          <div class="cupon-codigo">${c.codigo}</div>
+          <button class="btn-copiar" onclick="copiarCupon('${c.codigo}', this)">Copiar</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function copiarCupon(codigo, btn) {
+  navigator.clipboard.writeText(codigo).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copiado');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copiado'); }, 1600);
+  });
+}
+
+// Esperar a que script.js determine la sesión y luego cargar los cupones
+document.addEventListener('DOMContentLoaded', () => {
+  const esperar = setInterval(() => {
+    if (typeof usuarioActual !== 'undefined') {
+      clearInterval(esperar);
+      cargarCuponesUsuario();
+    }
+  }, 100);
+});
+</script>
+</body>
+</html>
