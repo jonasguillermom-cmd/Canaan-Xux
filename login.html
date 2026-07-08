@@ -147,6 +147,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
 /* ⚠️ Reemplaza con tus datos reales */
 const SUPABASE_URL  = 'https://biiefknpnkynfobbetav.supabase.co';  // ← CAMBIA
@@ -154,6 +155,17 @@ const SUPABASE_ANON = 'sb_publishable_YDHCImfe22Si2-LKmS5uiw_CNnpsIQr';         
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// EmailJS — el mismo servicio que ya usas para enviar los cupones
+const EMAILJS_SERVICE_ID       = 'service_lfv6e5u';
+const EMAILJS_TEMPLATE_CUPON   = 'template_yu7x7xg';
+const EMAILJS_TEMPLATE_CODIGO  = 'template_fjwlvk8'; 
+const EMAILJS_PUBLIC_KEY       = 'myF1SY_7rM2aM6jHj';
+emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+// URLs de las Edge Functions que generan y verifican el código
+const FN_CREAR_CODIGO     = SUPABASE_URL + '/functions/v1/crear-codigo-recuperacion';
+const FN_VERIFICAR_CODIGO = SUPABASE_URL + '/functions/v1/verificar-codigo-recuperacion';
 
 async function iniciarSesion() {
   const email = document.getElementById('login-email').value.trim();
@@ -243,20 +255,14 @@ async function enviarCodigoRecuperacion() {
   btn.disabled = true;
   btn.textContent = 'Enviando...';
 
-  // shouldCreateUser:false → solo envía el código si el correo ya tiene cuenta
-  const { error } = await db.auth.signInWithOtp({
-    email,
-    options: { shouldCreateUser: false }
-  });
+  const exito = await generarYEnviarCodigo(email);
 
   btn.disabled = false;
   btn.textContent = 'Enviar código';
 
-  if (error) {
+  if (!exito) {
     msg.className = 'auth-msg error';
-    msg.textContent = error.message.includes('rate limit')
-      ? 'Espera un momento antes de pedir otro código.'
-      : 'No se pudo enviar el código: ' + error.message;
+    msg.textContent = 'No se pudo enviar el código. Intenta de nuevo en un momento.';
     return;
   }
 
@@ -271,16 +277,41 @@ async function enviarCodigoRecuperacion() {
   iniciarCooldownReenvio();
 }
 
+// Llama a la Edge Function para generar el código y lo envía por EmailJS.
+// Devuelve true si el proceso terminó sin errores (aunque el correo no exista,
+// para no revelar qué correos están registrados).
+async function generarYEnviarCodigo(email) {
+  try {
+    const resp = await fetch(FN_CREAR_CODIGO, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await resp.json();
+    if (!resp.ok || data.error) return false;
+
+    // Si el correo no tiene cuenta, no mandamos nada pero no lo decimos (evita filtrar quién está registrado)
+    if (!data.exists) return true;
+
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CODIGO, {
+      to_email: email,
+      codigo: data.code,
+    });
+
+    return true;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+}
+
 async function reenviarCodigo(e) {
   if (e) e.preventDefault();
   if (recCooldown || !recEmailActual) return;
   const msg = document.getElementById('rec-codigo-msg');
-  const { error } = await db.auth.signInWithOtp({
-    email: recEmailActual,
-    options: { shouldCreateUser: false }
-  });
-  msg.className = error ? 'auth-msg error' : 'auth-msg ok';
-  msg.textContent = error ? ('No se pudo reenviar: ' + error.message) : 'Te enviamos un nuevo código.';
+  const exito = await generarYEnviarCodigo(recEmailActual);
+  msg.className = exito ? 'auth-msg ok' : 'auth-msg error';
+  msg.textContent = exito ? 'Te enviamos un nuevo código.' : 'No se pudo reenviar el código.';
   iniciarCooldownReenvio();
 }
 
@@ -330,42 +361,43 @@ async function confirmarCambioPass() {
   btn.disabled = true;
   btn.textContent = 'Verificando...';
 
-  // 1) Verificar el código — esto ya inicia sesión al usuario
-  const { error: errVerify } = await db.auth.verifyOtp({
-    email: recEmailActual,
-    token: codigo,
-    type: 'email'
-  });
-
-  if (errVerify) {
+  let data;
+  try {
+    const resp = await fetch(FN_VERIFICAR_CODIGO, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: recEmailActual, code: codigo, nuevaPassword: pass1 })
+    });
+    data = await resp.json();
+    if (!resp.ok || data.error) {
+      btn.disabled = false;
+      btn.textContent = 'Cambiar contraseña';
+      msg.className = 'auth-msg error';
+      msg.textContent = data.error || 'No se pudo verificar el código.';
+      return;
+    }
+  } catch (e) {
     btn.disabled = false;
     btn.textContent = 'Cambiar contraseña';
     msg.className = 'auth-msg error';
-    msg.textContent = errVerify.message.includes('expired')
-      ? 'El código expiró, pide uno nuevo.'
-      : 'Código incorrecto. Revísalo e inténtalo de nuevo.';
+    msg.textContent = 'Error de conexión. Intenta de nuevo.';
     return;
   }
 
-  // 2) Con la sesión ya activa, actualizar la contraseña
-  const { error: errUpdate } = await db.auth.updateUser({ password: pass1 });
+  // Contraseña actualizada en el servidor — ahora iniciamos sesión con la nueva contraseña
+  const { data: loginData, error: errLogin } = await db.auth.signInWithPassword({
+    email: recEmailActual, password: pass1
+  });
 
   btn.disabled = false;
   btn.textContent = 'Cambiar contraseña';
 
-  if (errUpdate) {
-    msg.className = 'auth-msg error';
-    msg.textContent = 'No se pudo cambiar la contraseña: ' + errUpdate.message;
-    return;
-  }
-
   msg.className = 'auth-msg ok';
   msg.textContent = '✓ Contraseña actualizada. Entrando a tu cuenta...';
 
-  setTimeout(async () => {
-    const { data: { user } } = await db.auth.getUser();
+  setTimeout(() => {
     const ADMIN_EMAIL = 'apicultorestenosique@gmail.com';
-    if (user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    if (!errLogin && loginData.user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
       window.location.href = 'admin.html';
     } else {
       window.location.href = 'index.html';
