@@ -53,6 +53,20 @@
   .auth-switch a { color: var(--naranja); font-weight: 600; }
   .olv-link { text-align: right; margin-top: -10px; margin-bottom: 18px; font-size: 12px; }
   .olv-link a { color: var(--naranja); }
+
+  /* RECUPERAR CONTRASEÑA */
+  .rec-hint { font-size: 12.5px; color: var(--gris); margin-bottom: 18px; line-height: 1.5; }
+  .rec-code-input {
+    width: 100%; padding: 13px 14px; border: 1.5px solid var(--borde); border-radius: 8px;
+    font-size: 22px; letter-spacing: 6px; text-align: center; font-family: inherit; color: var(--cafe);
+    outline: none; transition: border-color .2s;
+  }
+  .rec-code-input:focus { border-color: var(--naranja); }
+  .rec-back { text-align: center; margin-top: 18px; font-size: 13px; color: var(--gris); cursor: pointer; }
+  .rec-back:hover { color: var(--naranja); }
+  .rec-reenviar { text-align: center; margin-top: 10px; font-size: 12.5px; }
+  .rec-reenviar a { color: var(--naranja); font-weight: 600; }
+  .rec-reenviar a.disabled { color: var(--gris); pointer-events: none; }
 </style>
 </head>
 <body>
@@ -67,7 +81,9 @@
 </header>
 
 <div class="auth-wrap">
-  <div class="auth-card">
+
+  <!-- TARJETA: LOGIN -->
+  <div class="auth-card" id="card-login">
     <h2>Iniciar sesión</h2>
     <p class="sub">Accede a tu cuenta para ver tu carrito y realizar compras.</p>
 
@@ -80,12 +96,54 @@
       <input type="password" id="login-pass" placeholder="Tu contraseña"
              onkeydown="if(event.key==='Enter') iniciarSesion()">
     </div>
-    <div class="olv-link"><a href="#" onclick="olvidarPass()">¿Olvidaste tu contraseña?</a></div>
+    <div class="olv-link"><a href="#" onclick="mostrarRecuperar(event)">¿Olvidaste tu contraseña?</a></div>
 
     <button class="btn-auth" id="btn-login" onclick="iniciarSesion()">Entrar</button>
     <div class="auth-msg" id="login-msg"></div>
     <div class="auth-switch">¿No tienes cuenta? <a href="registro.html">Crea una gratis</a></div>
   </div>
+
+  <!-- TARJETA: RECUPERAR — PASO 1 (pedir correo) -->
+  <div class="auth-card" id="card-rec-email" style="display:none">
+    <h2>Recuperar contraseña</h2>
+    <p class="rec-hint">Te enviaremos un código de 6 dígitos al correo con el que registraste tu cuenta.</p>
+
+    <div class="auth-field">
+      <label>Correo electrónico</label>
+      <input type="email" id="rec-email" placeholder="tu@correo.com"
+             onkeydown="if(event.key==='Enter') enviarCodigoRecuperacion()">
+    </div>
+
+    <button class="btn-auth" id="btn-rec-enviar" onclick="enviarCodigoRecuperacion()">Enviar código</button>
+    <div class="auth-msg" id="rec-email-msg"></div>
+    <div class="rec-back" onclick="volverALogin()">← Volver a iniciar sesión</div>
+  </div>
+
+  <!-- TARJETA: RECUPERAR — PASO 2 (código + nueva contraseña) -->
+  <div class="auth-card" id="card-rec-codigo" style="display:none">
+    <h2>Escribe tu código</h2>
+    <p class="rec-hint">Enviamos un código de 6 dígitos a <strong id="rec-email-mostrado"></strong>. Revisa también tu carpeta de spam.</p>
+
+    <div class="auth-field">
+      <label>Código de verificación</label>
+      <input type="text" id="rec-codigo" class="rec-code-input" maxlength="6" inputmode="numeric" placeholder="000000">
+    </div>
+    <div class="auth-field">
+      <label>Nueva contraseña</label>
+      <input type="password" id="rec-pass-nueva" placeholder="Mínimo 6 caracteres">
+    </div>
+    <div class="auth-field">
+      <label>Confirmar nueva contraseña</label>
+      <input type="password" id="rec-pass-confirmar" placeholder="Repite la contraseña"
+             onkeydown="if(event.key==='Enter') confirmarCambioPass()">
+    </div>
+
+    <button class="btn-auth" id="btn-rec-confirmar" onclick="confirmarCambioPass()">Cambiar contraseña</button>
+    <div class="auth-msg" id="rec-codigo-msg"></div>
+    <div class="rec-reenviar">¿No te llegó? <a href="#" id="link-reenviar" onclick="reenviarCodigo(event)">Reenviar código</a></div>
+    <div class="rec-back" onclick="volverALogin()">← Volver a iniciar sesión</div>
+  </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -146,17 +204,173 @@ async function iniciarSesion() {
   }, 1000);
 }
 
-async function olvidarPass() {
-  const email = document.getElementById('login-email').value.trim();
-  const msg   = document.getElementById('login-msg');
+/* ════════════════════════════════════════════════════
+   RECUPERAR CONTRASEÑA — código de 6 dígitos por correo
+   (usa el OTP de Supabase: signInWithOtp + verifyOtp)
+   ════════════════════════════════════════════════════ */
+let recEmailActual = '';
+let recCooldown = false;
+
+function mostrarRecuperar(e) {
+  if (e) e.preventDefault();
+  document.getElementById('card-login').style.display = 'none';
+  document.getElementById('card-rec-email').style.display = 'block';
+  document.getElementById('card-rec-codigo').style.display = 'none';
+  // Precargar el correo si ya lo habían escrito en el login
+  const emailLogin = document.getElementById('login-email').value.trim();
+  if (emailLogin) document.getElementById('rec-email').value = emailLogin;
+  document.getElementById('rec-email-msg').className = 'auth-msg';
+}
+
+function volverALogin() {
+  document.getElementById('card-login').style.display = 'block';
+  document.getElementById('card-rec-email').style.display = 'none';
+  document.getElementById('card-rec-codigo').style.display = 'none';
+}
+
+async function enviarCodigoRecuperacion() {
+  const email = document.getElementById('rec-email').value.trim();
+  const msg   = document.getElementById('rec-email-msg');
+  const btn   = document.getElementById('btn-rec-enviar');
+
+  msg.className = 'auth-msg';
   if (!email) {
     msg.className = 'auth-msg error';
-    msg.textContent = 'Ingresa tu correo primero.';
+    msg.textContent = 'Ingresa tu correo electrónico.';
     return;
   }
-  await db.auth.resetPasswordForEmail(email);
+
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  // shouldCreateUser:false → solo envía el código si el correo ya tiene cuenta
+  const { error } = await db.auth.signInWithOtp({
+    email,
+    options: { shouldCreateUser: false }
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'Enviar código';
+
+  if (error) {
+    msg.className = 'auth-msg error';
+    msg.textContent = error.message.includes('rate limit')
+      ? 'Espera un momento antes de pedir otro código.'
+      : 'No se pudo enviar el código: ' + error.message;
+    return;
+  }
+
+  recEmailActual = email;
+  document.getElementById('rec-email-mostrado').textContent = email;
+  document.getElementById('card-rec-email').style.display = 'none';
+  document.getElementById('card-rec-codigo').style.display = 'block';
+  document.getElementById('rec-codigo-msg').className = 'auth-msg';
+  document.getElementById('rec-codigo').value = '';
+  document.getElementById('rec-pass-nueva').value = '';
+  document.getElementById('rec-pass-confirmar').value = '';
+  iniciarCooldownReenvio();
+}
+
+async function reenviarCodigo(e) {
+  if (e) e.preventDefault();
+  if (recCooldown || !recEmailActual) return;
+  const msg = document.getElementById('rec-codigo-msg');
+  const { error } = await db.auth.signInWithOtp({
+    email: recEmailActual,
+    options: { shouldCreateUser: false }
+  });
+  msg.className = error ? 'auth-msg error' : 'auth-msg ok';
+  msg.textContent = error ? ('No se pudo reenviar: ' + error.message) : 'Te enviamos un nuevo código.';
+  iniciarCooldownReenvio();
+}
+
+function iniciarCooldownReenvio() {
+  recCooldown = true;
+  const link = document.getElementById('link-reenviar');
+  let segundos = 45;
+  link.classList.add('disabled');
+  link.textContent = `Reenviar código (${segundos}s)`;
+  const intervalo = setInterval(() => {
+    segundos--;
+    if (segundos <= 0) {
+      clearInterval(intervalo);
+      recCooldown = false;
+      link.classList.remove('disabled');
+      link.textContent = 'Reenviar código';
+    } else {
+      link.textContent = `Reenviar código (${segundos}s)`;
+    }
+  }, 1000);
+}
+
+async function confirmarCambioPass() {
+  const codigo   = document.getElementById('rec-codigo').value.trim();
+  const pass1    = document.getElementById('rec-pass-nueva').value;
+  const pass2    = document.getElementById('rec-pass-confirmar').value;
+  const msg      = document.getElementById('rec-codigo-msg');
+  const btn      = document.getElementById('btn-rec-confirmar');
+
+  msg.className = 'auth-msg';
+  if (!codigo || codigo.length < 6) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'Ingresa el código de 6 dígitos.';
+    return;
+  }
+  if (!pass1 || pass1.length < 6) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'La nueva contraseña debe tener al menos 6 caracteres.';
+    return;
+  }
+  if (pass1 !== pass2) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'Las contraseñas no coinciden.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Verificando...';
+
+  // 1) Verificar el código — esto ya inicia sesión al usuario
+  const { error: errVerify } = await db.auth.verifyOtp({
+    email: recEmailActual,
+    token: codigo,
+    type: 'email'
+  });
+
+  if (errVerify) {
+    btn.disabled = false;
+    btn.textContent = 'Cambiar contraseña';
+    msg.className = 'auth-msg error';
+    msg.textContent = errVerify.message.includes('expired')
+      ? 'El código expiró, pide uno nuevo.'
+      : 'Código incorrecto. Revísalo e inténtalo de nuevo.';
+    return;
+  }
+
+  // 2) Con la sesión ya activa, actualizar la contraseña
+  const { error: errUpdate } = await db.auth.updateUser({ password: pass1 });
+
+  btn.disabled = false;
+  btn.textContent = 'Cambiar contraseña';
+
+  if (errUpdate) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'No se pudo cambiar la contraseña: ' + errUpdate.message;
+    return;
+  }
+
   msg.className = 'auth-msg ok';
-  msg.textContent = 'Te enviamos un enlace para restablecer tu contraseña.';
+  msg.textContent = '✓ Contraseña actualizada. Entrando a tu cuenta...';
+
+  setTimeout(async () => {
+    const { data: { user } } = await db.auth.getUser();
+    const ADMIN_EMAIL = 'apicultorestenosique@gmail.com';
+    if (user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+      window.location.href = 'admin.html';
+    } else {
+      window.location.href = 'index.html';
+    }
+  }, 1200);
 }
 
 async function sincronizarCarritoLocal(userId) {
