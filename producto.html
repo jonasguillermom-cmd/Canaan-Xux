@@ -136,6 +136,13 @@
   <div class="loading-prod">Cargando producto...</div>
 </div>
 
+<section style="max-width:1200px;margin:0 auto;padding:12px 24px 56px" id="seccion-relacionados">
+  <h2 class="section-title left">También te puede interesar</h2>
+  <div class="prod-grid" id="grid-relacionados">
+    <p style="grid-column:1/-1;text-align:center;color:#7a7a6a;padding:20px">Cargando...</p>
+  </div>
+</section>
+
 <div class="search-overlay">
   <div class="search-box">
     <button class="search-close">✕</button>
@@ -296,6 +303,34 @@ async function cargarProducto() {
     </div>`;
 
   document.getElementById('product-wrap').innerHTML = galeriaHTML + infoHTML;
+
+  cargarProductosRelacionados(p.id);
+}
+
+// ── PRODUCTOS RELACIONADOS (aleatorios, cambian en cada visita) ──
+async function cargarProductosRelacionados(idActual) {
+  const grid = document.getElementById('grid-relacionados');
+  if (!grid) return;
+
+  const { data, error } = await db.from('productos')
+    .select('*')
+    .eq('activo', true)
+    .neq('id', idActual);
+
+  if (error || !data || !data.length) {
+    document.getElementById('seccion-relacionados').style.display = 'none';
+    return;
+  }
+
+  // Barajar (Fisher–Yates) y tomar 4 al azar — cada carga da un resultado distinto
+  const barajado = data.slice();
+  for (let i = barajado.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [barajado[i], barajado[j]] = [barajado[j], barajado[i]];
+  }
+  const seleccionados = barajado.slice(0, 4);
+
+  grid.innerHTML = seleccionados.map(tarjetaProducto).join('');
 }
 
 function switchImg(thumb, src) {
