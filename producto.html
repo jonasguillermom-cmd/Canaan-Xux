@@ -69,6 +69,36 @@
   .prod-title{font-size:24px}
   .price-main{font-size:22px}
 }
+/* ── RESEÑAS ── */
+.resenas-wrap{max-width:800px;margin:0 auto}
+.resenas-resumen{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.resenas-prom{font-family:'Playfair Display',serif;font-size:34px;color:#3d3b1f}
+.resenas-estrellas{color:#eb904d;font-size:18px;letter-spacing:2px}
+.resenas-total{font-size:12.5px;color:#7a7a6a}
+.form-resena{background:#f9f6f0;border-radius:10px;padding:20px;margin-bottom:28px}
+.form-resena h3{font-size:15px;color:#3d3b1f;margin-bottom:14px}
+.estrellas-input{display:flex;gap:4px;margin-bottom:14px;font-size:26px;cursor:pointer}
+.estrellas-input span{color:#d8d2c4;transition:color .15s}
+.estrellas-input span.activa{color:#eb904d}
+.form-resena textarea{width:100%;min-height:80px;padding:12px 14px;border:1.5px solid #e0d8cc;border-radius:8px;font-family:inherit;font-size:13.5px;color:#3d3b1f;outline:none;resize:vertical;margin-bottom:12px}
+.form-resena textarea:focus{border-color:#eb904d}
+.foto-resena-drop{border:1.75px dashed #d8d2c4;border-radius:8px;padding:14px;text-align:center;font-size:12.5px;color:#7a7a6a;cursor:pointer;margin-bottom:14px;transition:border-color .2s}
+.foto-resena-drop:hover{border-color:#eb904d}
+.foto-resena-preview{max-width:120px;max-height:120px;border-radius:8px;margin-bottom:12px;display:none;object-fit:cover}
+.btn-enviar-resena{background:#eb904d;color:#fff;border:none;border-radius:6px;padding:11px 22px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;font-family:inherit;transition:background .2s}
+.btn-enviar-resena:hover{background:#c96a2a}
+.btn-enviar-resena:disabled{background:#ccc;cursor:not-allowed}
+.resena-login-cta{background:#f9f6f0;border-radius:10px;padding:20px;text-align:center;font-size:13.5px;color:#7a7a6a;margin-bottom:28px}
+.resena-login-cta a{color:#eb904d;font-weight:700}
+.resena-item{border-top:1px solid #e0d8cc;padding:18px 0;display:flex;gap:14px}
+.resena-avatar{width:38px;height:38px;border-radius:50%;background:#eb904d;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
+.resena-cuerpo{flex:1;min-width:0}
+.resena-header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.resena-nombre{font-weight:700;font-size:13.5px;color:#3d3b1f}
+.resena-fecha{font-size:11px;color:#9a9488}
+.resena-estrellas{color:#eb904d;font-size:13px;margin-bottom:6px}
+.resena-texto{font-size:13.5px;color:#666;line-height:1.6;margin-bottom:8px}
+.resena-foto{max-width:140px;border-radius:8px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -140,6 +170,25 @@
   <h2 class="section-title left">También te puede interesar</h2>
   <div class="prod-grid" id="grid-relacionados">
     <p style="grid-column:1/-1;text-align:center;color:#7a7a6a;padding:20px">Cargando...</p>
+  </div>
+</section>
+
+<section style="max-width:1200px;margin:0 auto;padding:12px 24px 64px">
+  <h2 class="section-title left">Opiniones del producto</h2>
+  <div class="resenas-wrap">
+    <div class="resenas-resumen" id="resenas-resumen" style="display:none">
+      <span class="resenas-prom" id="resenas-prom">0.0</span>
+      <div>
+        <div class="resenas-estrellas" id="resenas-estrellas-prom"></div>
+        <div class="resenas-total" id="resenas-total">0 opiniones</div>
+      </div>
+    </div>
+
+    <div id="resena-form-wrap"></div>
+
+    <div id="resenas-lista">
+      <p style="text-align:center;color:#7a7a6a;padding:20px">Cargando opiniones...</p>
+    </div>
   </div>
 </section>
 
@@ -305,6 +354,7 @@ async function cargarProducto() {
   document.getElementById('product-wrap').innerHTML = galeriaHTML + infoHTML;
 
   cargarProductosRelacionados(p.id);
+  cargarResenas(p.id);
 }
 
 // ── PRODUCTOS RELACIONADOS (aleatorios, cambian en cada visita) ──
@@ -331,6 +381,183 @@ async function cargarProductosRelacionados(idActual) {
   const seleccionados = barajado.slice(0, 4);
 
   grid.innerHTML = seleccionados.map(tarjetaProducto).join('');
+}
+
+// ════════════════════════════════════════════════════
+//   OPINIONES DEL PRODUCTO (reseñas)
+// ════════════════════════════════════════════════════
+let resenaFotoFile = null;
+let resenaEstrellasSel = 0;
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function estrellasHTML(n) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) html += i <= n ? '★' : '☆';
+  return html;
+}
+
+async function cargarResenas(productoId) {
+  const { data: { session } } = await db.auth.getSession();
+  const usuario = session?.user || null;
+
+  const { data: resenas } = await db.from('resenas')
+    .select('*')
+    .eq('producto_id', productoId)
+    .order('creado_en', { ascending: false });
+
+  renderFormResena(productoId, usuario, resenas || []);
+  renderListaResenas(resenas || []);
+  renderResumenResenas(resenas || []);
+}
+
+function renderResumenResenas(resenas) {
+  const resumen = document.getElementById('resenas-resumen');
+  const conCalif = resenas.filter(r => r.calificacion);
+  if (!resenas.length || !conCalif.length) { resumen.style.display = 'none'; return; }
+  const prom = conCalif.reduce((s, r) => s + r.calificacion, 0) / conCalif.length;
+  document.getElementById('resenas-prom').textContent = prom.toFixed(1);
+  document.getElementById('resenas-estrellas-prom').innerHTML = estrellasHTML(Math.round(prom));
+  document.getElementById('resenas-total').textContent = resenas.length + (resenas.length === 1 ? ' opinión' : ' opiniones');
+  resumen.style.display = 'flex';
+}
+
+function renderFormResena(productoId, usuario, resenas) {
+  const wrap = document.getElementById('resena-form-wrap');
+
+  if (!usuario) {
+    wrap.innerHTML = `
+      <div class="resena-login-cta">
+        <a href="login.html">Inicia sesión</a> para dejar tu opinión sobre este producto.
+      </div>`;
+    return;
+  }
+
+  const yaOpino = resenas.some(r => r.usuario_id === usuario.id);
+  if (yaOpino) {
+    wrap.innerHTML = `<div class="resena-login-cta">Ya dejaste tu opinión sobre este producto. ¡Gracias! 🙌</div>`;
+    return;
+  }
+
+  resenaFotoFile = null;
+  resenaEstrellasSel = 0;
+
+  wrap.innerHTML = `
+    <div class="form-resena">
+      <h3>Escribe tu opinión</h3>
+      <div class="estrellas-input" id="estrellas-input">
+        ${[1,2,3,4,5].map(i => `<span data-val="${i}" onclick="seleccionarEstrella(${i})">☆</span>`).join('')}
+      </div>
+      <textarea id="resena-texto" placeholder="¿Qué te pareció el producto?"></textarea>
+      <img id="resena-foto-preview" class="foto-resena-preview">
+      <div class="foto-resena-drop" onclick="document.getElementById('resena-foto-input').click()">
+        <input type="file" id="resena-foto-input" accept="image/*" style="display:none" onchange="onFotoResena(this)">
+        📷 Agregar una foto (opcional)
+      </div>
+      <button class="btn-enviar-resena" id="btn-enviar-resena" onclick="enviarResena('${productoId}')">Publicar opinión</button>
+      <div id="resena-msg" style="margin-top:10px;font-size:12.5px"></div>
+    </div>`;
+}
+
+function seleccionarEstrella(val) {
+  resenaEstrellasSel = val;
+  document.querySelectorAll('#estrellas-input span').forEach(s => {
+    const v = parseInt(s.dataset.val);
+    s.textContent = v <= val ? '★' : '☆';
+    s.classList.toggle('activa', v <= val);
+  });
+}
+
+function onFotoResena(input) {
+  const file = input.files[0];
+  if (!file) return;
+  resenaFotoFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('resena-foto-preview');
+    img.src = e.target.result;
+    img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function enviarResena(productoId) {
+  const { data: { session } } = await db.auth.getSession();
+  const usuario = session?.user;
+  if (!usuario) { window.location.href = 'login.html'; return; }
+
+  const texto = document.getElementById('resena-texto').value.trim();
+  const msg   = document.getElementById('resena-msg');
+  const btn   = document.getElementById('btn-enviar-resena');
+
+  if (!texto && !resenaFotoFile) {
+    msg.style.color = '#c0392b';
+    msg.textContent = 'Escribe tu opinión o agrega una foto.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Publicando...';
+  msg.textContent = '';
+
+  let foto_url = null;
+  if (resenaFotoFile) {
+    const ext = resenaFotoFile.name.split('.').pop();
+    const path = `${productoId}_${usuario.id}_${Date.now()}.${ext}`.replace(/\s/g, '_');
+    const { error: errSubida } = await db.storage.from('resenas').upload(path, resenaFotoFile, { upsert: true });
+    if (!errSubida) foto_url = db.storage.from('resenas').getPublicUrl(path).data.publicUrl;
+  }
+
+  const nombre = usuario.user_metadata?.nombre_completo || usuario.email.split('@')[0];
+
+  const { error } = await db.from('resenas').insert({
+    producto_id: productoId,
+    usuario_id: usuario.id,
+    nombre_usuario: nombre,
+    calificacion: resenaEstrellasSel || null,
+    texto: texto || null,
+    foto_url
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'Publicar opinión';
+
+  if (error) {
+    msg.style.color = '#c0392b';
+    msg.textContent = error.message.includes('duplicate') ? 'Ya dejaste una opinión de este producto.' : 'Error: ' + error.message;
+    return;
+  }
+
+  cargarResenas(productoId);
+}
+
+function renderListaResenas(resenas) {
+  const lista = document.getElementById('resenas-lista');
+  if (!resenas.length) {
+    lista.innerHTML = '<p style="text-align:center;color:#7a7a6a;padding:20px">Este producto aún no tiene opiniones. ¡Sé el primero!</p>';
+    return;
+  }
+  lista.innerHTML = resenas.map(r => {
+    const inicial = (r.nombre_usuario || '?').charAt(0).toUpperCase();
+    const fecha = new Date(r.creado_en).toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
+    return `
+    <div class="resena-item">
+      <div class="resena-avatar">${escapeHtml(inicial)}</div>
+      <div class="resena-cuerpo">
+        <div class="resena-header">
+          <span class="resena-nombre">${escapeHtml(r.nombre_usuario)}</span>
+          <span class="resena-fecha">${fecha}</span>
+        </div>
+        ${r.calificacion ? `<div class="resena-estrellas">${estrellasHTML(r.calificacion)}</div>` : ''}
+        ${r.texto ? `<div class="resena-texto">${escapeHtml(r.texto)}</div>` : ''}
+        ${r.foto_url ? `<img class="resena-foto" src="${r.foto_url}" onclick="window.open('${r.foto_url}','_blank')">` : ''}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function switchImg(thumb, src) {
