@@ -23,6 +23,11 @@
 .product-info{display:flex;flex-direction:column;gap:0}
 .prod-brand{font-size:11px;font-weight:800;color:#eb904d;letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px}
 .prod-title{font-family:'Playfair Display',serif;font-size:30px;color:#3d3b1f;line-height:1.2;margin-bottom:16px}
+.prod-vendedor{display:flex;align-items:center;gap:8px;margin-bottom:18px;padding:8px 12px;background:#f9f6f0;border-radius:6px;width:fit-content}
+.prod-vendedor img{width:22px;height:22px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.prod-vendedor .icono-tienda{width:22px;height:22px;border-radius:50%;background:#eb904d;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.prod-vendedor span{font-size:12.5px;color:#666}
+.prod-vendedor b{color:#3d3b1f;font-weight:700}
 .prod-price-wrap{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #e0d8cc}
 .price-main{font-size:28px;font-weight:800;color:#c96a2a}
 .prod-desc{font-size:14px;color:#666;line-height:1.8;margin-bottom:24px}
@@ -222,7 +227,7 @@ async function cargarProducto() {
   const id = params.get('id');
   if (!id) { document.getElementById('product-wrap').innerHTML = '<div class="loading-prod">Producto no encontrado.</div>'; return; }
 
-  const { data: p } = await db.from('productos').select('*').eq('id', id).single();
+  const { data: p } = await db.from('productos').select('*, empresas(nombre, logo_url)').eq('id', id).single();
   if (!p) { document.getElementById('product-wrap').innerHTML = '<div class="loading-prod">Producto no encontrado.</div>'; return; }
 
   productoActual = p;
@@ -304,6 +309,11 @@ async function cargarProducto() {
     <div class="product-info">
       <p class="prod-brand">Cana´an Xu´x</p>
       <h1 class="prod-title">${p.nombre}</h1>
+      ${p.empresas?.nombre ? `
+      <div class="prod-vendedor">
+        ${p.empresas.logo_url ? `<img src="${p.empresas.logo_url}" alt="${p.empresas.nombre}">` : `<span class="icono-tienda">🏪</span>`}
+        <span>Vendido por <b>${p.empresas.nombre}</b></span>
+      </div>` : ''}
       <div class="prod-price-wrap">
         <span class="price-main" id="price-main">$${precioInicial}</span>
       </div>
