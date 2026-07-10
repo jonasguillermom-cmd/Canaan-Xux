@@ -396,6 +396,13 @@ input[type=checkbox]{width:19px;height:19px;accent-color:var(--naranja);cursor:p
         <label>Nombre del producto *</label>
         <input type="text" id="p-nombre" placeholder="Ej: Vela Artesanal Hexagonal">
       </div>
+
+      <div class="campo">
+        <label>Vendido por (empresa)</label>
+        <input type="text" id="p-empresa" list="empresas-list" placeholder="Escribe o elige una empresa..." autocomplete="off">
+        <datalist id="empresas-list"></datalist>
+      </div>
+
       <div class="row2">
         <div class="campo"><label>Precio MXN *</label><input type="number" id="p-precio" placeholder="0.00" min="0" step="0.01"></div>
         <div class="campo"><label>Stock</label><input type="number" id="p-stock" placeholder="0" min="0"></div>
@@ -728,6 +735,7 @@ const { createClient } = supabase;
 const db = createClient(SURL, SKEY);
 
 let adminUser  = null;
+let empresasCache = []; // [{id, nombre}, ...] — empresas ya guardadas
 let mainPhotoFile = null;  // File de foto principal
 
 // Cada variante: { nombre, precio, archivos:[File|null, File|null, File|null], urls:['','',''] }
@@ -1535,6 +1543,50 @@ async function subirFoto(file, nombre) {
 }
 
 // ── GUARDAR PRODUCTO ──
+// ════════════════════════════════════════════════════
+//   EMPRESAS (VENDIDO POR)
+// ════════════════════════════════════════════════════
+
+// Carga las empresas ya guardadas y llena el datalist de autocompletado
+async function cargarEmpresas() {
+  const { data, error } = await db.from('empresas').select('id,nombre').order('nombre');
+  if (error) return;
+  empresasCache = data || [];
+  const dl = document.getElementById('empresas-list');
+  if (dl) dl.innerHTML = empresasCache.map(e => `<option value="${e.nombre.replace(/"/g,'&quot;')}">`).join('');
+}
+
+// Agrega una empresa nueva al datalist sin duplicarla, para que quede disponible al instante
+function agregarOpcionEmpresaDatalist(nombre) {
+  const dl = document.getElementById('empresas-list');
+  if (!dl || [...dl.options].some(o => o.value.toLowerCase() === nombre.toLowerCase())) return;
+  const opt = document.createElement('option');
+  opt.value = nombre;
+  dl.appendChild(opt);
+}
+
+// Busca la empresa por nombre (sin importar mayúsculas); si no existe la crea.
+// Devuelve el empresa_id o null si no se escribió ningún nombre.
+async function obtenerOcrearEmpresaId(nombreEmpresa) {
+  const nombre = (nombreEmpresa || '').trim();
+  if (!nombre) return null;
+
+  const existente = empresasCache.find(e => e.nombre.toLowerCase() === nombre.toLowerCase());
+  if (existente) return existente.id;
+
+  const { data, error } = await db.from('empresas').insert({ nombre }).select('id,nombre').single();
+  if (error) {
+    // Puede que otra pestaña la haya creado justo antes (choque de "nombre" único) — la buscamos de nuevo
+    const { data: reintento } = await db.from('empresas').select('id,nombre').ilike('nombre', nombre).maybeSingle();
+    if (reintento) { empresasCache.push(reintento); return reintento.id; }
+    return null;
+  }
+
+  empresasCache.push(data);
+  agregarOpcionEmpresaDatalist(data.nombre);
+  return data.id;
+}
+
 async function guardarProducto() {
   const nombre  = document.getElementById('p-nombre').value.trim();
   const precio  = parseFloat(document.getElementById('p-precio').value);
@@ -1582,9 +1634,13 @@ async function guardarProducto() {
     }
   }
 
+  // Empresa (vendido por) — reutiliza la existente o crea una nueva automáticamente
+  const nombreEmpresa = document.getElementById('p-empresa').value;
+  const empresa_id = await obtenerOcrearEmpresaId(nombreEmpresa);
+
   const imagenesArr = imagen_url ? [imagen_url] : [];
   const datos = { nombre, precio, categoria: catReal, subcategoria: subcat, descripcion: desc,
-    stock, activo, variantes: variantesArr, imagenes: imagenesArr, imagen_url };
+    stock, activo, variantes: variantesArr, imagenes: imagenesArr, imagen_url, empresa_id };
 
   let error;
   if (editId) ({ error } = await db.from('productos').update(datos).eq('id', editId));
@@ -1602,16 +1658,17 @@ async function guardarProducto() {
 async function loadProductos() {
   const lista = document.getElementById('prod-lista');
   lista.innerHTML = '<div class="empty-msg">Cargando...</div>';
-  const { data } = await db.from('productos').select('*').order('creado_en', { ascending: false });
+  const { data } = await db.from('productos').select('*, empresas(nombre)').order('creado_en', { ascending: false });
   if (!data || !data.length) { lista.innerHTML='<div class="empty-msg">No hay productos aún.</div>'; return; }
   lista.innerHTML = data.map(p => {
     const img = (p.imagenes&&p.imagenes[0]) ? p.imagenes[0] : (p.imagen_url||'');
     const vars = p.variantes&&p.variantes.length ? `${p.variantes.length} variante(s)` : '';
+    const vendedor = p.empresas?.nombre ? ` · 🏷️ ${p.empresas.nombre}` : '';
     return `<div class="prod-item">
       <img class="pi-img" src="${img}" alt="${p.nombre}" onerror="this.style.background='#f5f0e8'">
       <div class="pi-info">
         <div class="pi-nombre">${p.nombre}</div>
-        <div class="pi-meta">${p.categoria}${p.subcategoria?' › '+p.subcategoria:''} ${vars?'· '+vars:''} · ${p.activo?'✅':'⛔'}</div>
+        <div class="pi-meta">${p.categoria}${p.subcategoria?' › '+p.subcategoria:''} ${vars?'· '+vars:''} · ${p.activo?'✅':'⛔'}${vendedor}</div>
         <div class="pi-precio">$${parseFloat(p.precio).toFixed(2)}</div>
       </div>
       <div class="pi-btns">
@@ -1625,11 +1682,12 @@ async function loadProductos() {
 
 // ── EDITAR ──
 async function editarProducto(id) {
-  const { data: p } = await db.from('productos').select('*').eq('id', id).single();
+  const { data: p } = await db.from('productos').select('*, empresas(nombre)').eq('id', id).single();
   if (!p) return;
 
   document.getElementById('edit-id').value    = p.id;
   document.getElementById('p-nombre').value   = p.nombre;
+  document.getElementById('p-empresa').value  = p.empresas?.nombre || '';
   document.getElementById('p-precio').value   = p.precio;
   document.getElementById('p-stock').value    = p.stock;
   document.getElementById('p-desc').value     = p.descripcion || '';
@@ -1676,7 +1734,7 @@ async function eliminarProducto(id, nombre) {
 // ── RESET FORM ──
 function resetForm() {
   document.getElementById('edit-id').value = '';
-  ['p-nombre','p-precio','p-stock','p-desc'].forEach(id => document.getElementById(id).value='');
+  ['p-nombre','p-empresa','p-precio','p-stock','p-desc'].forEach(id => document.getElementById(id).value='');
   document.getElementById('p-activo').checked = true;
   document.getElementById('p-cat').value = '';
   document.getElementById('subcat-wrap').style.display = 'none';
@@ -2247,6 +2305,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('panel').style.display = 'block';
     const nombre = user.user_metadata?.nombre_completo || user.email.split('@')[0];
     document.getElementById('a-nombre').textContent = ' ' + nombre.split(' ')[0];
+    cargarEmpresas();
   }
 });
 </script>
