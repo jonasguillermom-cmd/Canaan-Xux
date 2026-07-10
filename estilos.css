@@ -52,7 +52,7 @@ header {
 
 .header-left { display: flex; align-items: center; gap: 24px; }
 .logo-wrap { display: flex; align-items: center; gap: 10px; }
-.logo-img { width: 92px; height: 92px; object-fit: contain; }
+.logo-img { width: 64px; height: 64px; object-fit: contain; }
 .logos-extra { display: flex; align-items: center; gap: 16px; }
 .logo-extra-slot {
   width: 64px; height: 64px;
