@@ -363,6 +363,184 @@
 }
 .hm-cta-btn.secundario:hover { box-shadow: none; border-color: #fff; }
 
+/* ════════════════════════════════
+   MEJORAS VISUALES ADICIONALES
+   (solo estética/gráfica — no se
+   modifica ningún color existente,
+   solo se usan las mismas variables
+   y tonos que ya estaban en el sitio)
+════════════════════════════════ */
+
+/* --- Reveal suave al hacer scroll --- */
+.hm-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .8s ease, transform .8s ease;
+}
+.hm-reveal.hm-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Hero: línea decorativa inferior --- */
+.hm-hero::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 4px;
+  background: linear-gradient(to right, var(--naranja), rgba(235,144,77,0));
+  z-index: 3;
+}
+.hm-hero-tag {
+  box-shadow: 0 4px 14px rgba(235,144,77,.15);
+}
+
+/* --- Intro: adornito bajo el label --- */
+.hm-intro .hm-label::after,
+.hm-galeria-title .hm-label::after {
+  content: '';
+  display: block;
+  width: 34px;
+  height: 2px;
+  background: var(--naranja);
+  opacity: .55;
+  margin: 10px auto 0;
+}
+
+/* --- Bloques: número decorativo grande de fondo + marco más rico --- */
+.hm-paso-texto {
+  position: relative;
+}
+.hm-pasos > .hm-paso:nth-child(1) .hm-paso-texto::before { content: '01'; }
+.hm-pasos > .hm-paso:nth-child(2) .hm-paso-texto::before { content: '02'; }
+.hm-pasos > .hm-paso:nth-child(3) .hm-paso-texto::before { content: '03'; }
+.hm-paso-texto::before {
+  position: absolute;
+  top: -34px;
+  left: 0;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 64px;
+  color: var(--cafe);
+  opacity: .06;
+  line-height: 1;
+  pointer-events: none;
+}
+.hm-paso.inverso .hm-paso-texto::before { left: auto; right: 0; }
+
+.hm-paso-foto {
+  border: 1px solid rgba(26,46,16,.06);
+  transition: box-shadow .35s ease, transform .35s ease;
+}
+.hm-paso-foto:hover {
+  box-shadow: 0 26px 54px rgba(26,46,16,.26);
+  transform: translateY(-4px);
+}
+
+/* --- Línea de tiempo: eje vertical con puntos --- */
+.hm-timeline {
+  position: relative;
+  padding-left: 6px;
+}
+.hm-timeline::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 102px;
+  width: 1px;
+  background: linear-gradient(to bottom, rgba(235,144,77,.05), rgba(235,144,77,.5) 12%, rgba(235,144,77,.5) 88%, rgba(235,144,77,.05));
+}
+.hm-tl-item {
+  position: relative;
+}
+.hm-tl-item::after {
+  content: '';
+  position: absolute;
+  left: 98px;
+  top: 24px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--naranja);
+  box-shadow: 0 0 0 4px #fff, 0 0 0 5px rgba(235,144,77,.3);
+}
+.hm-tl-texto {
+  padding: 4px 6px 4px 22px;
+  border-radius: 8px;
+  transition: background .3s ease;
+}
+.hm-tl-item:hover .hm-tl-texto {
+  background: #fdf8f2;
+}
+.hm-tl-item:last-child .hm-tl-fecha { color: var(--cafe); }
+.hm-tl-item:last-child::after { background: var(--cafe); box-shadow: 0 0 0 4px #fff, 0 0 0 5px rgba(44,74,22,.28); }
+
+@media (max-width: 760px) {
+  .hm-timeline::before { left: 44px; }
+  .hm-tl-item::after { left: 40px; }
+  .hm-tl-item { grid-template-columns: 96px 1fr; }
+}
+
+/* --- Cita: comillas decorativas --- */
+.hm-cita {
+  position: relative;
+  box-shadow: 0 20px 50px rgba(26,46,16,.08);
+}
+.hm-cita::before {
+  content: '“';
+  position: absolute;
+  top: 6px;
+  left: 24px;
+  font-family: 'Playfair Display', serif;
+  font-size: 74px;
+  font-style: normal;
+  color: var(--naranja);
+  opacity: .18;
+  line-height: 1;
+}
+
+/* --- Galería: overlay al pasar el mouse --- */
+.hm-galeria-item {
+  border: 1px solid rgba(26,46,16,.06);
+  box-shadow: 0 8px 20px rgba(26,46,16,.08);
+  transition: box-shadow .35s ease;
+}
+.hm-galeria-item:hover {
+  box-shadow: 0 18px 36px rgba(26,46,16,.22);
+}
+.hm-galeria-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.45), transparent 55%);
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+.hm-galeria-item:hover::after { opacity: 1; }
+
+/* --- CTA final: textura de puntos sutil --- */
+.hm-cta {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(26,46,16,.22);
+}
+.hm-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+  pointer-events: none;
+}
+.hm-cta > * { position: relative; z-index: 1; }
+
+/* --- Fuente / créditos con separador --- */
+.hm-fuente-nota {
+  border-top: 1px solid #ece2d0;
+  padding-top: 20px;
+}
+
 </style>
 </head>
 <body>
@@ -498,7 +676,7 @@
   <div class="hm-pasos">
 
     <!-- Bloque 1: Abeja sagrada -->
-    <div class="hm-paso">
+    <div class="hm-paso hm-reveal">
       <div class="hm-paso-foto">
         <img src="imagen/codice-detalle-meliponas.jpg" alt="Detalle de las abejas meliponas en el Códice Trocortesiano">
         <div class="hm-paso-credito">Facsímil del Códice Trocortesiano · Testimonio Compañía Editorial — detalle de las abejas meliponas</div>
@@ -519,7 +697,7 @@
     </div>
 
     <!-- Bloque 2: Códice -->
-    <div class="hm-paso inverso">
+    <div class="hm-paso inverso hm-reveal">
       <div class="hm-paso-foto">
         <img src="imagen/codice-almanaque-abejas.jpg" alt="Página del almanaque de las abejas del Códice Trocortesiano">
         <div class="hm-paso-credito">Facsímil del Códice Trocortesiano (Códice de Madrid) — almanaque de las abejas</div>
@@ -541,7 +719,7 @@
     </div>
 
     <!-- Bloque 3: Pieza arqueológica -->
-    <div class="hm-paso">
+    <div class="hm-paso hm-reveal">
       <div class="hm-paso-foto">
         <img src="imagen/pieza-maya-inah.jpg" alt="Pieza cerámica maya, colección INAH">
         <div class="hm-paso-credito">Pieza arqueológica maya · Colección INAH</div>
@@ -565,7 +743,7 @@
     <span class="hm-label">Un hilo que no se ha roto</span>
     <h2 data-editable="linea_titulo">De la meliponicultura maya a hoy</h2>
   </div>
-  <div class="hm-timeline">
+  <div class="hm-timeline hm-reveal">
     <div class="hm-tl-item">
       <div class="hm-tl-fecha">Hace +1000 años</div>
       <div class="hm-tl-texto">
@@ -590,7 +768,7 @@
   </div>
 
   <!-- CITA -->
-  <div class="hm-cita">
+  <div class="hm-cita hm-reveal">
     <p>"Cuando cuidamos a la Xunán Kab, no hacemos nada nuevo: seguimos un oficio que esta tierra lleva practicando desde hace más de mil años."</p>
     <span>Central Apícola del Usumacinta</span>
   </div>
@@ -600,7 +778,7 @@
     <span class="hm-label">En imágenes</span>
     <h2 data-editable="galeria_titulo">Testimonios de una tradición milenaria</h2>
   </div>
-  <div class="hm-galeria">
+  <div class="hm-galeria hm-reveal">
     <div>
       <div class="hm-galeria-item"><img src="imagen/codice-almanaque-abejas.jpg" alt="Almanaque de las abejas, Códice Trocortesiano"></div>
       <p class="hm-galeria-credito">Facsímil Códice Trocortesiano</p>
@@ -625,7 +803,7 @@
   </p>
 
   <!-- CTA FINAL -->
-  <div class="hm-cta">
+  <div class="hm-cta hm-reveal">
     <span class="hm-label">Esa herencia sigue viva</span>
     <h2 data-editable="cta_titulo">Conoce a la abeja que los mayas ya cuidaban</h2>
     <p data-editable="cta_texto">
@@ -714,6 +892,25 @@
       btn.classList.remove('activo');
     }
   });
+})();
+</script>
+<script>
+(function(){
+  var elementos = document.querySelectorAll('.hm-reveal');
+  if (!elementos.length) return;
+  if (!('IntersectionObserver' in window)) {
+    elementos.forEach(function(el){ el.classList.add('hm-visible'); });
+    return;
+  }
+  var observador = new IntersectionObserver(function(entradas){
+    entradas.forEach(function(entrada){
+      if (entrada.isIntersecting) {
+        entrada.target.classList.add('hm-visible');
+        observador.unobserve(entrada.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  elementos.forEach(function(el){ observador.observe(el); });
 })();
 </script>
 </body>
