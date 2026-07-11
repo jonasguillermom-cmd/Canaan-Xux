@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Iniciar Sesión — Cana'an Xu'x</title>
+<title>Iniciar Sesión — CENTRAL APÍCOLA DEL USUMACINTA</title>
 <link rel="stylesheet" href="estilos.css">
 <style>
   .auth-wrap {
@@ -71,14 +71,104 @@
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
   <div class="header-top">
+    <div class="header-left">
+    <div class="logos-extra">
+      <div class="logo-extra-slot">
+        <img class="logo-extra-img" src="imagen/CONANP LOGO.png" alt="Logo 1">
+      </div>
+      <div class="logo-extra-slot">
+        <img class="logo-extra-img" src="imagen/Cañon del Usumacinta_logo.png" alt="Logo 2">
+      </div>
+    </div>
     <a href="index.html" class="logo-wrap">
-      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
-      <div class="logo-name">Cana´an Xu´x <span>Apicultoras Tenosiquenses</span></div>
+      <img class="logo-img"
+        src="imagen/logo_centro.png"
+        alt="Miel Oro">
+      <div class="logo-name">
+        CENTRAL APÍCOLA
+        <span>DEL USUMACINTA</span>
+      </div>
     </a>
   </div>
+
+    <div class="header-icons">
+      <a href="#" onclick="toggleSearch(); return false">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        Buscar
+      </a>
+      <a href="login.html" id="btn-ingresar">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="txt-sesion">Ingresar</span>
+      </a>
+      <a href="carrito.html" id="cart-btn">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Carrito <span class="cart-count-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </div>
 </header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+
+    <div class="nav-item"><a href="index.html">Inicio</a></div>
+    <div class="nav-item"><a href="nosotros.html">Nosotros</a></div>
+        <!-- Tienda -->
+    <div class="nav-item">
+      <span>Productos <span class="chevron">▾</span></span>
+      <div class="dropdown">
+
+        <div class="dropdown-group">
+          <div class="dropdown-title">Productos de la Colmena</div>
+          <a href="miel.html">Miel</a>
+          <a href="#">Miel en panal</a>
+          <a href="#">Jabones</a>
+        </div>
+        <div class="dropdown-group">
+          <div class="dropdown-title">Otros Productos</div>
+          <a href="#">Gotas</a>
+          <a href="#">Dulces</a>
+          <a href="velas.html">Velas</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item"><a href="abejas.html">Abejas</a></div>
+    <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
+    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="contacto.html">Contacto</a></div>
+  </div>
+</nav>
+
+<!-- BARRA MENÚ MÓVIL -->
+<div class="barra-menu-movil">
+  <span class="menu-label">☰ Menú</span>
+  <button class="hamburger-btn" id="hamburger-btn" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- MENÚ DESPLEGABLE MÓVIL -->
+<div class="menu-desplegable" id="menu-desplegable">
+  <a href="index.html">Inicio</a>
+  <a href="nosotros.html">Nosotros</a>
+  <div class="menu-seccion">Productos</div>
+  <div class="submenu">
+    <a href="miel.html">Miel</a>
+    <a href="#">Miel en panal</a>
+    <a href="#">Jabones</a>
+    <a href="#">Gotas</a>
+    <a href="#">Dulces</a>
+    <a href="velas.html">Velas</a>
+  </div>
+  <a href="abejas.html">Abejas</a>
+  <a href="centro_rescate.html">Centro de Rescate</a>
+  <a href="blog.html">Blog y Eventos</a>
+  <a href="contacto.html">Contacto</a>
+</div>
 
 <div class="auth-wrap">
 
@@ -417,6 +507,30 @@ async function sincronizarCarritoLocal(userId) {
   }
   localStorage.removeItem('carrito_canaan');
 }
+</script>
+<script>
+(function(){
+  var btn  = document.getElementById('hamburger-btn');
+  var menu = document.getElementById('menu-desplegable');
+  if (!btn || !menu) return;
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var abierto = menu.classList.toggle('abierto');
+    btn.classList.toggle('activo', abierto);
+  });
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      menu.classList.remove('abierto');
+      btn.classList.remove('activo');
+    });
+  });
+  document.addEventListener('click', function(e){
+    if (!menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
+      menu.classList.remove('abierto');
+      btn.classList.remove('activo');
+    }
+  });
+})();
 </script>
 </body>
 </html>
