@@ -407,27 +407,7 @@
   margin: 10px auto 0;
 }
 
-/* --- Bloques: número decorativo grande de fondo + marco más rico --- */
-.hm-paso-texto {
-  position: relative;
-}
-.hm-pasos > .hm-paso:nth-child(1) .hm-paso-texto::before { content: '01'; }
-.hm-pasos > .hm-paso:nth-child(2) .hm-paso-texto::before { content: '02'; }
-.hm-pasos > .hm-paso:nth-child(3) .hm-paso-texto::before { content: '03'; }
-.hm-paso-texto::before {
-  position: absolute;
-  top: -34px;
-  left: 0;
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 64px;
-  color: var(--cafe);
-  opacity: .06;
-  line-height: 1;
-  pointer-events: none;
-}
-.hm-paso.inverso .hm-paso-texto::before { left: auto; right: 0; }
-
+/* --- Bloques: marco más rico --- */
 .hm-paso-foto {
   border: 1px solid rgba(26,46,16,.06);
   transition: box-shadow .35s ease, transform .35s ease;
