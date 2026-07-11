@@ -457,8 +457,9 @@
 .hm-tl-item:last-child::after { background: var(--cafe); box-shadow: 0 0 0 4px #fff, 0 0 0 5px rgba(44,74,22,.28); }
 
 @media (max-width: 760px) {
-  .hm-timeline::before { left: 44px; }
-  .hm-tl-item::after { left: 40px; }
+  .hm-timeline { padding-left: 24px; }
+  .hm-timeline::before { left: 8px; }
+  .hm-tl-item::after { left: -16px; }
   .hm-tl-item { grid-template-columns: 96px 1fr; }
 }
 
