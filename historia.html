@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Los inicios de la miel — CENTRAL APÍCOLA DEL USUMACINTA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<style>
+
+/* ════════════════════════════════
+   HERO LOS INICIOS DE LA MIEL
+════════════════════════════════ */
+.hm-hero {
+  position: relative;
+  height: 380px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: #241a10;
+  background-image: url('imagen/historia_miel/codice-pagina-completa.jpg');
+  background-size: cover;
+  background-position: center 20%;
+  background-repeat: no-repeat;
+}
+.hm-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(26, 16, 8, 0.88) 0%,
+    rgba(26, 16, 8, 0.6) 55%,
+    rgba(26, 16, 8, 0.25) 100%
+  );
+}
+.hm-hero-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%);
+}
+.hm-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 52px;
+  width: 100%;
+}
+.hm-breadcrumb {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+  margin-bottom: 16px;
+}
+.hm-breadcrumb a { color: var(--naranja); text-decoration: none; }
+.hm-hero-tag {
+  display: inline-block;
+  background: rgba(235,144,77,.2);
+  color: var(--naranja);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 2px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(235,144,77,.35);
+}
+.hm-hero-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 46px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 24px rgba(0,0,0,.5);
+}
+.hm-hero-content p {
+  font-size: 15px;
+  color: rgba(255,255,255,.75);
+  max-width: 560px;
+  line-height: 1.75;
+}
+
+/* ════════════════════════════════
+   PÁGINA
+════════════════════════════════ */
+.hm-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 40px;
+}
+
+.hm-intro {
+  padding: 60px 0 8px;
+  text-align: center;
+}
+.hm-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--naranja);
+  display: block;
+  margin-bottom: 10px;
+}
+.hm-intro h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px;
+  color: var(--cafe);
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+.hm-intro-text {
+  font-size: 15px;
+  color: var(--gris);
+  line-height: 1.85;
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+/* ════════════════════════════════
+   PASOS / BLOQUES (filas alternadas)
+════════════════════════════════ */
+.hm-pasos {
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+  padding: 56px 0;
+}
+.hm-paso {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.hm-paso.inverso .hm-paso-foto { order: 2; }
+.hm-paso.inverso .hm-paso-texto { order: 1; }
+
+.hm-paso-foto {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  box-shadow: 0 18px 40px rgba(26,46,16,.18);
+  background: #efe6d6;
+}
+.hm-paso-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .5s ease;
+}
+.hm-paso-foto:hover img { transform: scale(1.05); }
+
+.hm-paso-credito {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.72), transparent);
+  color: rgba(255,255,255,.85);
+  font-size: 10.5px;
+  letter-spacing: .03em;
+  padding: 22px 14px 8px;
+}
+
+.hm-paso-texto span.hm-label { margin-bottom: 8px; }
+.hm-paso-texto h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  color: var(--cafe);
+  margin-bottom: 14px;
+  line-height: 1.25;
+}
+.hm-paso-texto p {
+  font-size: 14.5px;
+  color: var(--gris);
+  line-height: 1.85;
+}
+.hm-paso-texto p + p { margin-top: 12px; }
+
+@media (max-width: 760px) {
+  .hm-paso, .hm-paso.inverso {
+    grid-template-columns: 1fr;
+  }
+  .hm-paso.inverso .hm-paso-foto,
+  .hm-paso.inverso .hm-paso-texto,
+  .hm-paso .hm-paso-foto,
+  .hm-paso .hm-paso-texto { order: initial; }
+}
+
+/* ════════════════════════════════
+   LÍNEA DE TIEMPO
+════════════════════════════════ */
+.hm-timeline {
+  max-width: 760px;
+  margin: 8px auto 8px;
+  padding: 24px 0 8px;
+}
+.hm-tl-item {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 20px;
+  padding: 18px 0;
+  border-top: 1px solid #ece2d0;
+}
+.hm-tl-item:first-child { border-top: none; }
+.hm-tl-fecha {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--naranja);
+  font-size: 14px;
+  padding-top: 2px;
+}
+.hm-tl-texto h4 {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--cafe);
+  margin-bottom: 4px;
+}
+.hm-tl-texto p {
+  font-size: 13.5px;
+  color: var(--gris);
+  line-height: 1.7;
+}
+
+/* ════════════════════════════════
+   CITA
+════════════════════════════════ */
+.hm-cita {
+  max-width: 780px;
+  margin: 40px auto 64px;
+  text-align: center;
+  padding: 44px 32px;
+  background: #fdf8f2;
+  border-radius: 16px;
+  border: 1px solid #eee0cc;
+}
+.hm-cita p {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--cafe);
+  line-height: 1.5;
+}
+.hm-cita span {
+  display: block;
+  margin-top: 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--naranja);
+}
+
+/* ════════════════════════════════
+   GALERÍA
+════════════════════════════════ */
+.hm-galeria-title { text-align: center; padding: 8px 0 32px; }
+.hm-galeria {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  padding-bottom: 24px;
+}
+.hm-galeria-item {
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  background: #efe6d6;
+}
+.hm-galeria-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .4s ease;
+}
+.hm-galeria-item:hover img { transform: scale(1.08); }
+.hm-galeria-credito {
+  font-size: 9.5px;
+  color: var(--gris);
+  text-align: center;
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+@media (max-width: 760px) {
+  .hm-galeria { grid-template-columns: repeat(2, 1fr); }
+}
+
+.hm-fuente-nota {
+  max-width: 740px;
+  margin: 8px auto 64px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--gris);
+  line-height: 1.7;
+}
+
+/* ════════════════════════════════
+   CTA FINAL
+════════════════════════════════ */
+.hm-cta {
+  text-align: center;
+  padding: 56px 24px 72px;
+  background: linear-gradient(135deg, #2c4a16, #1a2e10);
+  border-radius: 20px;
+  margin-bottom: 64px;
+}
+.hm-cta span.hm-label { color: #ebc07a; }
+.hm-cta h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  color: #fff;
+  margin-bottom: 14px;
+}
+.hm-cta p {
+  color: rgba(255,255,255,.7);
+  font-size: 14.5px;
+  max-width: 500px;
+  margin: 0 auto 26px;
+  line-height: 1.75;
+}
+.hm-cta-botones {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.hm-cta-btn {
+  display: inline-block;
+  background: var(--naranja);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 14px 30px;
+  border-radius: 4px;
+  transition: transform .2s, box-shadow .2s;
+}
+.hm-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(235,144,77,.4);
+}
+.hm-cta-btn.secundario {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.4);
+  color: #fff;
+}
+.hm-cta-btn.secundario:hover { box-shadow: none; border-color: #fff; }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div class="header-left">
+    <div class="logos-extra">
+      <div class="logo-extra-slot">
+        <img class="logo-extra-img" src="imagen/CONANP LOGO.png" alt="Logo 1">
+      </div>
+      <div class="logo-extra-slot">
+        <img class="logo-extra-img" src="imagen/Cañon del Usumacinta_logo.png" alt="Logo 2">
+      </div>
+    </div>
+    <a href="index.html" class="logo-wrap">
+      <img class="logo-img"
+        src="imagen/logo_centro.png"
+        alt="Miel Oro">
+      <div class="logo-name">
+        CENTRAL APÍCOLA
+        <span>DEL USUMACINTA</span>
+      </div>
+    </a>
+  </div>
+
+    <div class="header-icons">
+      <a href="#" onclick="toggleSearch(); return false">
+        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        Buscar
+      </a>
+      <a href="login.html" id="btn-ingresar">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="txt-sesion">Ingresar</span>
+      </a>
+      <a href="carrito.html" id="cart-btn">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Carrito <span class="cart-count-badge" id="cart-count">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+
+    <div class="nav-item"><a href="index.html">Inicio</a></div>
+    <div class="nav-item"><a href="nosotros.html">Nosotros</a></div>
+        <!-- Tienda -->
+    <div class="nav-item">
+      <span>Productos <span class="chevron">▾</span></span>
+      <div class="dropdown">
+
+        <div class="dropdown-group">
+          <div class="dropdown-title">Productos de la Colmena</div>
+          <a href="miel.html">Miel</a>
+          <a href="#">Miel en panal</a>
+          <a href="#">Jabones</a>
+        </div>
+        <div class="dropdown-group">
+          <div class="dropdown-title">Otros Productos</div>
+          <a href="#">Gotas</a>
+          <a href="#">Dulces</a>
+          <a href="velas.html">Velas</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item"><a href="abejas.html">Abejas</a></div>
+    <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
+    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="contacto.html">Contacto</a></div>
+  </div>
+</nav>
+
+<!-- BARRA MENÚ MÓVIL -->
+<div class="barra-menu-movil">
+  <span class="menu-label">☰ Menú</span>
+  <button class="hamburger-btn" id="hamburger-btn" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- MENÚ DESPLEGABLE MÓVIL -->
+<div class="menu-desplegable" id="menu-desplegable">
+  <a href="index.html">Inicio</a>
+  <a href="nosotros.html">Nosotros</a>
+  <div class="menu-seccion">Productos</div>
+  <div class="submenu">
+    <a href="miel.html">Miel</a>
+    <a href="#">Miel en panal</a>
+    <a href="#">Jabones</a>
+    <a href="#">Gotas</a>
+    <a href="#">Dulces</a>
+    <a href="velas.html">Velas</a>
+  </div>
+  <a href="abejas.html">Abejas</a>
+  <a href="centro_rescate.html">Centro de Rescate</a>
+  <a href="blog.html">Blog y Eventos</a>
+  <a href="contacto.html">Contacto</a>
+</div>
+
+<!-- HERO -->
+<div class="hm-hero">
+  <div class="hm-hero-overlay"></div>
+  <div class="hm-hero-content">
+    <div class="hm-breadcrumb">
+      <a href="index.html">Inicio</a> / Los inicios de la miel
+    </div>
+    <span class="hm-hero-tag">Herencia maya · Más de mil años de historia</span>
+    <h1 data-editable="hero_titulo">Los inicios de la miel</h1>
+    <p data-editable="hero_descripcion">Mucho antes de la Central Apícola del Usumacinta, los pueblos mayas de esta misma tierra ya criaban abejas sagradas y registraban ese saber en sus códices.</p>
+  </div>
+</div>
+
+<div class="hm-page">
+
+  <!-- INTRO -->
+  <div class="hm-intro">
+    <span class="hm-label">Una tradición más antigua que nosotros</span>
+    <h2 data-editable="intro_titulo">La miel que se cría en esta tierra desde hace siglos</h2>
+    <p class="hm-intro-text" data-editable="intro_texto">
+      Mucho antes de que la abeja europea (Apis mellifera) llegara a México con la Colonia, los pueblos mayas de
+      las tierras bajas —las mismas selvas que hoy recorre el Usumacinta— ya practicaban la meliponicultura: la
+      crianza de abejas nativas sin aguijón. Esa relación con las abejas no era solo alimento, era parte de su
+      religión, su calendario ritual y su forma de entender el mundo. Lo sabemos porque ellos mismos lo dejaron
+      escrito.
+    </p>
+  </div>
+
+  <!-- BLOQUES -->
+  <div class="hm-pasos">
+
+    <!-- Bloque 1: Abeja sagrada -->
+    <div class="hm-paso">
+      <div class="hm-paso-foto">
+        <img src="imagen/historia_miel/codice-detalle-meliponas.jpg" alt="Detalle de las abejas meliponas en el Códice Trocortesiano">
+        <div class="hm-paso-credito">Facsímil del Códice Trocortesiano · Testimonio Compañía Editorial — detalle de las abejas meliponas</div>
+      </div>
+      <div class="hm-paso-texto">
+        <span class="hm-label">La abeja sagrada</span>
+        <h3 data-editable="bloque1_titulo">Xunán Kab, la abeja sin aguijón</h3>
+        <p data-editable="bloque1_texto">
+          Los mayas no criaban cualquier abeja: criaban a la Melipona beecheii, conocida en maya yucateco como
+          Xunán Kab ("la señora abeja"). A diferencia de la abeja europea, no tiene aguijón y produce una miel
+          más líquida y aromática, usada tanto en la alimentación como en ceremonias y medicina tradicional.
+        </p>
+        <p>
+          Esa misma abeja —la Melipona— es la que hoy protegemos en nuestro meliponario y en el Centro de
+          Rescate.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bloque 2: Códice -->
+    <div class="hm-paso inverso">
+      <div class="hm-paso-foto">
+        <img src="imagen/historia_miel/codice-almanaque-abejas.jpg" alt="Página del almanaque de las abejas del Códice Trocortesiano">
+        <div class="hm-paso-credito">Facsímil del Códice Trocortesiano (Códice de Madrid) — almanaque de las abejas</div>
+      </div>
+      <div class="hm-paso-texto">
+        <span class="hm-label">El testimonio escrito</span>
+        <h3 data-editable="bloque2_titulo">Un calendario dedicado a las abejas</h3>
+        <p data-editable="bloque2_texto">
+          El Códice Trocortesiano —también llamado Códice de Madrid— es uno de los pocos libros mayas
+          prehispánicos que sobrevivieron a la Conquista. En sus últimas páginas guarda un "almanaque de las
+          abejas": una serie de láminas donde los sacerdotes-astrónomos mayas registraban los días propicios
+          para cuidar las colmenas, cosechar la miel y ofrendarla a los dioses.
+        </p>
+        <p>
+          Que un pueblo dedicara páginas enteras de su libro más importante a las abejas dice mucho de lo
+          sagrado que era este oficio.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bloque 3: Pieza arqueológica -->
+    <div class="hm-paso">
+      <div class="hm-paso-foto">
+        <img src="imagen/historia_miel/pieza-maya-inah.jpg" alt="Pieza cerámica maya, colección INAH">
+        <div class="hm-paso-credito">Pieza arqueológica maya · Colección INAH</div>
+      </div>
+      <div class="hm-paso-texto">
+        <span class="hm-label">Lo que dejó la arqueología</span>
+        <h3 data-editable="bloque3_titulo">Figuras que aún se estudian</h3>
+        <p data-editable="bloque3_texto">
+          Además de los códices, el INAH resguarda piezas cerámicas y de piedra como ésta, que muestran la
+          riqueza simbólica del mundo maya alrededor de sus dioses y rituales. Piezas así —tocados, incensarios,
+          urnas— son las que permiten a los arqueólogos reconstruir, poco a poco, el papel que tuvieron las
+          abejas y su miel en la vida ceremonial de estos pueblos.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LÍNEA DE TIEMPO -->
+  <div class="hm-intro" style="padding-top:8px;">
+    <span class="hm-label">Un hilo que no se ha roto</span>
+    <h2 data-editable="linea_titulo">De la meliponicultura maya a hoy</h2>
+  </div>
+  <div class="hm-timeline">
+    <div class="hm-tl-item">
+      <div class="hm-tl-fecha">Hace +1000 años</div>
+      <div class="hm-tl-texto">
+        <h4>Meliponicultura maya</h4>
+        <p>Los pueblos mayas de las tierras bajas crían Melipona beecheii en troncos huecos (jobones), registrando el oficio en sus códices.</p>
+      </div>
+    </div>
+    <div class="hm-tl-item">
+      <div class="hm-tl-fecha">Siglo XVI</div>
+      <div class="hm-tl-texto">
+        <h4>Llegada de la abeja europea</h4>
+        <p>Con la Colonia llega la Apis mellifera, la abeja con aguijón que hoy es la más común en la apicultura comercial de México.</p>
+      </div>
+    </div>
+    <div class="hm-tl-item">
+      <div class="hm-tl-fecha">Actualidad</div>
+      <div class="hm-tl-texto">
+        <h4>Central Apícola del Usumacinta</h4>
+        <p>En esta misma región, apicultoras trabajan hoy tanto con abeja Apis como con Melipona, cuidando además a las abejas nativas en nuestro Centro de Rescate.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CITA -->
+  <div class="hm-cita">
+    <p>"Cuando cuidamos a la Xunán Kab, no hacemos nada nuevo: seguimos un oficio que esta tierra lleva practicando desde hace más de mil años."</p>
+    <span>Central Apícola del Usumacinta</span>
+  </div>
+
+  <!-- GALERÍA -->
+  <div class="hm-galeria-title">
+    <span class="hm-label">En imágenes</span>
+    <h2 data-editable="galeria_titulo">Testimonios de una tradición milenaria</h2>
+  </div>
+  <div class="hm-galeria">
+    <div>
+      <div class="hm-galeria-item"><img src="imagen/historia_miel/codice-almanaque-abejas.jpg" alt="Almanaque de las abejas, Códice Trocortesiano"></div>
+      <p class="hm-galeria-credito">Facsímil Códice Trocortesiano</p>
+    </div>
+    <div>
+      <div class="hm-galeria-item"><img src="imagen/historia_miel/pieza-maya-inah.jpg" alt="Pieza arqueológica maya"></div>
+      <p class="hm-galeria-credito">Pieza arqueológica · INAH</p>
+    </div>
+    <div>
+      <div class="hm-galeria-item"><img src="imagen/historia_miel/codice-detalle-meliponas.jpg" alt="Detalle de abejas meliponas en el códice"></div>
+      <p class="hm-galeria-credito">Detalle abejas meliponas · Testimonio Cía. Editorial</p>
+    </div>
+    <div>
+      <div class="hm-galeria-item"><img src="imagen/historia_miel/codice-pagina-completa.jpg" alt="Lámina IX del Códice Trocortesiano"></div>
+      <p class="hm-galeria-credito">Lámina IX, Códice Trocortesiano</p>
+    </div>
+  </div>
+  <p class="hm-fuente-nota">
+    Las imágenes de códice son facsímiles de la edición de Testimonio Compañía Editorial; la pieza arqueológica
+    pertenece al acervo documentado por el INAH. Se muestran aquí con fines educativos, como contexto histórico
+    de la meliponicultura maya.
+  </p>
+
+  <!-- CTA FINAL -->
+  <div class="hm-cta">
+    <span class="hm-label">Esa herencia sigue viva</span>
+    <h2 data-editable="cta_titulo">Conoce a la abeja que los mayas ya cuidaban</h2>
+    <p data-editable="cta_texto">
+      En nuestro Centro de Rescate seguimos protegiendo a la Melipona y a otras abejas nativas de la región,
+      la misma que aparece en las páginas del Códice Trocortesiano.
+    </p>
+    <div class="hm-cta-botones">
+      <a href="melipona.html" class="hm-cta-btn">Conocer a la Melipona</a>
+      <a href="centro_rescate.html" class="hm-cta-btn secundario">Ver Centro de Rescate</a>
+    </div>
+  </div>
+
+</div><!-- /hm-page -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Cana´an <span>Xu´x</span></div>
+        <p class="footer-desc">Somos apicultores mexicanos. Ofrecemos miel de abeja pura y todos los productos derivados de la colmena.</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/mielorogdl/" target="_blank" title="Instagram">📷</a>
+          <a href="https://www.facebook.com/mielorogdl" target="_blank" title="Facebook">f</a>
+          <a href="https://www.pinterest.es/mielorogdl/" target="_blank" title="Pinterest">P</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Tienda</h4>
+        <ul>
+          <li><a href="#">Todo para el Apicultor</a></li>
+          <li><a href="#">Productos de la Colmena</a></li>
+          <li><a href="velas.html">Velas</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Aprende</h4>
+        <ul>
+          <li><a href="abejas.html">Tipos de abejas</a></li>
+          <li><a href="centro_rescate.html">Centro de Rescate</a></li>
+          <li><a href="blog.html">Blog y Eventos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="#">Puntos de Venta</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 · Todos los derechos reservados · Hecho en México</div>
+  </div>
+</footer>
+
+<div class="search-overlay">
+  <div class="search-box">
+    <button class="search-close">✕</button>
+    <input type="text" placeholder="Buscar productos...">
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+<a href="https://wa.me/529211234567" class="whatsapp-float" target="_blank">💬</a>
+<script>
+(function(){
+  var btn  = document.getElementById('hamburger-btn');
+  var menu = document.getElementById('menu-desplegable');
+  if (!btn || !menu) return;
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var abierto = menu.classList.toggle('abierto');
+    btn.classList.toggle('activo', abierto);
+  });
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      menu.classList.remove('abierto');
+      btn.classList.remove('activo');
+    });
+  });
+  document.addEventListener('click', function(e){
+    if (!menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
+      menu.classList.remove('abierto');
+      btn.classList.remove('activo');
+    }
+  });
+})();
+</script>
+</body>
+</html>
