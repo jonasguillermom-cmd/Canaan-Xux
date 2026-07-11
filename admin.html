@@ -399,8 +399,18 @@ input[type=checkbox]{width:19px;height:19px;accent-color:var(--naranja);cursor:p
 
       <div class="campo">
         <label>Vendido por (empresa)</label>
-        <input type="text" id="p-empresa" list="empresas-list" placeholder="Escribe o elige una empresa..." autocomplete="off">
+        <input type="text" id="p-empresa" list="empresas-list" placeholder="Escribe o elige una empresa..." autocomplete="off" oninput="onEmpresaNombreChange()">
         <datalist id="empresas-list"></datalist>
+      </div>
+
+      <div class="campo" id="empresa-logo-campo" style="display:none">
+        <label>Logo de la empresa <span style="text-transform:none;font-weight:500">(marca de agua en las fotos)</span></label>
+        <div class="foto-drop" onclick="document.getElementById('empresa-logo-input').click()">
+          <input type="file" id="empresa-logo-input" accept="image/*" style="display:none" onchange="onEmpresaLogo(this)">
+          <div class="ico">🏷️</div>
+          <p>Toca aquí para subir el logo</p>
+        </div>
+        <img id="preview-empresa-logo" src="" alt="" style="width:64px;height:64px;border-radius:50%;object-fit:cover;margin-top:11px;display:none;box-shadow:var(--sombra-sm)">
       </div>
 
       <div class="row2">
@@ -737,6 +747,7 @@ const db = createClient(SURL, SKEY);
 let adminUser  = null;
 let empresasCache = []; // [{id, nombre}, ...] — empresas ya guardadas
 let mainPhotoFile = null;  // File de foto principal
+let empresaLogoFile = null; // File del logo de la empresa (marca de agua)
 
 // Cada variante: { nombre, precio, archivos:[File|null, File|null, File|null], urls:['','',''] }
 // NO re-renderizamos al cambiar foto — solo actualizamos el DOM puntualmente
@@ -1421,6 +1432,34 @@ function onMainPhoto(input) {
   reader.readAsDataURL(mainPhotoFile);
 }
 
+// ── LOGO DE EMPRESA (marca de agua) ──
+function onEmpresaNombreChange() {
+  const nombre = document.getElementById('p-empresa').value.trim();
+  const campo = document.getElementById('empresa-logo-campo');
+  campo.style.display = nombre ? 'block' : 'none';
+  if (!nombre) return;
+
+  // Si la empresa ya existe y tiene logo guardado, lo mostramos como referencia
+  const existente = empresasCache.find(e => e.nombre.toLowerCase() === nombre.toLowerCase());
+  const img = document.getElementById('preview-empresa-logo');
+  if (existente && existente.logo_url && !empresaLogoFile) {
+    img.src = existente.logo_url; img.style.display = 'block';
+  } else if (!empresaLogoFile) {
+    img.style.display = 'none';
+  }
+}
+
+function onEmpresaLogo(input) {
+  empresaLogoFile = input.files[0];
+  if (!empresaLogoFile) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('preview-empresa-logo');
+    img.src = e.target.result; img.style.display = 'block';
+  };
+  reader.readAsDataURL(empresaLogoFile);
+}
+
 // ── CATEGORÍAS ──
 const SUBCATS = {
   miel:   ['Miel Pura','Miel Cruda','Con Mezcla','Tamaño Familiar'],
@@ -1549,7 +1588,7 @@ async function subirFoto(file, nombre) {
 
 // Carga las empresas ya guardadas y llena el datalist de autocompletado
 async function cargarEmpresas() {
-  const { data, error } = await db.from('empresas').select('id,nombre').order('nombre');
+  const { data, error } = await db.from('empresas').select('id,nombre,logo_url').order('nombre');
   if (error) return;
   empresasCache = data || [];
   const dl = document.getElementById('empresas-list');
@@ -1638,6 +1677,16 @@ async function guardarProducto() {
   const nombreEmpresa = document.getElementById('p-empresa').value;
   const empresa_id = await obtenerOcrearEmpresaId(nombreEmpresa);
 
+  // Logo de la empresa (marca de agua) — solo se sube/actualiza si eligieron un archivo nuevo
+  if (empresa_id && empresaLogoFile) {
+    const logo_url = await subirFoto(empresaLogoFile, `empresa_${nombreEmpresa.trim().slice(0,20)}`);
+    if (logo_url) {
+      await db.from('empresas').update({ logo_url }).eq('id', empresa_id);
+      const ce = empresasCache.find(e => e.id === empresa_id);
+      if (ce) ce.logo_url = logo_url;
+    }
+  }
+
   const imagenesArr = imagen_url ? [imagen_url] : [];
   const datos = { nombre, precio, categoria: catReal, subcategoria: subcat, descripcion: desc,
     stock, activo, variantes: variantesArr, imagenes: imagenesArr, imagen_url, empresa_id };
@@ -1682,7 +1731,7 @@ async function loadProductos() {
 
 // ── EDITAR ──
 async function editarProducto(id) {
-  const { data: p } = await db.from('productos').select('*, empresas(nombre)').eq('id', id).single();
+  const { data: p } = await db.from('productos').select('*, empresas(nombre, logo_url)').eq('id', id).single();
   if (!p) return;
 
   document.getElementById('edit-id').value    = p.id;
@@ -1694,6 +1743,18 @@ async function editarProducto(id) {
   document.getElementById('p-activo').checked = p.activo;
   document.getElementById('form-title').textContent = '✏️ Editando: ' + p.nombre;
   document.getElementById('btn-cancelar').style.display = 'block';
+
+  // Logo de la empresa vendedora
+  empresaLogoFile = null;
+  const campoLogo = document.getElementById('empresa-logo-campo');
+  const previewLogo = document.getElementById('preview-empresa-logo');
+  if (p.empresas?.nombre) {
+    campoLogo.style.display = 'block';
+    if (p.empresas.logo_url) { previewLogo.src = p.empresas.logo_url; previewLogo.style.display = 'block'; }
+    else previewLogo.style.display = 'none';
+  } else {
+    campoLogo.style.display = 'none';
+  }
 
   let catVal = p.categoria;
   if (p.categoria==='otros'&&p.subcategoria==='destacado') catVal='index';
@@ -1747,6 +1808,10 @@ function resetForm() {
   document.getElementById('btn-cancelar').style.display = 'none';
   document.getElementById('form-msg').className = 'msg';
   mainPhotoFile = null; variantes = [];
+  empresaLogoFile = null;
+  document.getElementById('empresa-logo-campo').style.display = 'none';
+  document.getElementById('preview-empresa-logo').style.display = 'none';
+  document.getElementById('empresa-logo-input').value = '';
 }
 
 function cancelEdit() { resetForm(); }
