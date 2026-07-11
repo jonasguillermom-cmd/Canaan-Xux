@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Producto — Cana'an Xu'x</title>
+<title>Producto — Central Apícola del Usumacinta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="estilos.css"/>
@@ -15,12 +15,15 @@
 .gallery-main{background:#f5f0e8;border-radius:8px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
 .gallery-main img{width:100%;height:100%;object-fit:contain;padding:24px;transition:transform .3s}
 .gallery-main:hover img{transform:scale(1.05)}
-.marca-agua-empresa{position:absolute;bottom:12px;right:12px;width:44px;height:44px;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.88);box-shadow:0 2px 8px rgba(0,0,0,.18);border:1.5px solid rgba(255,255,255,.9);pointer-events:none;z-index:2}
-.marca-agua-empresa img{width:100%;height:100%;object-fit:cover;padding:0;opacity:.92}
+.marca-agua-empresa{position:absolute;bottom:14px;right:14px;width:72px;height:72px;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.92);box-shadow:0 3px 12px rgba(0,0,0,.25);border:2.5px solid rgba(255,255,255,.95);pointer-events:none;z-index:2}
+.marca-agua-empresa img{width:100%;height:100%;object-fit:cover;padding:0}
+@media(max-width:600px){.marca-agua-empresa{width:56px;height:56px;bottom:10px;right:10px}}
 .gallery-thumbs{display:flex;gap:10px;flex-wrap:wrap}
-.thumb{width:68px;height:68px;border-radius:6px;overflow:hidden;border:2px solid #e0d8cc;cursor:pointer;background:#f5f0e8;transition:border-color .2s;flex-shrink:0}
+.thumb{width:68px;height:68px;border-radius:6px;overflow:hidden;border:2px solid #e0d8cc;cursor:pointer;background:#f5f0e8;transition:border-color .2s;flex-shrink:0;position:relative}
 .thumb.active,.thumb:hover{border-color:#eb904d}
 .thumb img{width:100%;height:100%;object-fit:contain;padding:6px}
+.marca-agua-mini{position:absolute;bottom:2px;right:2px;width:18px;height:18px;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.92);box-shadow:0 1px 4px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.9);pointer-events:none;z-index:2}
+.marca-agua-mini img{width:100%;height:100%;object-fit:cover;padding:0}
 /* ── INFO ── */
 .product-info{display:flex;flex-direction:column;gap:0}
 .prod-brand{font-size:11px;font-weight:800;color:#eb904d;letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px}
@@ -113,8 +116,8 @@
 <header>
   <div class="header-top">
     <a href="index.html" class="logo-wrap">
-      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
-      <div class="logo-name">Cana´an Xu´x <span>Apicultoras Tenosiquenses</span></div>
+      <img class="logo-img" src="imagen/logo.png" alt="Central Apícola del Usumacinta">
+      <div class="logo-name">Central Apícola del Usumacinta <span>Apicultoras Tenosiquenses</span></div>
     </a>
     <div class="header-icons">
       <a href="#" onclick="toggleSearch();return false">
@@ -236,7 +239,7 @@ async function cargarProducto() {
 
   // Breadcrumb
   document.getElementById('bread-nombre').textContent = p.nombre;
-  document.title = p.nombre + ' — Cana\'an Xu\'x';
+  document.title = p.nombre + ' — Central Apícola del Usumacinta';
   const catLink = { miel:'miel.html', velas:'velas.html', melipona:'melipona.html', otros:'index.html' };
   document.getElementById('bread-cat').innerHTML = `<a href="${catLink[p.categoria]||'#'}">${p.categoria.charAt(0).toUpperCase()+p.categoria.slice(1)}</a>`;
 
@@ -274,6 +277,7 @@ async function cargarProducto() {
         ${[0,1,2].map(i => fotosIniciales[i] ? `
           <div class="thumb ${i===0?'active':''}" onclick="switchImg(this,'${fotosIniciales[i]}')">
             <img src="${fotosIniciales[i]}" alt="Vista ${i+1}">
+            ${p.empresas?.logo_url ? `<div class="marca-agua-mini"><img src="${p.empresas.logo_url}" alt=""></div>` : ''}
           </div>` : '').join('')}
       </div>
     </div>`;
@@ -313,7 +317,7 @@ async function cargarProducto() {
   // Info HTML
   const infoHTML = `
     <div class="product-info">
-      <p class="prod-brand">Cana´an Xu´x</p>
+      <p class="prod-brand">Central Apícola del Usumacinta</p>
       <h1 class="prod-title">${p.nombre}</h1>
       ${p.empresas?.nombre ? `
       <div class="prod-vendedor">
