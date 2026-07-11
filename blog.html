@@ -101,12 +101,29 @@
 
 <div class="announce"></div>
 
+<!-- HEADER -->
 <header>
   <div class="header-top">
+    <div class="header-left">
+    <div class="logos-extra">
+      <div class="logo-extra-slot">
+        <img class="logo-extra-img" src="imagen/CONANP LOGO.png" alt="Logo 1">
+      </div>
+      <div class="logo-extra-slot">
+        <img class="logo-extra-img" src="imagen/Cañon del Usumacinta_logo.png" alt="Logo 2">
+      </div>
+    </div>
     <a href="index.html" class="logo-wrap">
-      <img class="logo-img" src="imagen/logo.png" alt="Cana'an Xu'x">
-      <div class="logo-name">Cana´an Xu´x<span>Apicultoras Tenosiquenses</span></div>
+      <img class="logo-img"
+        src="imagen/logo_centro.png"
+        alt="Miel Oro">
+      <div class="logo-name">
+        CENTRAL APÍCOLA
+        <span>DEL USUMACINTA</span>
+      </div>
     </a>
+  </div>
+
     <div class="header-icons">
       <a href="#" onclick="toggleSearch(); return false">
         <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -124,13 +141,17 @@
   </div>
 </header>
 
+<!-- NAV -->
 <nav>
   <div class="nav-inner">
+
     <div class="nav-item"><a href="index.html">Inicio</a></div>
     <div class="nav-item"><a href="nosotros.html">Nosotros</a></div>
+        <!-- Tienda -->
     <div class="nav-item">
       <span>Productos <span class="chevron">▾</span></span>
       <div class="dropdown">
+
         <div class="dropdown-group">
           <div class="dropdown-title">Productos de la Colmena</div>
           <a href="miel.html">Miel</a>
@@ -147,11 +168,12 @@
     </div>
     <div class="nav-item"><a href="abejas.html">Abejas</a></div>
     <div class="nav-item"><a href="centro_rescate.html">Centro de Rescate</a></div>
-    <div class="nav-item"><a href="blog.html" class="active">Blog y Eventos</a></div>
+    <div class="nav-item"><a href="blog.html">Blog y Eventos</a></div>
     <div class="nav-item"><a href="contacto.html">Contacto</a></div>
   </div>
 </nav>
 
+<!-- BARRA MENÚ MÓVIL -->
 <!-- BARRA MENÚ MÓVIL -->
 <div class="barra-menu-movil">
   <span class="menu-label">☰ Menú</span>
@@ -405,6 +427,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(
 
 document.addEventListener('DOMContentLoaded', cargarBlog);
 </script>
+
 
 <script>
 (function(){
