@@ -587,6 +587,14 @@ nav::before {
   border-radius: 4px;
 }
 
+/* Solo la imagen del bloque "Aprendiendo de las colmenas" */
+#bloque-aprendiendo .about-imgs {
+  grid-template-columns: 1fr;
+}
+#bloque-aprendiendo .about-imgs img {
+  height: 420px;
+}
+
 /* ─── EXPERIENCIAS ─── */
 .exp-grid {
   display: grid;
