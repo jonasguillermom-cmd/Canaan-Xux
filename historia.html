@@ -522,6 +522,23 @@
   padding-top: 20px;
 }
 
+/* --- Dato curioso (nuevo) --- */
+.hm-dato {
+  max-width: 740px;
+  margin: 28px auto 0;
+  padding: 22px 26px;
+  background: #fdf8f2;
+  border-left: 3px solid var(--naranja);
+  border-radius: 4px;
+  text-align: left;
+}
+.hm-dato span.hm-label { margin-bottom: 6px; }
+.hm-dato p {
+  font-size: 14px;
+  color: var(--gris);
+  line-height: 1.8;
+}
+
 </style>
 </head>
 <body>
@@ -650,6 +667,15 @@
       religión, su calendario ritual y su forma de entender el mundo. Lo sabemos porque ellos mismos lo dejaron
       escrito.
     </p>
+    <div class="hm-dato">
+      <span class="hm-label">¿Sabías qué?</span>
+      <p data-editable="dato_texto">
+        La miel y la cera de la Xunán Kab eran tan valiosas para los mayas que, según los registros de la época
+        colonial, se usaban como tributo y hasta como moneda de cambio en varias regiones del Mayab. En la zona
+        del Usumacinta, habitada por los mayas chontales, esta relación con las abejas nativas también formó
+        parte de la vida cotidiana y ceremonial, y hoy sigue viva en comunidades apícolas de la región.
+      </p>
+    </div>
   </div>
 
   <!-- BLOQUES -->
@@ -716,6 +742,30 @@
       </div>
     </div>
 
+    <!-- Bloque 4: El dios de las abejas -->
+    <div class="hm-paso inverso hm-reveal">
+      <div class="hm-paso-foto">
+        <img src="imagen/ah-muzen-cab.jpg" alt="Representación del dios maya de las abejas, Ah Muzen Cab"
+             onerror="this.style.display='none'">
+        <div class="hm-paso-credito">Representación referencial de Ah Muzen Cab, el "Dios Descendente"</div>
+      </div>
+      <div class="hm-paso-texto">
+        <span class="hm-label">Una abeja con nombre de dios</span>
+        <h3 data-editable="bloque4_titulo">Ah Muzen Cab, el patrono de los apicultores</h3>
+        <p data-editable="bloque4_texto">
+          Los mayas no solo criaban a la Xunán Kab: la veneraban como manifestación de Ah Muzen Cab, el "Dios
+          Descendente" o "Dios que Baja". Se le representa cabeza abajo, en pleno vuelo, tallado en el friso del
+          templo que lleva su nombre en Tulum y dibujado en las páginas del almanaque de las abejas del Códice
+          de Madrid.
+        </p>
+        <p>
+          Aún hoy, en algunas comunidades mayas de la península y del sureste mexicano, los meliponicultores le
+          piden permiso y protección antes de abrir un jobón —el tronco hueco donde vive la colmena— igual que
+          lo hacían sus antepasados hace más de mil años.
+        </p>
+      </div>
+    </div>
+
   </div>
 
   <!-- LÍNEA DE TIEMPO -->
@@ -736,6 +786,13 @@
       <div class="hm-tl-texto">
         <h4>Llegada de la abeja europea</h4>
         <p>Con la Colonia llega la Apis mellifera, la abeja con aguijón que hoy es la más común en la apicultura comercial de México.</p>
+      </div>
+    </div>
+    <div class="hm-tl-item">
+      <div class="hm-tl-fecha">Siglos XVII–XX</div>
+      <div class="hm-tl-texto">
+        <h4>Declive de la meliponicultura</h4>
+        <p>La ganadería, la deforestación y la preferencia por la abeja europea —más productiva a gran escala— hacen que la crianza tradicional de Melipona vaya desapareciendo en buena parte de la región maya.</p>
       </div>
     </div>
     <div class="hm-tl-item">
